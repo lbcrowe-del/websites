@@ -42,6 +42,20 @@ In each Static Web App → **Custom domains → Add**:
 
 > Tip: hosting the DNS zones in **Azure DNS** makes apex domains easiest (native alias records).
 
+## Pending manual steps (payment processing / paid tier)
+
+The licensing API and checkout flow below are built and pushed to
+`claude/payment-processing-paid-tier-odm732` (this repo and `lbcrowe-del/ServerBridge`). Not yet
+done — all manual/business steps, not code:
+
+1. Create the Stripe product + Payment Link, and the Lemon Squeezy product + License Keys feature
+   — see "Dashboard setup" below for exact settings.
+2. Set the real checkout URLs and price in `server-bridge/buy.html` (currently placeholders).
+3. Provision the Azure Storage account behind the licensing Function App and set
+   `STRIPE_WEBHOOK_SECRET` / `LEMONSQUEEZY_WEBHOOK_SECRET` in its configuration.
+4. Have `terms.html` / `privacy.html` / `refund.html` reviewed by an attorney before publishing.
+5. End-to-end test both checkout paths against the real desktop app before announcing.
+
 ## Licensing API (`server-bridge/api/`)
 
 An Azure Functions app (.NET 8, isolated worker) co-located with the `server-bridge.com` Static
