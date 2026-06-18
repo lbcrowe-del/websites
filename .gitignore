@@ -1,3 +1,8 @@
 .DS_Store
 *.log
 .vscode/
+
+# Azure Functions API (server-bridge/api)
+server-bridge/api/bin/
+server-bridge/api/obj/
+server-bridge/api/local.settings.json
