@@ -98,6 +98,15 @@ var STRIPE_CHECKOUT_URL = 'https://buy.stripe.com/...';        // from the Strip
 var LEMONSQUEEZY_CHECKOUT_URL = 'https://....lemonsqueezy.com/checkout/buy/...';
 ```
 
+Also set the real price in the `$XX` placeholder near the top of `buy.html`.
+
+### Legal pages (`terms.html`, `privacy.html`, `refund.html`)
+
+Draft templates linked from the footer and the checkout page. **Have an attorney review before
+publishing** — they're a reasonable starting point (30-day refund window, standard SaaS
+liability/warranty disclaimers) but aren't a substitute for legal advice. Each has a `<!-- TODO:
+set date -->` placeholder for the "last updated" date.
+
 ### Local preview
 
 ```bash

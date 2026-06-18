@@ -109,6 +109,17 @@ section { padding: 40px 0; }
   font-size: 15px; font-family: var(--font);
 }
 .buy-submit { width: 100%; text-align: center; cursor: pointer; }
+.price { margin: 4px 0 12px; }
+.price-amount { font-size: 36px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
+.price-period { color: var(--muted); font-size: 15px; margin-left: 4px; }
+
+/* Legal pages */
+.legal { padding: 48px 0 64px; }
+.legal h1 { font-size: clamp(28px, 4vw, 38px); letter-spacing: -0.02em; margin: 0 0 6px; }
+.legal .updated { color: var(--muted); font-size: 14px; margin: 0 0 32px; }
+.legal h2 { font-size: 19px; margin: 32px 0 10px; }
+.legal p, .legal li { color: var(--muted); font-size: 15px; }
+.legal ul { padding-left: 20px; }
 
 /* Footer */
 footer { border-top: 1px solid var(--border); padding: 28px 0; color: var(--muted); font-size: 14px; }

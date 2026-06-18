@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Terms of Service — ServerBridge</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="wrap topbar">
+    <div class="brand"><span class="mark">S</span> ServerBridge</div>
+    <a class="home" href="index.html">&larr; Back</a>
+  </header>
+
+  <main>
+    <section class="wrap legal">
+      <h1>Terms of Service</h1>
+      <p class="updated">Last updated: <!-- TODO: set date --> &middot; Draft — have this reviewed by an attorney before publishing.</p>
+
+      <p>These Terms of Service ("Terms") govern your use of ServerBridge (the "Software"),
+        provided by Lee Crowe Software ("we," "us," or "our"). By purchasing, downloading, or
+        using ServerBridge, you agree to these Terms.</p>
+
+      <h2>1. The software</h2>
+      <p>ServerBridge is a desktop application that helps migrate file server content to
+        Microsoft 365 (SharePoint, OneDrive, and Teams) using your own Microsoft 365 tenant
+        credentials. We do not host, store, or have access to the files you migrate — all data
+        moves directly between your source file server and your Microsoft 365 tenant via the
+        Microsoft Graph API.</p>
+
+      <h2>2. License</h2>
+      <p>The free tier of ServerBridge may be used without restriction. ServerBridge Pro requires
+        an active, paid license key tied to a single device. We grant you a non-exclusive,
+        non-transferable license to use ServerBridge Pro on one device per active subscription,
+        for as long as your subscription remains active and in good standing.</p>
+
+      <h2>3. Billing and subscriptions</h2>
+      <p>ServerBridge Pro is billed on a recurring basis through our payment processor (Stripe or
+        Lemon Squeezy, depending on your billing country). Subscriptions renew automatically until
+        cancelled. You can cancel at any time through the billing portal linked in your
+        confirmation email; cancellation takes effect at the end of the current billing period.</p>
+
+      <h2>4. Refunds</h2>
+      <p>See our <a href="refund.html">Refund Policy</a> for details.</p>
+
+      <h2>5. Acceptable use</h2>
+      <p>You agree not to reverse-engineer, redistribute, or resell ServerBridge or its license
+        keys, and not to use it in a manner that violates applicable law or the terms of your
+        Microsoft 365 agreement.</p>
+
+      <h2>6. Disclaimer of warranties</h2>
+      <p>ServerBridge is provided "as is" without warranties of any kind, express or implied,
+        including but not limited to merchantability and fitness for a particular purpose. You
+        are responsible for verifying migrated content and maintaining your own backups before
+        and during any migration.</p>
+
+      <h2>7. Limitation of liability</h2>
+      <p>To the maximum extent permitted by law, Lee Crowe Software is not liable for any
+        indirect, incidental, or consequential damages arising from your use of ServerBridge,
+        including data loss, beyond the amount you paid for the applicable subscription period.</p>
+
+      <h2>8. Changes to these terms</h2>
+      <p>We may update these Terms from time to time. Continued use of ServerBridge after an
+        update constitutes acceptance of the revised Terms.</p>
+
+      <h2>9. Contact</h2>
+      <p>Questions about these Terms? Email
+        <a href="mailto:hello@leecrowesoftware.com">hello@leecrowesoftware.com</a>.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>&copy; <span id="yr"></span> Lee Crowe Software</span>
+      <span><a href="https://leecrowesoftware.com">leecrowesoftware.com</a></span>
+    </div>
+  </footer>
+
+  <script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+</body>
+</html>
