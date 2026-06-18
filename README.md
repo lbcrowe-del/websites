@@ -87,6 +87,17 @@ local development with the Azure Functions Core Tools.
   webhook endpoint at `https://server-bridge.com/api/webhooks/lemonsqueezy` (any events — used
   only for visibility, not required for licensing to function).
 
+### Hybrid checkout routing (`server-bridge/buy.html`)
+
+`buy.html` is a country picker: US visitors are sent to the Stripe Payment Link, everyone else to
+the Lemon Squeezy checkout (merchant of record for international tax). Before going live, set the
+two real URLs at the top of the inline script in `buy.html`:
+
+```js
+var STRIPE_CHECKOUT_URL = 'https://buy.stripe.com/...';        // from the Stripe Payment Link
+var LEMONSQUEEZY_CHECKOUT_URL = 'https://....lemonsqueezy.com/checkout/buy/...';
+```
+
 ### Local preview
 
 ```bash
