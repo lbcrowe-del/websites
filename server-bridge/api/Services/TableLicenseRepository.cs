@@ -37,21 +37,6 @@ public sealed class TableLicenseRepository : ILicenseRepository
         await _table.UpsertEntityAsync(record, TableUpdateMode.Replace, cancellationToken);
     }
 
-    public async Task<LicenseRecord?> FindByStripeSubscriptionAsync(string subscriptionId, CancellationToken cancellationToken)
-    {
-        var escaped = subscriptionId.Replace("'", "''", StringComparison.Ordinal);
-        var query = _table.QueryAsync<LicenseRecord>(
-            r => r.PartitionKey == "license" && r.StripeSubscriptionId == escaped,
-            cancellationToken: cancellationToken);
-
-        await foreach (var record in query)
-        {
-            return record;
-        }
-
-        return null;
-    }
-
     public async Task LinkCheckoutSessionAsync(string sessionId, string licenseKey, CancellationToken cancellationToken)
     {
         var link = new CheckoutSessionLink { RowKey = sessionId, LicenseKey = licenseKey };

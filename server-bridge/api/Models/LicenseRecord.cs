@@ -15,6 +15,5 @@ public sealed class LicenseRecord : ITableEntity
     public bool Active { get; set; } = true;
     public string? DeviceId { get; set; }
     public string? StripeCustomerId { get; set; }
-    public string? StripeSubscriptionId { get; set; }
     public DateTimeOffset? ExpiresAtUtc { get; set; }
 }

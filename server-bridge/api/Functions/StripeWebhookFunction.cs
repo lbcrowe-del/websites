@@ -8,8 +8,7 @@ using ServerBridge.LicensingApi.Services;
 
 namespace ServerBridge.LicensingApi.Functions;
 
-/// <summary>Handles the subset of Stripe events needed to keep self-issued license keys in sync with
-/// subscription state: issue on checkout completion, deactivate on cancellation/payment failure.</summary>
+/// <summary>Issues a license key when a Stripe one-time checkout completes.</summary>
 public sealed class StripeWebhookFunction
 {
     private readonly ILicenseRepository _repository;
@@ -46,22 +45,15 @@ public sealed class StripeWebhookFunction
 
         using var doc = JsonDocument.Parse(payload);
         var eventType = doc.RootElement.GetProperty("type").GetString();
-        var dataObject = doc.RootElement.GetProperty("data").GetProperty("object");
 
-        switch (eventType)
+        if (eventType == "checkout.session.completed")
         {
-            case "checkout.session.completed":
-                await HandleCheckoutCompletedAsync(dataObject, cancellationToken);
-                break;
-            case "customer.subscription.updated":
-                await SetSubscriptionActiveAsync(dataObject, active: true, cancellationToken);
-                break;
-            case "customer.subscription.deleted":
-                await SetSubscriptionActiveAsync(dataObject, active: false, cancellationToken);
-                break;
-            default:
-                _logger.LogInformation("Ignoring unhandled Stripe event type {EventType}", eventType);
-                break;
+            var dataObject = doc.RootElement.GetProperty("data").GetProperty("object");
+            await HandleCheckoutCompletedAsync(dataObject, cancellationToken);
+        }
+        else
+        {
+            _logger.LogInformation("Ignoring unhandled Stripe event type {EventType}", eventType);
         }
 
         return req.CreateResponse(HttpStatusCode.OK);
@@ -71,7 +63,6 @@ public sealed class StripeWebhookFunction
     {
         var sessionId = session.GetProperty("id").GetString() ?? string.Empty;
         var customerId = session.TryGetProperty("customer", out var c) && c.ValueKind == JsonValueKind.String ? c.GetString() : null;
-        var subscriptionId = session.TryGetProperty("subscription", out var s) && s.ValueKind == JsonValueKind.String ? s.GetString() : null;
 
         var licenseKey = _keyGenerator.Generate();
         var record = new LicenseRecord
@@ -79,30 +70,11 @@ public sealed class StripeWebhookFunction
             RowKey = licenseKey,
             Tier = "Pro",
             Active = true,
-            StripeCustomerId = customerId,
-            StripeSubscriptionId = subscriptionId
+            StripeCustomerId = customerId
         };
 
         await _repository.UpsertAsync(record, cancellationToken);
         await _repository.LinkCheckoutSessionAsync(sessionId, licenseKey, cancellationToken);
-    }
-
-    private async Task SetSubscriptionActiveAsync(JsonElement subscription, bool active, CancellationToken cancellationToken)
-    {
-        var subscriptionId = subscription.GetProperty("id").GetString();
-        if (string.IsNullOrEmpty(subscriptionId))
-        {
-            return;
-        }
-
-        var record = await _repository.FindByStripeSubscriptionAsync(subscriptionId, cancellationToken);
-        if (record is null)
-        {
-            _logger.LogWarning("No license record found for Stripe subscription {SubscriptionId}", subscriptionId);
-            return;
-        }
-
-        record.Active = active;
-        await _repository.UpsertAsync(record, cancellationToken);
+        _logger.LogInformation("Issued license key for Stripe session {SessionId}", sessionId);
     }
 }
