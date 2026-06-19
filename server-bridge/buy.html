@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Get ServerBridge</title>
-  <meta name="description" content="Choose your country to continue to checkout for ServerBridge." />
+  <meta name="description" content="Buy ServerBridge Pro — file server to Microsoft 365 migration." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -21,24 +21,15 @@
           <!-- TODO: replace $XX with the real price once it's set -->
           <p class="price"><span class="price-amount">$XX</span><span class="price-period">/month</span></p>
           <p>Unlocks resumable large-file migrations, Microsoft 365 compatibility pre-flight
-            checks, and priority support. Select your country to continue to checkout.</p>
+            checks, and priority support.</p>
         </div>
 
-        <form id="buy-form">
-          <label class="field-label" for="country">Country</label>
-          <select id="country" name="country" class="field-select" required>
-            <option value="" disabled selected>Choose a country&hellip;</option>
-            <option value="US">United States</option>
-            <option value="__other__">Other / International</option>
-          </select>
-
-          <button type="submit" class="btn btn-primary buy-submit">Continue to checkout</button>
-        </form>
+        <a id="checkout-btn" class="btn btn-primary buy-submit" href="#">Continue to checkout</a>
 
         <p class="note" style="margin-top:18px">
-          US purchases are processed by Stripe. All other countries are processed by Lemon Squeezy,
-          which handles international sales tax/VAT as merchant of record. By continuing you agree
-          to our <a href="terms.html">Terms of Service</a>, <a href="refund.html">Refund Policy</a>,
+          Payments are processed securely by Stripe. International sales tax and VAT are handled
+          automatically. By continuing you agree to our
+          <a href="terms.html">Terms of Service</a>, <a href="refund.html">Refund Policy</a>,
           and <a href="privacy.html">Privacy Policy</a>.
         </p>
       </div>
@@ -60,17 +51,10 @@
   <script>
     document.getElementById('yr').textContent = new Date().getFullYear();
 
-    // TODO: replace with the real Stripe Payment Link and Lemon Squeezy checkout URL once
-    // the products are created in each dashboard.
+    // TODO: replace with the real Stripe Payment Link URL once the product is created.
     var STRIPE_CHECKOUT_URL = 'https://buy.stripe.com/REPLACE_ME';
-    var LEMONSQUEEZY_CHECKOUT_URL = 'https://REPLACE_ME.lemonsqueezy.com/checkout/buy/REPLACE_ME';
 
-    document.getElementById('buy-form').addEventListener('submit', function (event) {
-      event.preventDefault();
-      var country = document.getElementById('country').value;
-      var destination = country === 'US' ? STRIPE_CHECKOUT_URL : LEMONSQUEEZY_CHECKOUT_URL;
-      window.location.href = destination;
-    });
+    document.getElementById('checkout-btn').href = STRIPE_CHECKOUT_URL;
   </script>
 </body>
 </html>

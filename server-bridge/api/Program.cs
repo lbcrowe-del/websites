@@ -9,8 +9,6 @@ var host = new HostBuilder()
         services.AddSingleton<ILicenseRepository, TableLicenseRepository>();
         services.AddSingleton<LicenseKeyGenerator>();
         services.AddSingleton<StripeSignatureVerifier>();
-        services.AddSingleton<LemonSqueezySignatureVerifier>();
-        services.AddHttpClient<LemonSqueezyClient>();
         services.AddSingleton<LicenseRequestHandler>();
     })
     .Build();
