@@ -1,5 +1,4 @@
 using System.Net;
-using System.Text.Json;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using ServerBridge.LicensingApi.Models;
@@ -9,8 +8,6 @@ namespace ServerBridge.LicensingApi.Functions;
 
 public sealed class LicenseStatusFunction
 {
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
-
     private readonly LicenseRequestHandler _handler;
 
     public LicenseStatusFunction(LicenseRequestHandler handler) => _handler = handler;
@@ -20,17 +17,17 @@ public sealed class LicenseStatusFunction
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "license/status")] HttpRequestData req,
         CancellationToken cancellationToken)
     {
-        var body = await req.ReadFromJsonAsync<LicenseRequestBody>(JsonOptions, cancellationToken);
+        var body = await req.ReadFromJsonAsync<LicenseRequestBody>(cancellationToken);
         if (body is null || string.IsNullOrWhiteSpace(body.LicenseKey))
         {
             var bad = req.CreateResponse(HttpStatusCode.BadRequest);
-            await bad.WriteAsJsonAsync(new LicenseResponseBody(false, "Free", "None", null, "License key is required."), JsonOptions, cancellationToken);
+            await bad.WriteAsJsonAsync(new LicenseResponseBody(false, "Free", "None", null, "License key is required."), cancellationToken);
             return bad;
         }
 
         var result = await _handler.StatusAsync(body.LicenseKey, body.DeviceId, cancellationToken);
         var response = req.CreateResponse(HttpStatusCode.OK);
-        await response.WriteAsJsonAsync(result, JsonOptions, cancellationToken);
+        await response.WriteAsJsonAsync(result, cancellationToken);
         return response;
     }
 }
