@@ -97,7 +97,7 @@ public sealed class StripeIssueLicenseFunction
         "  </main>" +
         "  <footer>" +
         "    <div class=\"wrap\">" +
-        "      <span>&copy; <span id=\"yr\"></span> Lee Crowe Software</span>" +
+        "      <span>&copy; <span id=\"yr\"></span> Lee Crowe Software Solutions LLC</span>" +
         "      <span class=\"legal-links\">" +
         "        <a href=\"terms.html\">Terms</a> &middot;" +
         "        <a href=\"privacy.html\">Privacy</a> &middot;" +
