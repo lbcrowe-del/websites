@@ -16,4 +16,11 @@ public sealed class LicenseRecord : ITableEntity
     public string? DeviceId { get; set; }
     public string? StripeCustomerId { get; set; }
     public DateTimeOffset? ExpiresAtUtc { get; set; }
+
+    // EULA acceptance recorded at first activation. Auditable trail tying the user's
+    // accepted-EULA version to their license + (via Stripe) their email. Older clients
+    // that don't send these stay null.
+    public string? EulaVersion { get; set; }
+    public DateTimeOffset? EulaAcceptedUtc { get; set; }
+    public string? EulaAcceptedFromDeviceId { get; set; }
 }

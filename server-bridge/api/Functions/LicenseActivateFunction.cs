@@ -25,7 +25,12 @@ public sealed class LicenseActivateFunction
             return bad;
         }
 
-        var result = await _handler.ActivateAsync(body.LicenseKey, body.DeviceId, cancellationToken);
+        var result = await _handler.ActivateAsync(
+            body.LicenseKey,
+            body.DeviceId,
+            body.EulaVersion,
+            body.EulaAcceptedUtc,
+            cancellationToken);
         var response = req.CreateResponse(HttpStatusCode.OK);
         await response.WriteAsJsonAsync(result, cancellationToken);
         return response;

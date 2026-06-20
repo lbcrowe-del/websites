@@ -13,7 +13,12 @@ public sealed class LicenseRequestHandler
         _repository = repository;
     }
 
-    public async Task<LicenseResponseBody> ActivateAsync(string licenseKey, string deviceId, CancellationToken cancellationToken)
+    public async Task<LicenseResponseBody> ActivateAsync(
+        string licenseKey,
+        string deviceId,
+        string? eulaVersion,
+        DateTimeOffset? eulaAcceptedUtc,
+        CancellationToken cancellationToken)
     {
         var record = await _repository.GetAsync(licenseKey, cancellationToken);
         if (record is null || !record.Active)
@@ -22,6 +27,17 @@ public sealed class LicenseRequestHandler
         }
 
         record.DeviceId = deviceId;
+
+        // Record the EULA acceptance the first time we see one for this license. Once stored,
+        // it stays put — a later activation on a different device doesn't overwrite the original
+        // audit record. Older clients (no eulaVersion) simply leave the row untouched.
+        if (!string.IsNullOrWhiteSpace(eulaVersion) && record.EulaVersion is null)
+        {
+            record.EulaVersion = eulaVersion;
+            record.EulaAcceptedUtc = eulaAcceptedUtc ?? DateTimeOffset.UtcNow;
+            record.EulaAcceptedFromDeviceId = deviceId;
+        }
+
         await _repository.UpsertAsync(record, cancellationToken);
         return Valid(record.Tier, record.ExpiresAtUtc);
     }
