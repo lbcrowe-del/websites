@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Download ServerBridge</title>
+  <meta name="description" content="Download ServerBridge for Windows or macOS. Free to use; activates Pro features with a license key." />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .dl-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top: 12px; }
+    .dl-card { padding: 20px; border-radius: 12px; background: var(--card, #fff); box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.05); }
+    .dl-card h3 { margin: 0 0 4px; }
+    .dl-card .sub { font-size: 13px; opacity: .7; margin-bottom: 14px; }
+    .dl-card.recommended { outline: 2px solid var(--accent, #2563eb); }
+    .dl-card .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--accent, #2563eb); color: #fff; margin-left: 6px; vertical-align: middle; }
+    .dl-status { padding: 14px 16px; border-radius: 10px; background: rgba(234, 179, 8, .12); border: 1px solid rgba(234, 179, 8, .35); margin: 16px 0; font-size: 14px; }
+    .dl-status.error { background: rgba(239, 68, 68, .12); border-color: rgba(239, 68, 68, .4); }
+    .dl-meta { font-size: 12px; opacity: .65; margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <header class="wrap topbar">
+    <div class="brand"><span class="mark">S</span> ServerBridge</div>
+    <a class="home" href="index.html">← Back to home</a>
+  </header>
+
+  <main>
+    <section class="wrap hero">
+      <h1>Download ServerBridge</h1>
+      <p class="lead">Free to install and run. A Pro license key unlocks paid features —
+        <a href="buy.html">get one here</a>.</p>
+
+      <div id="prerelease-notice" class="dl-status" hidden>
+        <strong>Heads up:</strong> This is a prerelease build. The installer is not yet
+        code-signed, so Windows will show a SmartScreen warning ("More info → Run anyway")
+        and macOS will require you to right-click the app and choose <em>Open</em> the
+        first time. Signing is on the way.
+      </div>
+
+      <div id="dl-loading" class="dl-meta">Loading the latest release…</div>
+      <div id="dl-error" class="dl-status error" hidden></div>
+      <div id="dl-grid" class="dl-grid" hidden></div>
+
+      <p class="dl-meta" id="dl-version-line" hidden></p>
+
+      <p class="lead" style="margin-top:28px">
+        All releases are published on
+        <a href="https://github.com/lbcrowe-del/ServerBridge/releases">GitHub</a>.
+        Source is at <a href="https://github.com/lbcrowe-del/ServerBridge">lbcrowe-del/ServerBridge</a>.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© <span id="yr"></span> Lee Crowe Software</span>
+      <span class="legal-links">
+        <a href="terms.html">Terms</a> ·
+        <a href="privacy.html">Privacy</a> ·
+        <a href="refund.html">Refunds</a>
+      </span>
+      <span><a href="https://leecrowesoftware.com">leecrowesoftware.com</a></span>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    // Detect the user's OS so we can highlight the right installer.
+    function detectPlatform() {
+      const ua = navigator.userAgent || '';
+      const plat = navigator.platform || '';
+      if (/Win/i.test(plat) || /Windows/i.test(ua)) return 'win';
+      if (/Mac/i.test(plat) || /Mac OS/i.test(ua)) {
+        // Best-effort Apple Silicon hint; many browsers report Intel for compat.
+        if (/arm|aarch64/i.test(ua)) return 'osx-arm64';
+        return 'osx-x64';
+      }
+      return 'unknown';
+    }
+
+    // Classify a release asset filename into a platform bucket.
+    function classify(name) {
+      const n = name.toLowerCase();
+      if (n.endsWith('.nupkg') || n.startsWith('releases')) return null;
+      if (n.includes('win') || n.endsWith('.exe') || n.endsWith('.msi')) return 'win';
+      if (n.includes('arm64')) return 'osx-arm64';
+      if (n.includes('osx') || n.includes('mac') || n.endsWith('.dmg') || n.endsWith('.pkg')) return 'osx-x64';
+      return null;
+    }
+
+    const PLATFORM_META = {
+      'win':       { title: 'Windows',                  sub: 'Windows 10/11, 64-bit' },
+      'osx-x64':   { title: 'macOS (Intel)',            sub: 'macOS 11 Big Sur or later' },
+      'osx-arm64': { title: 'macOS (Apple Silicon)',    sub: 'M1/M2/M3 Macs' },
+    };
+
+    async function loadRelease() {
+      const loading = document.getElementById('dl-loading');
+      const errEl = document.getElementById('dl-error');
+      const grid = document.getElementById('dl-grid');
+      const versionLine = document.getElementById('dl-version-line');
+      const prerelNotice = document.getElementById('prerelease-notice');
+
+      try {
+        // We want the most recent release, including prereleases (early builds).
+        const res = await fetch('https://api.github.com/repos/lbcrowe-del/ServerBridge/releases?per_page=5');
+        if (!res.ok) throw new Error('GitHub API returned ' + res.status);
+        const releases = await res.json();
+        if (!Array.isArray(releases) || releases.length === 0) {
+          throw new Error('No releases have been published yet.');
+        }
+        const rel = releases[0];
+
+        if (rel.prerelease) prerelNotice.hidden = false;
+
+        const buckets = {};
+        for (const asset of rel.assets) {
+          const p = classify(asset.name);
+          if (!p) continue;
+          // Prefer a Setup-style installer over generic archives.
+          if (!buckets[p] || /setup/i.test(asset.name)) buckets[p] = asset;
+        }
+
+        const detected = detectPlatform();
+        const order = ['win', 'osx-arm64', 'osx-x64'].filter(k => buckets[k]);
+        if (order.length === 0) {
+          throw new Error('Release ' + rel.tag_name + ' has no platform installers attached yet.');
+        }
+
+        grid.innerHTML = '';
+        for (const key of order) {
+          const a = buckets[key];
+          const meta = PLATFORM_META[key];
+          const card = document.createElement('a');
+          card.href = a.browser_download_url;
+          card.className = 'dl-card' + (key === detected || (detected === 'osx-x64' && key === 'osx-x64') ? ' recommended' : '');
+          card.innerHTML =
+            '<h3>' + meta.title +
+            (key === detected ? '<span class="badge">For your device</span>' : '') +
+            '</h3>' +
+            '<div class="sub">' + meta.sub + '</div>' +
+            '<div class="btn btn-primary" style="width:100%;text-align:center">Download</div>' +
+            '<div class="dl-meta">' + a.name + ' · ' + Math.round(a.size / (1024 * 1024)) + ' MB</div>';
+          grid.appendChild(card);
+        }
+
+        versionLine.textContent = 'Version ' + (rel.tag_name || rel.name) +
+          ' · published ' + new Date(rel.published_at).toLocaleDateString();
+        versionLine.hidden = false;
+        grid.hidden = false;
+        loading.hidden = true;
+      } catch (e) {
+        loading.hidden = true;
+        errEl.textContent = 'Could not load releases: ' + e.message +
+          ' You can browse all releases directly on GitHub.';
+        errEl.hidden = false;
+      }
+    }
+
+    loadRelease();
+  </script>
+</body>
+</html>
