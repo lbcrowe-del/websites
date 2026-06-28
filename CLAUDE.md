@@ -11,7 +11,7 @@ desktop app (which lives in the separate `lbcrowe-del/ServerBridge` repo, on-dis
   - `api/` — the licensing **Azure Functions** app (isolated worker, **.NET 10**).
   - `api-tests/` — xUnit integration tests for the API (run against Azurite; `Category=Integration`).
   - `legal-source/ServerBridge-EULA.md` — synced copy of the EULA source of truth (real source is
-    in the `MigratePro` repo), used to generate `eula.html`.
+    in the ServerBridge repo), used to generate `eula.html`.
   - `eula.html` / `privacy.html` / `terms.html` / `refund.html` / `buy.html` / `download.html`.
 - `leecrowesoftware/` — the `leecrowesoftware.com` company site.
 - `scripts/` — `generate_eula.py`, `sync_eula_from_migratepro.sh`.
@@ -63,7 +63,7 @@ and **405s every POST**. Free SWA **cannot** link an external API backend (needs
 
 ## EULA generation (do not hand-edit eula.html)
 `eula.html` is **generated** from `server-bridge/legal-source/ServerBridge-EULA.md` (itself a synced
-copy of the real source in the `MigratePro` repo). To change it: edit the `.md` in `MigratePro`,
+copy of the real source in the ServerBridge repo). To change it: edit the `.md` in the ServerBridge repo,
 then run `scripts/sync_eula_from_migratepro.sh` (syncs + runs `generate_eula.py`). Never edit
 `eula.html` by hand — CI enforces this. Legal review is via **Justee AI**, not an attorney.
 
@@ -87,4 +87,4 @@ dotnet test server-bridge/api-tests/ServerBridge.LicensingApi.Tests.csproj --fil
 
 ## See also
 - `STATUS.md` — current state, recent decisions, open items (read first each session).
-- `MigratePro` repo's `CLAUDE.md` — desktop app + the canonical M365 tenant/signing details.
+- The ServerBridge repo's `CLAUDE.md` — desktop app + the canonical M365 tenant/signing details.
