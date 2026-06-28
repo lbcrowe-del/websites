@@ -42,6 +42,26 @@ public sealed class LicenseRequestHandler
         return Valid(record.Tier, record.ExpiresAtUtc);
     }
 
+    public async Task<MigrationCompleteResponseBody> ReportMigrationCompleteAsync(
+        string licenseKey,
+        string deviceId,
+        int filesMigratedCount,
+        DateTimeOffset completedAtUtc,
+        CancellationToken cancellationToken)
+    {
+        var record = await _repository.GetAsync(licenseKey, cancellationToken);
+        if (record is null || !record.Active)
+        {
+            return new MigrationCompleteResponseBody(false, "License key not found or inactive.");
+        }
+
+        record.MigrationCompletedUtc = completedAtUtc;
+        record.MigrationsCompletedCount += 1;
+
+        await _repository.UpsertAsync(record, cancellationToken);
+        return new MigrationCompleteResponseBody(true, null);
+    }
+
     public async Task<LicenseResponseBody> StatusAsync(string licenseKey, string deviceId, CancellationToken cancellationToken)
     {
         var record = await _repository.GetAsync(licenseKey, cancellationToken);

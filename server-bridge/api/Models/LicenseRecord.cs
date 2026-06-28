@@ -23,4 +23,9 @@ public sealed class LicenseRecord : ITableEntity
     public string? EulaVersion { get; set; }
     public DateTimeOffset? EulaAcceptedUtc { get; set; }
     public string? EulaAcceptedFromDeviceId { get; set; }
+
+    // Set when the client reports a completed migration. Used by the refund policy's
+    // soft completed-migration check (no file names/content, just completion + count).
+    public DateTimeOffset? MigrationCompletedUtc { get; set; }
+    public int MigrationsCompletedCount { get; set; }
 }
