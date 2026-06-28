@@ -68,14 +68,21 @@ then run `scripts/sync_eula_from_migratepro.sh` (syncs + runs `generate_eula.py`
 `eula.html` by hand — CI enforces this. Legal review is via **Justee AI**, not an attorney.
 
 ## Build / test / run locally
+**After any significant change to the API, run `scripts/preflight.sh` and report the result before
+finishing the turn** — don't claim it works without running it. Use `--smoke` (with `LICENSE_KEY`
+set) to also hit the live Function App after a deploy. This is a standing instruction for every
+session. The script builds the API and runs the Azurite-backed integration tests (starting/stopping
+the emulator itself).
 ```bash
+scripts/preflight.sh                 # build + Azurite integration tests
+scripts/preflight.sh --smoke         # also smoke-test the live Function App (needs LICENSE_KEY)
+
+# Manual equivalents:
 dotnet build server-bridge/api/ServerBridge.LicensingApi.csproj -c Release
-# integration tests need the Azure Storage emulator (Azurite) on :10002:
-azurite --silent --location /tmp/azurite &
+azurite --silent --location /tmp/azurite &   # Table emulator on :10002
 dotnet test server-bridge/api-tests/ServerBridge.LicensingApi.Tests.csproj --filter "Category=Integration"
 # local Functions host: create server-bridge/api/local.settings.json with
 #   AzureWebJobsStorage / LICENSE_TABLE_CONNECTION = "UseDevelopmentStorage=true"
-# Post-deploy smoke test: server-bridge/api/scripts/smoke-migration-complete.sh
 ```
 
 ## See also
