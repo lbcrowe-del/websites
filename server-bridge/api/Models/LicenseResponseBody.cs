@@ -8,3 +8,11 @@ public sealed record LicenseRequestBody(
     string DeviceId,
     string? EulaVersion = null,
     DateTimeOffset? EulaAcceptedUtc = null);
+
+public sealed record MigrationCompleteRequestBody(
+    string LicenseKey,
+    string DeviceId,
+    int FilesMigratedCount,
+    DateTimeOffset CompletedAtUtc);
+
+public sealed record MigrationCompleteResponseBody(bool Recorded, string? Message);

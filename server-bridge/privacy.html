@@ -35,6 +35,12 @@
           license key and a randomly generated device identifier (not tied to any personal
           hardware identifier) to our licensing server to activate and periodically re-validate
           your license.</li>
+        <li><strong>Migration completion status.</strong> When a migration run finishes
+          successfully, the ServerBridge desktop app sends an anonymous completion signal — your
+          license key, the randomly generated device identifier, a count of the number of files
+          migrated, and the completion timestamp — to our licensing server. This contains no file
+          names, folder paths, or file contents, and is used to support our refund policy and
+          understand whether migrations are completing successfully.</li>
         <li><strong>Website contact requests.</strong> If you email us (e.g. to ask a question or
           request a refund), we keep that correspondence to respond to you.</li>
       </ul>
@@ -51,8 +57,8 @@
           email address directly to process your purchase. We never see or store your card
           number.</li>
         <li><strong>Microsoft Azure</strong> (Azure Table Storage, license records) — stores your
-          email address, license key, and license activation history so we can validate your
-          license.</li>
+          email address, license key, license activation history, and migration completion status
+          so we can validate your license.</li>
       </ul>
       <p>We do not sell or share your data with any other third party, and we do not transfer
         data to any third party for advertising purposes.</p>

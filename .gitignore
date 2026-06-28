@@ -6,3 +6,7 @@
 server-bridge/api/bin/
 server-bridge/api/obj/
 server-bridge/api/local.settings.json
+
+# Licensing API integration tests (server-bridge/api-tests)
+server-bridge/api-tests/bin/
+server-bridge/api-tests/obj/
