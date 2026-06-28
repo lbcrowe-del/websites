@@ -1,0 +1,45 @@
+name: Test Licensing API
+
+# Runs the licensing API's integration tests against the Azurite storage emulator.
+# Triggered on changes to the API or its tests.
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'server-bridge/api/**'
+      - 'server-bridge/api-tests/**'
+  pull_request:
+    paths:
+      - 'server-bridge/api/**'
+      - 'server-bridge/api-tests/**'
+  workflow_dispatch:
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Start Azurite (Table emulator)
+        run: |
+          npm install -g azurite
+          azurite --silent --location /tmp/azurite &
+          # Wait for the Table service to accept connections.
+          for i in $(seq 1 30); do
+            (echo > /dev/tcp/127.0.0.1/10002) >/dev/null 2>&1 && break
+            sleep 1
+          done
+
+      - name: Integration tests
+        run: dotnet test server-bridge/api-tests/ServerBridge.LicensingApi.Tests.csproj --filter "Category=Integration" --verbosity normal
