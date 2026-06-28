@@ -1,0 +1,51 @@
+name: EULA sync check
+
+# server-bridge/eula.html is GENERATED from server-bridge/legal-source/ServerBridge-EULA.md
+# by scripts/generate_eula.py — never hand-edit eula.html directly. This workflow
+# regenerates it and fails if the committed file doesn't match, catching both stray
+# hand-edits and a legal-source/ServerBridge-EULA.md update that wasn't regenerated.
+#
+# legal-source/ServerBridge-EULA.md is a synced copy of the real source of truth,
+# MigratePro/legal/eula/ServerBridge-EULA.md (what the desktop app actually displays
+# at first run). Whenever that file changes, copy it here and rerun the generator
+# before committing — this workflow can't reach into the other (separate) repo to
+# verify that sync happened, only that this repo's own copy and eula.html agree.
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'server-bridge/legal-source/**'
+      - 'server-bridge/eula.html'
+      - 'scripts/generate_eula.py'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'server-bridge/legal-source/**'
+      - 'server-bridge/eula.html'
+      - 'scripts/generate_eula.py'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: pip install markdown
+
+      - name: Regenerate eula.html
+        run: python scripts/generate_eula.py
+
+      - name: Fail if eula.html is out of sync
+        run: |
+          if ! git diff --exit-code -- server-bridge/eula.html; then
+            echo "::error::server-bridge/eula.html does not match the output of scripts/generate_eula.py."
+            echo "::error::Run 'python scripts/generate_eula.py' locally and commit the result. Never hand-edit eula.html."
+            exit 1
+          fi

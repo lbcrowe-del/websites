@@ -120,6 +120,10 @@ section { padding: 40px 0; }
 .legal h2 { font-size: 19px; margin: 32px 0 10px; }
 .legal p, .legal li { color: var(--muted); font-size: 15px; }
 .legal ul { padding-left: 20px; }
+.legal .callout {
+  background: var(--accent-soft); border: 1px solid var(--accent); border-radius: var(--radius);
+  padding: 14px 18px; margin: 0 0 28px; color: var(--text); font-size: 15px;
+}
 
 /* Footer */
 footer { border-top: 1px solid var(--border); padding: 28px 0; color: var(--muted); font-size: 14px; }
