@@ -22,6 +22,21 @@ jobs:
       - name: Build
         run: dotnet publish server-bridge/api/ServerBridge.LicensingApi.csproj --configuration Release --output ./publish --runtime linux-x64 --self-contained false
 
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Keep the Function App's runtime stack in lockstep with the package's target framework.
+      # Setting it here, before the publish below, means the package swap (which restarts the
+      # app) lands on the already-correct stack instead of a mismatched one.
+      - name: Ensure .NET 10 isolated runtime stack
+        run: |
+          az functionapp config set \
+            --name serverbridge-licensing \
+            --resource-group websites_rg \
+            --net-framework-version v10.0
+
       - name: Deploy to Azure Functions
         uses: Azure/functions-action@v1
         with:
