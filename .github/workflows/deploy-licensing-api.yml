@@ -17,7 +17,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
 
       - name: Build
         run: dotnet publish server-bridge/api/ServerBridge.LicensingApi.csproj --configuration Release --output ./publish --runtime linux-x64 --self-contained false
