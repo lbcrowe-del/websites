@@ -26,6 +26,8 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>End User License Agreement — ServerBridge</title>
   <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
 </head>
 <body>
   <header class="wrap topbar">
