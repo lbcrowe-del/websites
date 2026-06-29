@@ -12,16 +12,16 @@ _Last updated: 2026-06-29_
 - **Azurite-backed integration tests** for the API run in CI (`test-licensing-api.yml`).
 - **Privacy Policy + DPA** updated to disclose the migration-completion data category.
 - **Favicon + apple-touch-icon added**, wired into every page (PR #5).
-- ✅ **Stripe webhook fixed (2026-06-29).** The "ServerBridge Licensing" destination was pointed
-  at `server-bridge.com/api/webhooks/stripe` (405s, Free SWA, no API backend) — edited in place to
-  `https://serverbridge-licensing.azurewebsites.net/api/webhooks/stripe`. Confirmed Azure's
-  `STRIPE_WEBHOOK_SECRET` matches the destination's signing secret exactly (editing in place, not
-  recreating, preserved it). No live `checkout.session.completed` event existed yet to replay for
-  an end-to-end test; will confirm on the first real sale. Run `scripts/verify-first-sale.sh
-  --license <key>` (or `--session <checkout session id>`) right after — it cross-checks the
-  Stripe webhook delivery, Function App invocation (App Insights), the `Licenses` table row,
-  and the live `license/status` API in one pass. Dry-run tested 2026-06-29 against a dummy key
-  (all 4 checks ran cleanly, just empty as expected with zero real sales so far).
+- ✅ **Stripe webhook verified end-to-end in production (2026-06-29).** Lee made a real $99 live
+  purchase (`cs_live_a1jWl0...`, $104.94 with tax) specifically to test the webhook fix —
+  `scripts/verify-first-sale.sh` confirmed all 4 checks: webhook delivered
+  (`pending_webhooks: 0`), license `SB-84LB4-D4WL9-W33XP-XETFJ` issued in the `Licenses` table
+  (`Tier: Pro`, matched Stripe customer ID), and `license/status` returned `Valid: true, Tier:
+  Pro`. App Insights showed no request yet at check time — likely ingestion lag, not a failure,
+  given the other 3 checks independently confirmed the request was processed. Lee then
+  initiated a refund through the Stripe dashboard to close out the test purchase (refund itself
+  not yet independently re-verified — would also exercise the refund-policy code path if/when
+  checked).
 - **New Stripe product (2026-06-29):** old product/price archived; new one uses lookup key
   `serverbridge_pro_onetime`. Same $99 + tax. `buy.html` updated to the new Payment Link.
 
