@@ -3,7 +3,7 @@
 > Living state doc. **Read first each session; update at the end of any session that changes
 > something here, then commit.** Architecture that's stable belongs in `CLAUDE.md`, not here.
 
-_Last updated: 2026-06-28_
+_Last updated: 2026-06-29_
 
 ## Current state
 - **Licensing API live on .NET 10.** `migration/complete` endpoint shipped and verified in prod
@@ -11,14 +11,18 @@ _Last updated: 2026-06-28_
   automated in `deploy-licensing-api.yml`.
 - **Azurite-backed integration tests** for the API run in CI (`test-licensing-api.yml`).
 - **Privacy Policy + DPA** updated to disclose the migration-completion data category.
+- **Favicon + apple-touch-icon added**, wired into every page (PR #5).
+- ✅ **Stripe webhook fixed (2026-06-29).** The "ServerBridge Licensing" destination was pointed
+  at `server-bridge.com/api/webhooks/stripe` (405s, Free SWA, no API backend) — edited in place to
+  `https://serverbridge-licensing.azurewebsites.net/api/webhooks/stripe`. Confirmed Azure's
+  `STRIPE_WEBHOOK_SECRET` matches the destination's signing secret exactly (editing in place, not
+  recreating, preserved it). No live `checkout.session.completed` event existed yet to replay for
+  an end-to-end test; will confirm on the first real sale (check the Function App +
+  `serverbridgelicenses` table then).
+- **New Stripe product (2026-06-29):** old product/price archived; new one uses lookup key
+  `serverbridge_pro_onetime`. Same $99 + tax. `buy.html` updated to the new Payment Link.
 
 ## Open items / decisions
-- ⚠️ **Verify the Stripe webhook URL in the Stripe dashboard.** `server-bridge.com/api/webhooks/stripe`
-  405s (Free SWA, no API backend); license issuance only works if Stripe points at
-  `https://serverbridge-licensing.azurewebsites.net/api/webhooks/stripe`. The paid-tier rollout
-  session verified the flow when the API was SWA-managed-functions; it has since moved to the
-  standalone Function App (same `serverbridgelicenses` storage). A repointed Stripe endpoint issues
-  a new signing secret that must match `STRIPE_WEBHOOK_SECRET` on the Function App. **Not yet confirmed/fixed.**
 - **Branding deferred:** staying on the `azurewebsites.net` host for the API (no free TLS on
   Consumption). Revisit at launch (SWA Standard ~$9/mo would give `server-bridge.com/api` + free cert).
 - **Legal pages** (`terms.html`/`privacy.html`/`refund.html`) still have date placeholders to fill
