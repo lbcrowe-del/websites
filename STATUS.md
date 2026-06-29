@@ -12,45 +12,27 @@ _Last updated: 2026-06-29_
 - **Azurite-backed integration tests** for the API run in CI (`test-licensing-api.yml`).
 - **Privacy Policy + DPA** updated to disclose the migration-completion data category.
 - **Favicon + apple-touch-icon added**, wired into every page (PR #5).
-- ✅ **Stripe webhook verified end-to-end in production (2026-06-29).** Lee made a real $99 live
-  purchase (`cs_live_a1jWl0...`, $104.94 with tax) specifically to test the webhook fix —
-  `scripts/verify-first-sale.sh` confirmed all 4 checks: webhook delivered
-  (`pending_webhooks: 0`), license `SB-84LB4-D4WL9-W33XP-XETFJ` issued in the `Licenses` table
-  (`Tier: Pro`, matched Stripe customer ID), and `license/status` returned `Valid: true, Tier:
-  Pro`. App Insights showed no request yet at check time — likely ingestion lag, not a failure,
-  given the other 3 checks independently confirmed the request was processed. Lee then
-  initiated a refund through the Stripe dashboard to close out the test purchase (refund itself
-  not yet independently re-verified — would also exercise the refund-policy code path if/when
-  checked).
+- **Stripe payment pipeline fully verified and hardened (2026-06-29).** Webhook host fix
+  confirmed end-to-end on a real $99 live purchase (`scripts/verify-first-sale.sh`: webhook
+  delivered, license issued, `license/status` returned `Valid: true`). While verifying it, found
+  and closed a real gap: refunds/chargebacks never deactivated the issued license.
+  `StripeWebhookFunction` now also handles `charge.refunded` (full refunds only — partial
+  refunds are logged, not deactivated) and `charge.dispute.created`, both via a shared
+  `DeactivateLicenseForPaymentIntentAsync` helper keyed off the Stripe `payment_intent` (linked
+  to the license at issuance time). Live webhook destination updated to listen for both new
+  event types (and the two stale, unused `customer.subscription.*` events from the old
+  subscription-model drafts were removed). Deployed and confirmed live. The one test license
+  predating this fix (`SB-84LB4-D4WL9-W33XP-XETFJ`) was manually corrected to `Active: false` —
+  note for future table edits: `az storage entity merge` writes bare `key=value` pairs as
+  strings, not typed booleans, which 500'd the status API until fixed via the
+  `azure-data-tables` Python SDK; use that SDK (or the C# typed model), not the Azure CLI, for
+  any future direct edits to boolean/typed fields in this table.
 - **New Stripe product (2026-06-29):** old product/price archived; new one uses lookup key
   `serverbridge_pro_onetime`. Same $99 + tax. `buy.html` updated to the new Payment Link.
-- ✅ **Refund now deactivates the license (2026-06-29).** Gap found while verifying the test
-  purchase: `StripeWebhookFunction` only ever handled `checkout.session.completed` — a refunded
-  purchase left the issued license permanently active. Added `charge.refunded` handling: the
-  webhook now also links the Stripe `payment_intent` to the license key at issuance
-  (`ILicenseRepository.LinkPaymentIntentAsync`, partition `"paymentintent"` in the `Licenses`
-  table), and on a *fully* refunded charge looks up that license and sets `Active = false`.
-  Partial refunds are logged but don't deactivate (no partial-license concept for a flat
-  one-time price). Also added `charge.dispute.created` handling for the same reason — a
-  chargeback is the same "got the money back" exposure as a refund — deactivating the license as
-  soon as the dispute opens rather than waiting for resolution; a dispute won in the merchant's
-  favor isn't auto-reactivated (manual follow-up if that ever comes up). Both share a
-  `DeactivateLicenseForPaymentIntentAsync` helper. Preflight passed (build + Azurite-backed
-  integration tests). **Manual step still needed:** the live webhook destination's restricted
-  API key can't update its own subscribed-events list — add `charge.refunded` and
-  `charge.dispute.created` via the Stripe Dashboard (Developers → Webhooks → "ServerBridge
-  Licensing" → Edit); also remove the two stale `customer.subscription.updated`/`.deleted`
-  events left over from the old subscription-model drafts (nothing in code handles them). Not
-  yet exercised against Lee's own pending refund; re-run `scripts/verify-first-sale.sh --license
-  SB-84LB4-D4WL9-W33XP-XETFJ` once the refund completes and the dashboard events are updated, to
-  confirm `Active` flips to `false`.
 
 ## Open items / decisions
 - **Branding deferred:** staying on the `azurewebsites.net` host for the API (no free TLS on
   Consumption). Revisit at launch (SWA Standard ~$9/mo would give `server-bridge.com/api` + free cert).
-- ✅ **Legal pages dated (2026-06-27).** `terms.html`/`privacy.html`/`refund.html` all carry a
-  live "Last updated" date; no placeholders remain. Lee is treating Justee AI's review as the
-  final legal review for these pages (not an attorney engagement).
 - **Deploy publishes** the API framework-dependent (RID dropped 2026-06-28); takes effect next API deploy.
 
 ## Recent decisions (don't re-litigate)
