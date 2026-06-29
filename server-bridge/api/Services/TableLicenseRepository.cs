@@ -55,4 +55,23 @@ public sealed class TableLicenseRepository : ILicenseRepository
             return null;
         }
     }
+
+    public async Task LinkPaymentIntentAsync(string paymentIntentId, string licenseKey, CancellationToken cancellationToken)
+    {
+        var link = new CheckoutSessionLink { PartitionKey = "paymentintent", RowKey = paymentIntentId, LicenseKey = licenseKey };
+        await _table.UpsertEntityAsync(link, TableUpdateMode.Replace, cancellationToken);
+    }
+
+    public async Task<string?> GetLicenseKeyForPaymentIntentAsync(string paymentIntentId, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await _table.GetEntityAsync<CheckoutSessionLink>("paymentintent", paymentIntentId, cancellationToken: cancellationToken);
+            return response.Value.LicenseKey;
+        }
+        catch (RequestFailedException ex) when (ex.Status == 404)
+        {
+            return null;
+        }
+    }
 }

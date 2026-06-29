@@ -24,6 +24,19 @@ _Last updated: 2026-06-29_
   checked).
 - **New Stripe product (2026-06-29):** old product/price archived; new one uses lookup key
   `serverbridge_pro_onetime`. Same $99 + tax. `buy.html` updated to the new Payment Link.
+- ✅ **Refund now deactivates the license (2026-06-29).** Gap found while verifying the test
+  purchase: `StripeWebhookFunction` only ever handled `checkout.session.completed` — a refunded
+  purchase left the issued license permanently active. Added `charge.refunded` handling: the
+  webhook now also links the Stripe `payment_intent` to the license key at issuance
+  (`ILicenseRepository.LinkPaymentIntentAsync`, partition `"paymentintent"` in the `Licenses`
+  table), and on a *fully* refunded charge looks up that license and sets `Active = false`.
+  Partial refunds are logged but don't deactivate (no partial-license concept for a flat
+  one-time price). Preflight passed (build + Azurite-backed integration tests). **Manual step
+  still needed:** the live webhook destination's restricted API key can't update its own
+  subscribed-events list — add `charge.refunded` via the Stripe Dashboard (Developers →
+  Webhooks → "ServerBridge Licensing" → Edit). Not yet exercised against Lee's own pending
+  refund; re-run `scripts/verify-first-sale.sh --license SB-84LB4-D4WL9-W33XP-XETFJ` once the
+  refund completes and the dashboard event is added, to confirm `Active` flips to `false`.
 
 ## Open items / decisions
 - **Branding deferred:** staying on the `azurewebsites.net` host for the API (no free TLS on

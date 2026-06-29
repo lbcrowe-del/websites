@@ -12,4 +12,10 @@ public interface ILicenseRepository
     Task LinkCheckoutSessionAsync(string sessionId, string licenseKey, CancellationToken cancellationToken);
 
     Task<string?> GetLicenseKeyForSessionAsync(string sessionId, CancellationToken cancellationToken);
+
+    /// <summary>Stores a payment-intent-id → license-key mapping so a later refund webhook can find
+    /// the license to deactivate (refund events carry the charge/payment intent, not the checkout session).</summary>
+    Task LinkPaymentIntentAsync(string paymentIntentId, string licenseKey, CancellationToken cancellationToken);
+
+    Task<string?> GetLicenseKeyForPaymentIntentAsync(string paymentIntentId, CancellationToken cancellationToken);
 }

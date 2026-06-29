@@ -46,10 +46,15 @@ public sealed class StripeWebhookFunction
         using var doc = JsonDocument.Parse(payload);
         var eventType = doc.RootElement.GetProperty("type").GetString();
 
+        var dataObject = doc.RootElement.GetProperty("data").GetProperty("object");
+
         if (eventType == "checkout.session.completed")
         {
-            var dataObject = doc.RootElement.GetProperty("data").GetProperty("object");
             await HandleCheckoutCompletedAsync(dataObject, cancellationToken);
+        }
+        else if (eventType == "charge.refunded")
+        {
+            await HandleChargeRefundedAsync(dataObject, cancellationToken);
         }
         else
         {
@@ -63,6 +68,7 @@ public sealed class StripeWebhookFunction
     {
         var sessionId = session.GetProperty("id").GetString() ?? string.Empty;
         var customerId = session.TryGetProperty("customer", out var c) && c.ValueKind == JsonValueKind.String ? c.GetString() : null;
+        var paymentIntentId = session.TryGetProperty("payment_intent", out var pi) && pi.ValueKind == JsonValueKind.String ? pi.GetString() : null;
 
         var licenseKey = _keyGenerator.Generate();
         var record = new LicenseRecord
@@ -75,6 +81,50 @@ public sealed class StripeWebhookFunction
 
         await _repository.UpsertAsync(record, cancellationToken);
         await _repository.LinkCheckoutSessionAsync(sessionId, licenseKey, cancellationToken);
+        if (!string.IsNullOrEmpty(paymentIntentId))
+        {
+            await _repository.LinkPaymentIntentAsync(paymentIntentId, licenseKey, cancellationToken);
+        }
+
         _logger.LogInformation("Issued license key for Stripe session {SessionId}", sessionId);
+    }
+
+    /// <summary>Deactivates the license tied to a fully-refunded charge. Partial refunds are logged
+    /// but don't deactivate — there's no partial-license concept for a flat one-time purchase.</summary>
+    private async Task HandleChargeRefundedAsync(JsonElement charge, CancellationToken cancellationToken)
+    {
+        var chargeId = charge.TryGetProperty("id", out var cid) ? cid.GetString() : null;
+        var paymentIntentId = charge.TryGetProperty("payment_intent", out var pi) && pi.ValueKind == JsonValueKind.String ? pi.GetString() : null;
+        var fullyRefunded = charge.TryGetProperty("refunded", out var r) && r.GetBoolean();
+
+        if (string.IsNullOrEmpty(paymentIntentId))
+        {
+            _logger.LogWarning("charge.refunded event {ChargeId} had no payment_intent; cannot locate license to deactivate.", chargeId);
+            return;
+        }
+
+        if (!fullyRefunded)
+        {
+            _logger.LogInformation("Partial refund on charge {ChargeId}; leaving license active.", chargeId);
+            return;
+        }
+
+        var licenseKey = await _repository.GetLicenseKeyForPaymentIntentAsync(paymentIntentId, cancellationToken);
+        if (licenseKey is null)
+        {
+            _logger.LogWarning("No license found for refunded payment intent {PaymentIntentId} (charge {ChargeId}).", paymentIntentId, chargeId);
+            return;
+        }
+
+        var record = await _repository.GetAsync(licenseKey, cancellationToken);
+        if (record is null)
+        {
+            _logger.LogWarning("License {LicenseKey} linked to payment intent {PaymentIntentId} but missing from the table.", licenseKey, paymentIntentId);
+            return;
+        }
+
+        record.Active = false;
+        await _repository.UpsertAsync(record, cancellationToken);
+        _logger.LogInformation("Deactivated license {LicenseKey} due to full refund on charge {ChargeId}.", licenseKey, chargeId);
     }
 }
