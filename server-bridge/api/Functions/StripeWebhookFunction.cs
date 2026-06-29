@@ -56,6 +56,10 @@ public sealed class StripeWebhookFunction
         {
             await HandleChargeRefundedAsync(dataObject, cancellationToken);
         }
+        else if (eventType == "charge.dispute.created")
+        {
+            await HandleChargeDisputeCreatedAsync(dataObject, cancellationToken);
+        }
         else
         {
             _logger.LogInformation("Ignoring unhandled Stripe event type {EventType}", eventType);
@@ -109,10 +113,33 @@ public sealed class StripeWebhookFunction
             return;
         }
 
+        await DeactivateLicenseForPaymentIntentAsync(paymentIntentId, "refunded", chargeId, cancellationToken);
+    }
+
+    /// <summary>Deactivates the license tied to a disputed charge as soon as the dispute is opened,
+    /// rather than waiting for the dispute to resolve — protects against continued use of the
+    /// software while a chargeback is in progress. Disputes won in the merchant's favor are not
+    /// automatically reactivated; that's a manual follow-up if it ever comes up.</summary>
+    private async Task HandleChargeDisputeCreatedAsync(JsonElement dispute, CancellationToken cancellationToken)
+    {
+        var disputeId = dispute.TryGetProperty("id", out var did) ? did.GetString() : null;
+        var paymentIntentId = dispute.TryGetProperty("payment_intent", out var pi) && pi.ValueKind == JsonValueKind.String ? pi.GetString() : null;
+
+        if (string.IsNullOrEmpty(paymentIntentId))
+        {
+            _logger.LogWarning("charge.dispute.created event {DisputeId} had no payment_intent; cannot locate license to deactivate.", disputeId);
+            return;
+        }
+
+        await DeactivateLicenseForPaymentIntentAsync(paymentIntentId, "disputed", disputeId, cancellationToken);
+    }
+
+    private async Task DeactivateLicenseForPaymentIntentAsync(string paymentIntentId, string reason, string? sourceEventObjectId, CancellationToken cancellationToken)
+    {
         var licenseKey = await _repository.GetLicenseKeyForPaymentIntentAsync(paymentIntentId, cancellationToken);
         if (licenseKey is null)
         {
-            _logger.LogWarning("No license found for refunded payment intent {PaymentIntentId} (charge {ChargeId}).", paymentIntentId, chargeId);
+            _logger.LogWarning("No license found for {Reason} payment intent {PaymentIntentId} ({SourceEventObjectId}).", reason, paymentIntentId, sourceEventObjectId);
             return;
         }
 
@@ -125,6 +152,6 @@ public sealed class StripeWebhookFunction
 
         record.Active = false;
         await _repository.UpsertAsync(record, cancellationToken);
-        _logger.LogInformation("Deactivated license {LicenseKey} due to full refund on charge {ChargeId}.", licenseKey, chargeId);
+        _logger.LogInformation("Deactivated license {LicenseKey} due to {Reason} ({SourceEventObjectId}).", licenseKey, reason, sourceEventObjectId);
     }
 }

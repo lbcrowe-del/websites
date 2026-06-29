@@ -31,12 +31,19 @@ _Last updated: 2026-06-29_
   (`ILicenseRepository.LinkPaymentIntentAsync`, partition `"paymentintent"` in the `Licenses`
   table), and on a *fully* refunded charge looks up that license and sets `Active = false`.
   Partial refunds are logged but don't deactivate (no partial-license concept for a flat
-  one-time price). Preflight passed (build + Azurite-backed integration tests). **Manual step
-  still needed:** the live webhook destination's restricted API key can't update its own
-  subscribed-events list — add `charge.refunded` via the Stripe Dashboard (Developers →
-  Webhooks → "ServerBridge Licensing" → Edit). Not yet exercised against Lee's own pending
-  refund; re-run `scripts/verify-first-sale.sh --license SB-84LB4-D4WL9-W33XP-XETFJ` once the
-  refund completes and the dashboard event is added, to confirm `Active` flips to `false`.
+  one-time price). Also added `charge.dispute.created` handling for the same reason — a
+  chargeback is the same "got the money back" exposure as a refund — deactivating the license as
+  soon as the dispute opens rather than waiting for resolution; a dispute won in the merchant's
+  favor isn't auto-reactivated (manual follow-up if that ever comes up). Both share a
+  `DeactivateLicenseForPaymentIntentAsync` helper. Preflight passed (build + Azurite-backed
+  integration tests). **Manual step still needed:** the live webhook destination's restricted
+  API key can't update its own subscribed-events list — add `charge.refunded` and
+  `charge.dispute.created` via the Stripe Dashboard (Developers → Webhooks → "ServerBridge
+  Licensing" → Edit); also remove the two stale `customer.subscription.updated`/`.deleted`
+  events left over from the old subscription-model drafts (nothing in code handles them). Not
+  yet exercised against Lee's own pending refund; re-run `scripts/verify-first-sale.sh --license
+  SB-84LB4-D4WL9-W33XP-XETFJ` once the refund completes and the dashboard events are updated, to
+  confirm `Active` flips to `false`.
 
 ## Open items / decisions
 - **Branding deferred:** staying on the `azurewebsites.net` host for the API (no free TLS on
