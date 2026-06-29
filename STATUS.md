@@ -25,8 +25,9 @@ _Last updated: 2026-06-29_
 ## Open items / decisions
 - **Branding deferred:** staying on the `azurewebsites.net` host for the API (no free TLS on
   Consumption). Revisit at launch (SWA Standard ~$9/mo would give `server-bridge.com/api` + free cert).
-- **Legal pages** (`terms.html`/`privacy.html`/`refund.html`) still have date placeholders to fill
-  after Justee review is finalized.
+- ✅ **Legal pages dated (2026-06-27).** `terms.html`/`privacy.html`/`refund.html` all carry a
+  live "Last updated" date; no placeholders remain. Lee is treating Justee AI's review as the
+  final legal review for these pages (not an attorney engagement).
 - **Deploy publishes** the API framework-dependent (RID dropped 2026-06-28); takes effect next API deploy.
 
 ## Recent decisions (don't re-litigate)
