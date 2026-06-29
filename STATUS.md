@@ -17,8 +17,11 @@ _Last updated: 2026-06-29_
   `https://serverbridge-licensing.azurewebsites.net/api/webhooks/stripe`. Confirmed Azure's
   `STRIPE_WEBHOOK_SECRET` matches the destination's signing secret exactly (editing in place, not
   recreating, preserved it). No live `checkout.session.completed` event existed yet to replay for
-  an end-to-end test; will confirm on the first real sale (check the Function App +
-  `serverbridgelicenses` table then).
+  an end-to-end test; will confirm on the first real sale. Run `scripts/verify-first-sale.sh
+  --license <key>` (or `--session <checkout session id>`) right after — it cross-checks the
+  Stripe webhook delivery, Function App invocation (App Insights), the `Licenses` table row,
+  and the live `license/status` API in one pass. Dry-run tested 2026-06-29 against a dummy key
+  (all 4 checks ran cleanly, just empty as expected with zero real sales so far).
 - **New Stripe product (2026-06-29):** old product/price archived; new one uses lookup key
   `serverbridge_pro_onetime`. Same $99 + tax. `buy.html` updated to the new Payment Link.
 
