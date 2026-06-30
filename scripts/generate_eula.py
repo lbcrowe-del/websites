@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Generates server-bridge/eula.html from legal-source/ServerBridge-EULA.md.
 
-The EULA's source of truth is MigratePro/legal/eula/ServerBridge-EULA.md (what the
+The EULA's source of truth is desktop/legal/eula/ServerBridge-EULA.md (what the
 app shows at first run). This repo keeps a synced copy at
 server-bridge/legal-source/ServerBridge-EULA.md — whenever that .md changes in
-MigratePro, copy the updated file here and rerun this script. Never hand-edit
+desktop, copy the updated file here and rerun this script. Never hand-edit
 server-bridge/eula.html directly; CI re-runs this script and fails the build if its
 output doesn't match the committed file, so hand edits will be silently overwritten
 and caught.

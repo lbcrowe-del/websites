@@ -2,7 +2,7 @@
 
 This repo holds two marketing sites **and** the licensing backend for the **ServerBridge**
 desktop app (which lives in the separate `lbcrowe-del/ServerBridge` repo, on-disk folder
-`MigratePro`). Cross-repo changes between the two are common.
+`desktop`). Cross-repo changes between the two are common.
 
 - **GitHub:** `lbcrowe-del/websites`  ·  **Owner:** Lee Crowe Software Solutions LLC
 
@@ -14,7 +14,7 @@ desktop app (which lives in the separate `lbcrowe-del/ServerBridge` repo, on-dis
     in the ServerBridge repo), used to generate `eula.html`.
   - `eula.html` / `privacy.html` / `terms.html` / `refund.html` / `buy.html` / `download.html`.
 - `leecrowesoftware/` — the `leecrowesoftware.com` company site.
-- `scripts/` — `generate_eula.py`, `sync_eula_from_migratepro.sh`.
+- `scripts/` — `generate_eula.py`, `sync_eula_from_serverbridge.sh`.
 
 ## Azure topology (verified 2026-06-28 — get this right, it has bitten us)
 - **Subscription/tenant:** the licensing infra lives in subscription **`4befc9c5-…`** under tenant
@@ -64,7 +64,7 @@ and **405s every POST**. Free SWA **cannot** link an external API backend (needs
 ## EULA generation (do not hand-edit eula.html)
 `eula.html` is **generated** from `server-bridge/legal-source/ServerBridge-EULA.md` (itself a synced
 copy of the real source in the ServerBridge repo). To change it: edit the `.md` in the ServerBridge repo,
-then run `scripts/sync_eula_from_migratepro.sh` (syncs + runs `generate_eula.py`). Never edit
+then run `scripts/sync_eula_from_serverbridge.sh` (syncs + runs `generate_eula.py`). Never edit
 `eula.html` by hand — CI enforces this. Legal review is via **Justee AI**, not an attorney.
 
 ## Build / test / run locally

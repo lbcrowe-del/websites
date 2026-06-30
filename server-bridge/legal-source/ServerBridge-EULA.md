@@ -1,7 +1,7 @@
 # ServerBridge — End User License Agreement (EULA)
 
-**Effective Date:** June 27, 2026
-**Version:** 1.3
+**Effective Date:** June 29, 2026
+**Version:** 1.4
 
 > **IMPORTANT — READ CAREFULLY BEFORE INSTALLING OR USING THIS SOFTWARE.**
 >
@@ -146,6 +146,10 @@ if Licensor has been advised of the possibility of such damages.
 **IN NO EVENT SHALL LICENSOR'S TOTAL CUMULATIVE LIABILITY TO LICENSEE ARISING OUT OF OR
 RELATED TO THIS AGREEMENT EXCEED THE GREATER OF (A) THE TOTAL AMOUNT PAID BY LICENSEE TO
 LICENSOR FOR THE SOFTWARE, OR (B) ONE HUNDRED UNITED STATES DOLLARS (USD $100.00).**
+
+**THE FOREGOING LIMITATIONS AND CAP SHALL NOT APPLY TO, AND LICENSOR'S LIABILITY SHALL NOT BE
+LIMITED WITH RESPECT TO, DAMAGES ARISING FROM LICENSOR'S GROSS NEGLIGENCE, WILLFUL MISCONDUCT,
+OR FRAUD.**
 
 Some jurisdictions do not allow the exclusion or limitation of certain warranties or
 liabilities, so the above limitations may not apply to Licensee to the extent prohibited by
@@ -298,6 +302,7 @@ For questions regarding this Agreement, please contact:
 THAT LICENSEE HAS READ THIS AGREEMENT, UNDERSTANDS IT, AND AGREES TO BE BOUND BY ITS TERMS AND
 CONDITIONS.**
 
-*Last updated: June 27, 2026*
+*Last updated: June 29, 2026 (v1.4 — added gross negligence/willful misconduct/fraud carve-out to
+the Section 7 liability cap)*
 
 *© 2026 Lee Crowe Software Solutions LLC. All rights reserved.*

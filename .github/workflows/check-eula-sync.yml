@@ -6,7 +6,7 @@ name: EULA sync check
 # hand-edits and a legal-source/ServerBridge-EULA.md update that wasn't regenerated.
 #
 # legal-source/ServerBridge-EULA.md is a synced copy of the real source of truth,
-# MigratePro/legal/eula/ServerBridge-EULA.md (what the desktop app actually displays
+# desktop/legal/eula/ServerBridge-EULA.md (what the desktop app actually displays
 # at first run). Whenever that file changes, copy it here and rerun the generator
 # before committing — this workflow can't reach into the other (separate) repo to
 # verify that sync happened, only that this repo's own copy and eula.html agree.
