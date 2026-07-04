@@ -47,8 +47,7 @@
 
       <p class="lead" style="margin-top:28px">
         All releases are published on
-        <a href="https://github.com/lbcrowe-del/ServerBridge/releases">GitHub</a>.
-        Source is at <a href="https://github.com/lbcrowe-del/ServerBridge">lbcrowe-del/ServerBridge</a>.
+        <a href="https://github.com/lbcrowe-del/ServerBridge-releases/releases">GitHub</a>.
       </p>
     </section>
   </main>
@@ -105,8 +104,10 @@
       const prerelNotice = document.getElementById('prerelease-notice');
 
       try {
-        // We want the most recent release, including prereleases (early builds).
-        const res = await fetch('https://api.github.com/repos/lbcrowe-del/ServerBridge/releases?per_page=5');
+        // Installers are published to the PUBLIC ServerBridge-releases repo (the source
+        // repo is private, so its releases API is not readable anonymously). We want the
+        // most recent release, including prereleases (early builds).
+        const res = await fetch('https://api.github.com/repos/lbcrowe-del/ServerBridge-releases/releases?per_page=5');
         if (!res.ok) throw new Error('GitHub API returned ' + res.status);
         const releases = await res.json();
         if (!Array.isArray(releases) || releases.length === 0) {
