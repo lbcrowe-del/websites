@@ -27,9 +27,19 @@ desktop app (which lives in the separate `lbcrowe-del/ServerBridge` repo, on-dis
   **`https://serverbridge-licensing.azurewebsites.net/api/`**. Functions: `LicenseActivate`,
   `LicenseStatus`, `MigrationComplete`, `StripeWebhook`, `StripeIssueLicense`.
 - **Static Web Apps** (both **Free** SKU, RG `websites_rg`): `serverbridge-site` serves
-  `server-bridge.com`; `leecrowesoftware-site` serves `leecrowesoftware.com`.
-- **DNS:** Azure DNS zones `server-bridge.com` and `leecrowesoftware.com`, RG `websites_rg`. The
-  apex A-record for `server-bridge.com` points at the Static Web App.
+  `server-bridge.com` (default host `ashy-stone-0a8502f10.7.azurestaticapps.net`);
+  `leecrowesoftware-site` serves `leecrowesoftware.com` (default host
+  `lemon-pond-0912d7510.7.azurestaticapps.net`). Each has **both** apex and `www` registered as
+  custom domains (www added 2026-07-04 — was previously NXDOMAIN).
+- **DNS:** Azure DNS zones `server-bridge.com` and `leecrowesoftware.com`, RG `websites_rg`. Apex
+  is an A-record → the SWA; `www` is a CNAME → the SWA default host (add www as an SWA custom
+  domain first, then it auto-validates + issues the cert). `leecrowesoftware.com` also carries M365
+  email records (MX/SPF/autodiscover), **DMARC** (`_dmarc` TXT, `p=none` monitoring, 2026-07-04),
+  and **DKIM** `selectorN._domainkey` CNAMEs → `…w-v1.dkim.mail.microsoft` (see STATUS.md; DKIM
+  enable pending M365 sync).
+- **App installers are NOT in this repo's domain** — `download.html` fetches releases from the
+  public `lbcrowe-del/ServerBridge-releases` repo (the app source repo is private). See the
+  ServerBridge desktop repo's CLAUDE.md for the release-publishing topology.
 
 ## ⚠️ `server-bridge.com/api` does NOT reach the Function App
 **History (reconciled 2026-06-28):** the licensing API originally ran as **SWA managed functions**

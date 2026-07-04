@@ -3,9 +3,28 @@
 > Living state doc. **Read first each session; update at the end of any session that changes
 > something here, then commit.** Architecture that's stable belongs in `CLAUDE.md`, not here.
 
-_Last updated: 2026-06-29_
+_Last updated: 2026-07-04_
 
 ## Current state
+- 🚀 **ServerBridge v1.0.1 shipped (2026-07-04).** `download.html` now fetches releases from the
+  **public `lbcrowe-del/ServerBridge-releases` repo** (the app source repo is private, so its
+  releases API 404s anonymously — customers couldn't download). Verified: the live download page
+  loads and pulls v1.0.1, and installers are anonymously downloadable. Don't repoint the fetch at
+  the private `lbcrowe-del/ServerBridge` repo.
+- **DNS hardening (2026-07-04):**
+  - `www` added for **both** `server-bridge.com` and `leecrowesoftware.com` (previously NXDOMAIN):
+    CNAME → the site's SWA default hostname + registered as an SWA custom domain; both certs
+    `Ready`, both serve over HTTPS.
+  - **DMARC** added for `leecrowesoftware.com` (`_dmarc` TXT = `v=DMARC1; p=none;
+    rua=mailto:hello@leecrowesoftware.com`) — monitoring mode, safe. MX/SPF/autodiscover were
+    already correct. Tighten to `p=quarantine` after DKIM is on and reports look clean.
+  - **DKIM** for `leecrowesoftware.com`: `New-DkimSigningConfig` created (Exchange Online), and
+    the two `selectorN._domainkey` CNAMEs published pointing at the **newer M365 target**
+    `selectorN-leecrowesoftware-com._domainkey.LeeCroweSoftware.w-v1.dkim.mail.microsoft` (NOT the
+    classic `._domainkey.<tenant>.onmicrosoft.com` pattern — M365 moved to `w-v1.dkim.mail.microsoft`;
+    always create the config first via `New-DkimSigningConfig`, which prints the exact target).
+    ⏳ Still `Enabled:False / Status:CnameMissing` — waiting on M365 validator to see the CNAMEs;
+    finish with `Set-DkimSigningConfig -Identity leecrowesoftware.com -Enabled $true` once synced.
 - **Licensing API live on .NET 10.** `migration/complete` endpoint shipped and verified in prod
   (returns `{"Recorded":false}` for an unknown key). `httpsOnly` enabled. Stack-flip to v10.0
   automated in `deploy-licensing-api.yml`.
