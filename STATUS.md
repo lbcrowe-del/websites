@@ -50,6 +50,16 @@ _Last updated: 2026-07-04_
   `serverbridge_pro_onetime`. Same $99 + tax. `buy.html` updated to the new Payment Link.
 
 ## Open items / decisions
+- ⏰ **DMARC follow-up — revisit on/after ~2026-07-25** (≥3 weeks of `p=none` report data).
+  `leecrowesoftware.com` DMARC is currently `p=none` (monitoring). Before tightening: (1) confirm
+  DKIM is enabled and passing, (2) review the `rua` aggregate reports sent to
+  `hello@leecrowesoftware.com` to confirm every legitimate sender passes SPF and/or aligned DKIM.
+  Then tighten to `p=quarantine` — ideally ramping `pct=25 → 50 → 100` — and eventually `p=reject`.
+  Do NOT jump straight to quarantine/reject: premature tightening silently spam-folders legit mail
+  (e.g. support replies from `hello@`), which is invisible and hurts deliverability.
+- ⏳ **Finish DKIM enable** for `leecrowesoftware.com` — config + CNAMEs are in place (see Current
+  state); once M365 syncs the CNAMEs, run `Set-DkimSigningConfig -Identity leecrowesoftware.com
+  -Enabled $true`.
 - **Branding deferred:** staying on the `azurewebsites.net` host for the API (no free TLS on
   Consumption). Revisit at launch (SWA Standard ~$9/mo would give `server-bridge.com/api` + free cert).
 - **Deploy publishes** the API framework-dependent (RID dropped 2026-06-28); takes effect next API deploy.
