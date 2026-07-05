@@ -8,6 +8,14 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" href="favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <style>
+    .tier-table { width: 100%; border-collapse: collapse; margin: 22px 0; font-size: 0.95rem; }
+    .tier-table th, .tier-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid rgba(128,128,128,0.25); }
+    .tier-table thead th { font-weight: 600; }
+    .tier-table td.tier-col, .tier-table th.tier-col { text-align: center; white-space: nowrap; }
+    .tier-table .yes { color: #1a9d55; font-weight: 600; }
+    .tier-table .muted { opacity: 0.5; }
+  </style>
 </head>
 <body>
   <header class="wrap topbar">
@@ -21,9 +29,29 @@
         <div class="section-head" style="margin-bottom:20px">
           <h2>ServerBridge Pro</h2>
           <p class="price"><span class="price-amount">$99</span><span class="price-period"> one-time</span></p>
-          <p>Unlocks resumable large-file migrations, Microsoft 365 compatibility pre-flight
-            checks, and priority support.</p>
+          <p>ServerBridge is free to try on real migrations — up to <strong>25&nbsp;GB per
+            job</strong>. Pro removes the cap for <strong>unlimited migration</strong> and unlocks
+            upcoming Pro-only capabilities. One-time purchase, no subscription.</p>
         </div>
+
+        <table class="tier-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th class="tier-col">Free</th>
+              <th class="tier-col">Pro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Source scanning &amp; inventory</td><td class="tier-col"><span class="yes">✓</span></td><td class="tier-col"><span class="yes">✓</span></td></tr>
+            <tr><td>Microsoft 365 compatibility pre-flight checks</td><td class="tier-col"><span class="yes">✓</span></td><td class="tier-col"><span class="yes">✓</span></td></tr>
+            <tr><td>Per-folder destination routing</td><td class="tier-col"><span class="yes">✓</span></td><td class="tier-col"><span class="yes">✓</span></td></tr>
+            <tr><td>Migration to SharePoint / OneDrive / Teams<br><small>(incl. resumable large-file uploads)</small></td><td class="tier-col"><span class="yes">✓</span></td><td class="tier-col"><span class="yes">✓</span></td></tr>
+            <tr><td>Verification &amp; report export</td><td class="tier-col"><span class="yes">✓</span></td><td class="tier-col"><span class="yes">✓</span></td></tr>
+            <tr><td>Data migrated per job</td><td class="tier-col">Up to 25&nbsp;GB</td><td class="tier-col"><strong>Unlimited</strong></td></tr>
+            <tr><td>Future Pro-only capabilities<br><small>(Clean ROT, Permission Review)</small></td><td class="tier-col muted">—</td><td class="tier-col"><span class="yes">✓</span></td></tr>
+          </tbody>
+        </table>
 
         <a id="checkout-btn" class="btn btn-primary buy-submit" href="#">Continue to checkout</a>
 
