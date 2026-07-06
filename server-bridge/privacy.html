@@ -45,6 +45,12 @@
           understand whether migrations are completing successfully.</li>
         <li><strong>Website contact requests.</strong> If you email us (e.g. to ask a question or
           request a refund), we keep that correspondence to respond to you.</li>
+        <li><strong>Aggregate website analytics.</strong> We use Cloudflare Web Analytics, a
+          privacy-first, cookieless service, to understand how many people visit this website and
+          which pages they view. It sets no cookies, does not fingerprint or track you across
+          sites, and collects no personal data — only aggregate counts (page views, referrers,
+          approximate country). Because it uses no cookies and no personal identifiers, no consent
+          banner is required.</li>
       </ul>
 
       <h2>How we use this information</h2>
@@ -61,6 +67,9 @@
         <li><strong>Microsoft Azure</strong> (Azure Table Storage, license records) — stores your
           email address, license key, license activation history, and migration completion status
           so we can validate your license.</li>
+        <li><strong>Cloudflare</strong> (website analytics) — processes aggregate, cookieless
+          website traffic statistics on our behalf. It does not receive personal data and does not
+          track you across sites.</li>
       </ul>
       <p>We do not sell or share your data with any other third party, and we do not transfer
         data to any third party for advertising purposes.</p>
@@ -125,5 +134,8 @@
   </footer>
 
   <script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "1dd7b99606b2470b86ee6e97cafd2ab3"}'></script>
+  <!-- End Cloudflare Web Analytics -->
 </body>
 </html>
