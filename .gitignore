@@ -2,6 +2,9 @@
 *.log
 .vscode/
 
+# Download-tracking local data (scripts/track-downloads.sh)
+scripts/.download-history.jsonl
+
 # Azure Functions API (server-bridge/api)
 server-bridge/api/bin/
 server-bridge/api/obj/
