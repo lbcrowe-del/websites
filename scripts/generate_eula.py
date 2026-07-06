@@ -28,6 +28,7 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" href="favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="canonical" href="https://server-bridge.com/eula.html" />
 </head>
 <body>
   <header class="wrap topbar">
@@ -52,6 +53,9 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
   </footer>
 
   <script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{{"token": "1dd7b99606b2470b86ee6e97cafd2ab3"}}'></script>
+  <!-- End Cloudflare Web Analytics -->
 </body>
 </html>
 """
