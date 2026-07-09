@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ServerBridge License Auditor — Find unused Microsoft 365 licenses</title>
+  <meta name="description" content="Find the Microsoft 365 licenses nobody's using and recover the spend. A read-only audit that cross-checks every assigned license against real sign-in activity — see your wasted spend before you pay a cent." />
+  <meta property="og:title" content="ServerBridge License Auditor — Find unused Microsoft 365 licenses" />
+  <meta property="og:description" content="Cross-check every M365 license against real sign-in activity and recover the wasted spend. Free read-only scan; flat annual pricing." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://server-bridge.com/license-auditor.html" />
+  <meta property="og:image" content="https://server-bridge.com/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ServerBridge License Auditor" />
+  <meta name="twitter:description" content="Find unused Microsoft 365 licenses and recover the spend." />
+  <meta name="twitter:image" content="https://server-bridge.com/og-image.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="canonical" href="https://server-bridge.com/license-auditor.html" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ServerBridge License Auditor",
+    "applicationCategory": "BusinessApplication",
+    "applicationSubCategory": "License optimization",
+    "operatingSystem": "Windows, macOS",
+    "description": "Finds unused and over-provisioned Microsoft 365 licenses by cross-checking assigned licenses against real sign-in activity, and reports the recoverable spend.",
+    "url": "https://server-bridge.com/license-auditor.html",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Lee Crowe Software Solutions LLC",
+      "url": "https://leecrowesoftware.com"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "299",
+      "priceCurrency": "USD",
+      "category": "Annual subscription; free scan available"
+    }
+  }
+  </script>
+</head>
+<body>
+  <header class="wrap topbar">
+    <div class="brand"><a href="index.html" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:10px"><span class="mark">S</span> ServerBridge</a></div>
+    <a class="home" href="https://leecrowesoftware.com">Lee Crowe Software ↗</a>
+  </header>
+
+  <main>
+    <section class="wrap hero">
+      <span class="eyebrow"><span class="dot"></span> Coming soon</span>
+      <h1>Find the M365 licenses nobody's using.</h1>
+      <p class="tagline">Recover the spend — in an afternoon.</p>
+      <p class="lead">The ServerBridge License Auditor cross-checks every assigned Microsoft 365
+        license against real sign-in activity and hands you a report: exactly which seats are dead
+        weight, and what they cost you. Read-only. Nothing to install in your tenant.</p>
+      <div class="cta">
+        <!-- TODO(launch): swap mailto for the public free-scan repo / release download -->
+        <a class="btn btn-primary" href="mailto:hello@leecrowesoftware.com?subject=Notify%20me%3A%20ServerBridge%20License%20Auditor">Get notified at launch</a>
+        <a class="btn btn-ghost" href="#pricing">See pricing</a>
+      </div>
+    </section>
+
+    <!-- Savings calculator -->
+    <section class="wrap">
+      <div class="section-head">
+        <h2>How much are you wasting?</h2>
+        <p>Drag to match your tenant. The audit finds the seats behind these numbers.</p>
+      </div>
+      <div class="calc" role="group" aria-label="Savings estimator">
+        <div class="calc-controls">
+          <h3>Your tenant</h3>
+          <div class="field">
+            <div class="field-top">
+              <label for="seats">Licensed users</label>
+              <span class="field-val" id="seatsOut">100</span>
+            </div>
+            <input type="range" id="seats" min="10" max="1000" step="5" value="100" />
+            <p class="field-hint">Total assigned M365 licenses across the tenant.</p>
+          </div>
+          <div class="field">
+            <div class="field-top">
+              <label>Dominant plan</label>
+              <span class="field-val" id="planOut">E3 · $36/mo</span>
+            </div>
+            <div class="segmented" id="plan" role="group" aria-label="Dominant license plan">
+              <button type="button" data-cost="7" aria-pressed="false">Basic</button>
+              <button type="button" data-cost="16" aria-pressed="false">Standard</button>
+              <button type="button" data-cost="36" aria-pressed="true">E3</button>
+              <button type="button" data-cost="59" aria-pressed="false">E5</button>
+            </div>
+            <p class="field-hint">Sets the average monthly price per recovered seat.</p>
+          </div>
+          <div class="field">
+            <div class="field-top">
+              <label for="waste">Estimated waste</label>
+              <span class="field-val" id="wasteOut">15%</span>
+            </div>
+            <input type="range" id="waste" min="5" max="30" step="1" value="15" />
+            <p class="field-hint">Audits typically surface 15–30% unused or over-provisioned seats.</p>
+          </div>
+        </div>
+        <div class="calc-readout">
+          <p class="readout-label">Wasted license spend we'd surface</p>
+          <div class="readout-big" id="savOut">$6,480</div>
+          <p class="readout-per">per year · <span id="seatsFound">15</span> reclaimable seats</p>
+          <div class="readout-divide"></div>
+          <div class="readout-cost">
+            <span>Your recommended plan</span>
+            <span class="v" id="priceOut">$599/yr</span>
+          </div>
+          <span class="roi-pill" id="roiOut">Pays for itself 10.8×</span>
+          <!-- TODO(launch): point at the public free-scan repo / release asset -->
+          <a class="btn btn-primary scan-cta" href="mailto:hello@leecrowesoftware.com?subject=Notify%20me%3A%20ServerBridge%20License%20Auditor%20free%20scan" id="scanCta">Get the free scan that finds this</a>
+          <p class="scan-sub">Read-only PowerShell · no app registration · runs in 5 minutes</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="wrap">
+      <div class="section-head">
+        <h2>How it works</h2>
+        <p>Three Graph checks, one dollar figure.</p>
+      </div>
+      <div class="grid">
+        <div class="feature">
+          <div class="ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg></div>
+          <h3>Read your license inventory</h3>
+          <p>Every subscribed SKU and who it's assigned to — pulled straight from Microsoft Graph.</p>
+        </div>
+        <div class="feature">
+          <div class="ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+          <h3>Cross-check real sign-in activity</h3>
+          <p>Match each licensed user against their last sign-in to find dormant and disabled seats.</p>
+        </div>
+        <div class="feature">
+          <div class="ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <h3>Put a dollar figure on the waste</h3>
+          <p>Price the dead seats by SKU and total your recoverable spend — with an exportable list.</p>
+        </div>
+        <div class="feature">
+          <div class="ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <h3>Read-only, by design</h3>
+          <p>Delegated, least-privilege Graph access. It never changes, removes, or stores anything.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="wrap">
+      <div class="section-head">
+        <h2>Flat annual price — no per-seat billing</h2>
+        <p>One subscription, priced by tenant size. Every tier includes the full audit.</p>
+      </div>
+      <div class="tiers">
+        <div class="tier">
+          <h3>Starter</h3>
+          <p class="seats">Up to 50 users</p>
+          <div class="price">$299<span>/yr</span></div>
+          <p class="price-note">or $699 one-time</p>
+          <ul>
+            <li>Full unused-license audit</li>
+            <li>Sign-in activity cross-check (90-day)</li>
+            <li>Exportable report (PDF &amp; CSV)</li>
+            <li>Downgrade recommendations by SKU</li>
+          </ul>
+          <!-- TODO(launch): swap for free-scan download / Stripe buy -->
+          <a class="btn btn-ghost" href="mailto:hello@leecrowesoftware.com?subject=Notify%20me%3A%20License%20Auditor%20Starter">Notify me</a>
+        </div>
+        <div class="tier featured">
+          <span class="flag">Most tenants</span>
+          <h3>Team</h3>
+          <p class="seats">51–300 users</p>
+          <div class="price">$599<span>/yr</span></div>
+          <p class="price-note">covers the entire M365 Business range</p>
+          <ul>
+            <li>Everything in Starter</li>
+            <li>Scheduled re-audits (monthly drift)</li>
+            <li>Service-level waste detection</li>
+            <li>Shared license &amp; guest-account flags</li>
+          </ul>
+          <a class="btn btn-primary" href="mailto:hello@leecrowesoftware.com?subject=Notify%20me%3A%20License%20Auditor%20Team">Notify me</a>
+        </div>
+        <div class="tier">
+          <h3>Enterprise</h3>
+          <p class="seats">300+ users</p>
+          <div class="price">$1,200<span>/yr</span></div>
+          <p class="price-note">multi-tenant &amp; custom above 1,000</p>
+          <ul>
+            <li>Everything in Team</li>
+            <li>Multi-tenant / CSP roll-up</li>
+            <li>Priority support &amp; onboarding</li>
+            <li>Entra ID Health Dashboard upgrade path</li>
+          </ul>
+          <a class="btn btn-ghost" href="mailto:hello@leecrowesoftware.com?subject=Notify%20me%3A%20License%20Auditor%20Enterprise">Talk to us</a>
+        </div>
+      </div>
+      <p class="pricing-foot">Every plan starts with a free scan — you see the dollar figure before you pay a cent.</p>
+    </section>
+
+    <!-- Free vs paid fence -->
+    <section class="wrap">
+      <div class="section-head">
+        <h2>Free scan vs. paid audit</h2>
+        <p>The free scan tells you what's wrong. The audit fixes it — and keeps it fixed.</p>
+      </div>
+      <div class="fence">
+        <div class="fence-head">
+          <div class="lead-cell"><h3>What you get</h3></div>
+          <div class="col-free">
+            <p class="kicker">Free</p>
+            <p class="name">Community scan</p>
+            <p class="meta">Read-only PowerShell · as-is</p>
+          </div>
+          <div class="col-paid">
+            <p class="kicker">Paid · from $299/yr</p>
+            <p class="name">License Auditor</p>
+            <p class="meta">Full audit · supported</p>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="feat">Total wasted spend — the headline number</div>
+          <div class="cell"><span class="mk yes"><span class="tick"></span>Yes</span></div>
+          <div class="cell paidcol"><span class="mk yes"><span class="tick"></span>Yes</span></div>
+        </div>
+        <div class="frow">
+          <div class="feat">Unused-license detection</div>
+          <div class="cell"><span class="mk yes"><span class="tick"></span>Yes</span></div>
+          <div class="cell paidcol"><span class="mk yes"><span class="tick"></span>Yes</span></div>
+        </div>
+        <div class="frow">
+          <div class="feat">Output format</div>
+          <div class="cell"><span class="mk partial"><span class="dash"></span>Raw CSV</span></div>
+          <div class="cell paidcol"><span class="mk yes"><span class="tick"></span>PDF + CSV report</span></div>
+        </div>
+        <div class="frow">
+          <div class="feat">Per-SKU downgrade recommendations</div>
+          <div class="cell"><span class="mk no"><span class="dash"></span>No</span></div>
+          <div class="cell paidcol"><span class="mk yes"><span class="tick"></span>Yes</span></div>
+        </div>
+        <div class="frow">
+          <div class="feat">Scheduled re-audits &amp; drift tracking</div>
+          <div class="cell"><span class="mk no"><span class="dash"></span>No</span></div>
+          <div class="cell paidcol"><span class="mk yes"><span class="tick"></span>Yes</span></div>
+        </div>
+        <div class="frow">
+          <div class="feat">Guest &amp; shared-license flags</div>
+          <div class="cell"><span class="mk no"><span class="dash"></span>No</span></div>
+          <div class="cell paidcol"><span class="mk yes"><span class="tick"></span>Yes</span></div>
+        </div>
+        <div class="frow">
+          <div class="feat">Multi-tenant / CSP roll-up</div>
+          <div class="cell"><span class="mk no"><span class="dash"></span>No</span></div>
+          <div class="cell paidcol"><span class="mk yes"><span class="tick"></span>Enterprise</span></div>
+        </div>
+        <div class="frow">
+          <div class="feat">Support</div>
+          <div class="cell"><span class="mk no"><span class="dash"></span>Community</span></div>
+          <div class="cell paidcol"><span class="mk yes"><span class="tick"></span>Included</span></div>
+        </div>
+        <div class="fence-foot">
+          <div class="note">Same tenant, same Graph connection — upgrading just unlocks the rest.</div>
+          <div class="cell"><a class="btn btn-ghost" href="mailto:hello@leecrowesoftware.com?subject=Notify%20me%3A%20License%20Auditor%20free%20scan">Get the scan</a></div>
+          <div class="cell paidcol"><a class="btn btn-primary" href="mailto:hello@leecrowesoftware.com?subject=Notify%20me%3A%20License%20Auditor">Notify me</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Notify -->
+    <section class="wrap notify">
+      <div class="card">
+        <div class="section-head" style="margin-bottom:14px">
+          <h2>Be first to recover your spend</h2>
+          <p>The License Auditor is coming soon. Leave us a line and we'll tell you the moment the
+            free scan is ready.</p>
+        </div>
+        <a class="btn btn-primary" href="mailto:hello@leecrowesoftware.com?subject=Notify%20me%3A%20ServerBridge%20License%20Auditor">Notify me at launch</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© <span id="yr"></span> Lee Crowe Software Solutions LLC</span>
+      <span class="legal-links">
+        <a href="eula.html">EULA</a> ·
+        <a href="terms.html">Terms</a> ·
+        <a href="privacy.html">Privacy</a> ·
+        <a href="refund.html">Refunds</a>
+      </span>
+      <span><a href="index.html">ServerBridge</a> · <a href="https://leecrowesoftware.com">leecrowesoftware.com</a></span>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+    (function () {
+      var seats = document.getElementById('seats');
+      var waste = document.getElementById('waste');
+      var planBtns = Array.prototype.slice.call(document.querySelectorAll('#plan button'));
+      var planNames = { 7: 'Basic · $7/mo', 16: 'Standard · $16/mo', 36: 'E3 · $36/mo', 59: 'E5 · $59/mo' };
+      var seatsOut = document.getElementById('seatsOut');
+      var wasteOut = document.getElementById('wasteOut');
+      var planOut = document.getElementById('planOut');
+      var savOut = document.getElementById('savOut');
+      var seatsFound = document.getElementById('seatsFound');
+      var priceOut = document.getElementById('priceOut');
+      var roiOut = document.getElementById('roiOut');
+
+      function planCost() {
+        var b = planBtns.find(function (x) { return x.getAttribute('aria-pressed') === 'true'; });
+        return b ? Number(b.dataset.cost) : 36;
+      }
+      function money(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
+      function tierFor(n) {
+        if (n <= 50) return { label: '$299/yr', price: 299 };
+        if (n <= 300) return { label: '$599/yr', price: 599 };
+        return { label: '$1,200/yr', price: 1200 };
+      }
+      function recalc() {
+        var n = Number(seats.value), w = Number(waste.value), cost = planCost();
+        var reclaim = Math.max(1, Math.round(n * w / 100));
+        var annual = reclaim * cost * 12;
+        var tier = tierFor(n), roi = annual / tier.price;
+        seatsOut.textContent = n.toLocaleString('en-US');
+        wasteOut.textContent = w + '%';
+        planOut.textContent = planNames[cost];
+        savOut.textContent = money(annual);
+        seatsFound.textContent = reclaim.toLocaleString('en-US');
+        priceOut.textContent = tier.label;
+        roiOut.textContent = 'Pays for itself ' + roi.toFixed(1) + '×';
+      }
+      seats.addEventListener('input', recalc);
+      waste.addEventListener('input', recalc);
+      planBtns.forEach(function (b) {
+        b.addEventListener('click', function () {
+          planBtns.forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
+          b.setAttribute('aria-pressed', 'true');
+          recalc();
+        });
+      });
+      recalc();
+    })();
+  </script>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "1dd7b99606b2470b86ee6e97cafd2ab3"}'></script>
+  <!-- End Cloudflare Web Analytics -->
+</body>
+</html>
