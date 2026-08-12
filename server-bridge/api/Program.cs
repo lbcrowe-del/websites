@@ -10,6 +10,7 @@ var host = new HostBuilder()
         services.AddSingleton<LicenseKeyGenerator>();
         services.AddSingleton<StripeSignatureVerifier>();
         services.AddSingleton<LicenseRequestHandler>();
+        services.AddSingleton<IEmailService, BrevoEmailService>();
     })
     .Build();
 

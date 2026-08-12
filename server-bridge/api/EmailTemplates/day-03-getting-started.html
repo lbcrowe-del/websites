@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<!-- Brevo template: "Getting started with ServerBridge"
+     Trigger: 3 days after contact added to Pro Customers list
+     Brevo merge tags: {{ contact.FIRSTNAME }}, {{ contact.LICENSE_KEY }}
+     Subject line: Getting the most out of ServerBridge, {{ contact.FIRSTNAME }}
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Getting started with ServerBridge</title>
+</head>
+<body style="margin:0;padding:0;background:#0f1117;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0f1117;">
+    <tr>
+      <td align="center" style="padding:40px 16px;">
+        <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;">
+
+          <!-- Header -->
+          <tr>
+            <td style="background:#161b2e;border-radius:12px 12px 0 0;padding:24px 36px;">
+              <span style="font-size:20px;font-weight:700;color:#ffffff;">
+                <span style="display:inline-block;background:#5b6af0;color:#fff;border-radius:6px;
+                             width:26px;height:26px;line-height:26px;text-align:center;
+                             font-size:14px;font-weight:700;margin-right:8px;">S</span>
+                ServerBridge
+              </span>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="background:#1a1f2e;padding:36px;">
+              <p style="margin:0 0 20px;font-size:22px;font-weight:700;color:#ffffff;">
+                Getting the most out of ServerBridge, {{ contact.FIRSTNAME }}
+              </p>
+              <p style="margin:0 0 24px;font-size:15px;color:#9ca3af;line-height:1.6;">
+                You've had your license for a few days — here are the things most people find
+                helpful when they're getting started.
+              </p>
+
+              <!-- Tip 1 -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+                <tr>
+                  <td style="background:#0f1117;border-left:3px solid #5b6af0;border-radius:0 6px 6px 0;
+                             padding:16px 20px;">
+                    <p style="margin:0 0 6px;font-size:14px;font-weight:700;color:#a5b4fc;">
+                      &#128101; Map your users first
+                    </p>
+                    <p style="margin:0;font-size:14px;color:#9ca3af;line-height:1.5;">
+                      Before running a migration, use the <strong style="color:#d1d5db;">User Mapping</strong>
+                      screen to match source accounts to destination accounts. ServerBridge will
+                      automatically re-permission migrated files so nothing lands in the wrong inbox.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Tip 2 -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+                <tr>
+                  <td style="background:#0f1117;border-left:3px solid #5b6af0;border-radius:0 6px 6px 0;
+                             padding:16px 20px;">
+                    <p style="margin:0 0 6px;font-size:14px;font-weight:700;color:#a5b4fc;">
+                      &#128202; Run a test migration first
+                    </p>
+                    <p style="margin:0;font-size:14px;color:#9ca3af;line-height:1.5;">
+                      Pick a single non-critical folder and migrate it to a test destination before
+                      you commit to the full run. This is the fastest way to catch permission
+                      or connectivity issues before they affect real data.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Tip 3 -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:32px;">
+                <tr>
+                  <td style="background:#0f1117;border-left:3px solid #5b6af0;border-radius:0 6px 6px 0;
+                             padding:16px 20px;">
+                    <p style="margin:0 0 6px;font-size:14px;font-weight:700;color:#a5b4fc;">
+                      &#9200; Schedule it for off-hours
+                    </p>
+                    <p style="margin:0;font-size:14px;color:#9ca3af;line-height:1.5;">
+                      Large migrations are best run overnight or over a weekend. ServerBridge
+                      can be left running unattended — it'll handle transient network errors
+                      automatically and pick up where it left off if interrupted.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:0 0 8px;font-size:14px;color:#9ca3af;line-height:1.5;">
+                Your license key, in case you need it again:
+              </p>
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:32px;">
+                <tr>
+                  <td style="background:#0f1117;border:1px solid #3b4a6b;border-radius:8px;
+                             padding:14px 18px;font-family:monospace;font-size:14px;
+                             color:#a5b4fc;letter-spacing:.04em;word-break:break-all;">
+                    {{ contact.LICENSE_KEY }}
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:0;font-size:14px;color:#9ca3af;line-height:1.5;">
+                Questions? Just reply to this email — I'm happy to help.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background:#161b2e;border-radius:0 0 12px 12px;padding:20px 36px;
+                        border-top:1px solid #2a3147;">
+              <p style="margin:0;font-size:12px;color:#6b7280;line-height:1.6;">
+                &copy; Lee Crowe Software Solutions LLC &nbsp;&middot;&nbsp;
+                <a href="https://server-bridge.com/terms.html" style="color:#6b7280;">Terms</a>
+                &nbsp;&middot;&nbsp;
+                <a href="https://server-bridge.com/privacy.html" style="color:#6b7280;">Privacy</a>
+                &nbsp;&middot;&nbsp;
+                <a href="{{ unsubscribe }}" style="color:#6b7280;">Unsubscribe</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

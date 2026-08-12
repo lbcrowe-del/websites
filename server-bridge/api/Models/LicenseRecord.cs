@@ -24,6 +24,10 @@ public sealed class LicenseRecord : ITableEntity
     public DateTimeOffset? EulaAcceptedUtc { get; set; }
     public string? EulaAcceptedFromDeviceId { get; set; }
 
+    // Customer contact info captured from the Stripe checkout session at purchase time.
+    public string? CustomerEmail { get; set; }
+    public string? CustomerName { get; set; }
+
     // Set when the client reports a completed migration. Used by the refund policy's
     // soft completed-migration check (no file names/content, just completion + count).
     public DateTimeOffset? MigrationCompletedUtc { get; set; }

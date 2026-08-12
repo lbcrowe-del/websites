@@ -4,6 +4,8 @@
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
     "STRIPE_WEBHOOK_SECRET": "whsec_...",
-    "LICENSE_TABLE_CONNECTION": "UseDevelopmentStorage=true"
+    "LICENSE_TABLE_CONNECTION": "UseDevelopmentStorage=true",
+    "BREVO_API_KEY": "xkeysib-...",
+    "BREVO_MARKETING_LIST_ID": "2"
   }
 }

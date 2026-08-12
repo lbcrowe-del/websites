@@ -14,17 +14,20 @@ public sealed class StripeWebhookFunction
     private readonly ILicenseRepository _repository;
     private readonly LicenseKeyGenerator _keyGenerator;
     private readonly StripeSignatureVerifier _signatureVerifier;
+    private readonly IEmailService _email;
     private readonly ILogger<StripeWebhookFunction> _logger;
 
     public StripeWebhookFunction(
         ILicenseRepository repository,
         LicenseKeyGenerator keyGenerator,
         StripeSignatureVerifier signatureVerifier,
+        IEmailService email,
         ILoggerFactory loggerFactory)
     {
         _repository = repository;
         _keyGenerator = keyGenerator;
         _signatureVerifier = signatureVerifier;
+        _email = email;
         _logger = loggerFactory.CreateLogger<StripeWebhookFunction>();
     }
 
@@ -74,13 +77,26 @@ public sealed class StripeWebhookFunction
         var customerId = session.TryGetProperty("customer", out var c) && c.ValueKind == JsonValueKind.String ? c.GetString() : null;
         var paymentIntentId = session.TryGetProperty("payment_intent", out var pi) && pi.ValueKind == JsonValueKind.String ? pi.GetString() : null;
 
+        // Extract customer contact info from checkout session.
+        // customer_details is populated for all checkout modes; customer_email is a flat fallback.
+        string? customerEmail = null;
+        string? customerName = null;
+        if (session.TryGetProperty("customer_details", out var details) && details.ValueKind == JsonValueKind.Object)
+        {
+            customerEmail = details.TryGetProperty("email", out var e) && e.ValueKind == JsonValueKind.String ? e.GetString() : null;
+            customerName = details.TryGetProperty("name", out var n) && n.ValueKind == JsonValueKind.String ? n.GetString() : null;
+        }
+        customerEmail ??= session.TryGetProperty("customer_email", out var ce) && ce.ValueKind == JsonValueKind.String ? ce.GetString() : null;
+
         var licenseKey = _keyGenerator.Generate();
         var record = new LicenseRecord
         {
             RowKey = licenseKey,
             Tier = "Pro",
             Active = true,
-            StripeCustomerId = customerId
+            StripeCustomerId = customerId,
+            CustomerEmail = customerEmail,
+            CustomerName = customerName
         };
 
         await _repository.UpsertAsync(record, cancellationToken);
@@ -91,6 +107,16 @@ public sealed class StripeWebhookFunction
         }
 
         _logger.LogInformation("Issued license key for Stripe session {SessionId}", sessionId);
+
+        if (!string.IsNullOrEmpty(customerEmail))
+        {
+            await _email.SendWelcomeEmailAsync(customerEmail, customerName, licenseKey, cancellationToken);
+            await _email.AddMarketingContactAsync(customerEmail, customerName, licenseKey, cancellationToken);
+        }
+        else
+        {
+            _logger.LogWarning("No customer email on Stripe session {SessionId} — welcome email skipped.", sessionId);
+        }
     }
 
     /// <summary>Deactivates the license tied to a fully-refunded charge. Partial refunds are logged
