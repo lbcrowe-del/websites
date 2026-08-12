@@ -18,10 +18,11 @@ public sealed class LicenseRequestHandler
         string deviceId,
         string? eulaVersion,
         DateTimeOffset? eulaAcceptedUtc,
+        string? product,
         CancellationToken cancellationToken)
     {
         var record = await _repository.GetAsync(licenseKey, cancellationToken);
-        if (record is null || !record.Active)
+        if (record is null || !record.Active || !ProductMatches(record, product))
         {
             return Invalid("License key not found or inactive.");
         }
@@ -39,7 +40,7 @@ public sealed class LicenseRequestHandler
         }
 
         await _repository.UpsertAsync(record, cancellationToken);
-        return Valid(record.Tier, record.ExpiresAtUtc);
+        return Valid(record.Tier, record.Product, record.ExpiresAtUtc);
     }
 
     public async Task<MigrationCompleteResponseBody> ReportMigrationCompleteAsync(
@@ -62,17 +63,26 @@ public sealed class LicenseRequestHandler
         return new MigrationCompleteResponseBody(true, null);
     }
 
-    public async Task<LicenseResponseBody> StatusAsync(string licenseKey, string deviceId, CancellationToken cancellationToken)
+    public async Task<LicenseResponseBody> StatusAsync(string licenseKey, string deviceId, string? product, CancellationToken cancellationToken)
     {
         var record = await _repository.GetAsync(licenseKey, cancellationToken);
-        return record is { Active: true }
-            ? Valid(record.Tier, record.ExpiresAtUtc)
+        return record is { Active: true } && ProductMatches(record, product)
+            ? Valid(record.Tier, record.Product, record.ExpiresAtUtc)
             : Invalid("License key not found or inactive.");
     }
 
-    private static LicenseResponseBody Valid(string tier, DateTimeOffset? expiresAtUtc) =>
-        new(true, tier, "Stripe", expiresAtUtc, null);
+    /// <summary>A key only unlocks the product it was issued for. Missing request product
+    /// defaults to "ServerBridge" so existing desktop clients keep matching their own keys.</summary>
+    private static bool ProductMatches(LicenseRecord record, string? requestedProduct)
+    {
+        var expected = string.IsNullOrWhiteSpace(requestedProduct) ? "ServerBridge" : requestedProduct;
+        return string.Equals(record.Product, expected, StringComparison.OrdinalIgnoreCase);
+    }
 
+    private static LicenseResponseBody Valid(string tier, string product, DateTimeOffset? expiresAtUtc) =>
+        new(true, tier, "Stripe", expiresAtUtc, null, product);
+
+    // Opaque on mismatch — don't reveal that the key exists for a different product.
     private static LicenseResponseBody Invalid(string message) =>
         new(false, "Free", "Stripe", null, message);
 }

@@ -30,6 +30,7 @@ public sealed class LicenseActivateFunction
             body.DeviceId,
             body.EulaVersion,
             body.EulaAcceptedUtc,
+            body.Product,
             cancellationToken);
         var response = req.CreateResponse(HttpStatusCode.OK);
         await response.WriteAsJsonAsync(result, cancellationToken);
