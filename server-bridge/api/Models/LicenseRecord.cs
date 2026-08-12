@@ -12,6 +12,11 @@ public sealed class LicenseRecord : ITableEntity
     public ETag ETag { get; set; }
 
     public string Tier { get; set; } = "Pro";
+
+    // Which product this key unlocks. Defaults to "ServerBridge" so legacy rows (no Product
+    // column) and existing issuance resolve to ServerBridge. Auditor keys use "LicenseAuditor".
+    public string Product { get; set; } = "ServerBridge";
+
     public bool Active { get; set; } = true;
     public string? DeviceId { get; set; }
     public string? StripeCustomerId { get; set; }

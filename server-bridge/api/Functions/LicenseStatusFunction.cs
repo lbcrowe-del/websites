@@ -25,7 +25,7 @@ public sealed class LicenseStatusFunction
             return bad;
         }
 
-        var result = await _handler.StatusAsync(body.LicenseKey, body.DeviceId, cancellationToken);
+        var result = await _handler.StatusAsync(body.LicenseKey, body.DeviceId, body.Product, cancellationToken);
         var response = req.CreateResponse(HttpStatusCode.OK);
         await response.WriteAsJsonAsync(result, cancellationToken);
         return response;
