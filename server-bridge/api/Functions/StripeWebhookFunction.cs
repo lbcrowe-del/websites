@@ -131,7 +131,7 @@ public sealed class StripeWebhookFunction
         if (!string.IsNullOrEmpty(customerEmail))
         {
             await _email.SendWelcomeEmailAsync(customerEmail, customerName, licenseKey, product, cancellationToken);
-            await _email.AddMarketingContactAsync(customerEmail, customerName, licenseKey, cancellationToken);
+            await _email.AddMarketingContactAsync(customerEmail, customerName, licenseKey, product, cancellationToken);
         }
         else
         {

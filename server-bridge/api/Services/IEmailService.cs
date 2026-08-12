@@ -11,8 +11,9 @@ public interface IEmailService
 
     /// <summary>
     /// Creates or updates a Brevo marketing contact so time-based automation
-    /// (day-3, day-14, day-30 sequences) can be triggered from the Brevo UI.
-    /// Implementations must never throw — log and swallow on failure.
+    /// (day-3, day-14, day-30 sequences) can be triggered from the Brevo UI. The
+    /// contact is routed to the list for <paramref name="product"/> so each product
+    /// has its own nurture stream. Implementations must never throw — log and swallow.
     /// </summary>
-    Task AddMarketingContactAsync(string email, string? name, string licenseKey, CancellationToken cancellationToken);
+    Task AddMarketingContactAsync(string email, string? name, string licenseKey, string product, CancellationToken cancellationToken);
 }

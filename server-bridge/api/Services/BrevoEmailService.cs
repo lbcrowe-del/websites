@@ -10,18 +10,19 @@ namespace ServerBridge.LicensingApi.Services;
 ///
 /// Required app settings:
 ///   BREVO_API_KEY            — API key from Brevo → Account → SMTP &amp; API → API Keys
-///   BREVO_MARKETING_LIST_ID  — integer list ID from Brevo → Contacts → Lists (create a
-///                              "Pro Customers" list; copy the ID from its URL or the list table)
+///   BREVO_MARKETING_LIST_ID  — integer list ID for ServerBridge Pro customers (Brevo →
+///                              Contacts → Lists; copy the ID from its URL or the list table)
+///   BREVO_AUDITOR_LIST_ID    — integer list ID for License Auditor customers (create a
+///                              separate "License Auditor Customers" list so its nurture stream
+///                              is independent of ServerBridge)
 ///
-/// Brevo automation setup (one-time, in the Brevo UI):
+/// Brevo automation setup (one-time per product, in the Brevo UI):
 ///   1. Contacts → Automation → Create a workflow.
-///   2. Trigger: "A contact is added to a specific list" → choose the list above.
-///   3. Add time-delay steps:
-///        Wait 3 days  → Send email template "Getting started with ServerBridge"
-///        Wait 14 days → Send email template "How's your migration going?"
-///        Wait 30 days → Send email template "Know someone who'd love ServerBridge?"
-///   4. Each template is in EmailTemplates/day-{N}-*.html in this repo — paste the HTML
-///      into Brevo's template editor and use {{ contact.FIRSTNAME }} / {{ contact.LICENSE_KEY }}.
+///   2. Trigger: "A contact is added to a specific list" → choose that product's list.
+///   3. Add time-delay steps (Wait 3 / 14 / 30 days → Send the matching email template).
+///   4. Templates live in EmailTemplates/ — ServerBridge: day-{N}-*.html; License Auditor:
+///      auditor-day-{N}-*.html. Paste the HTML into Brevo and use the merge tags
+///      {{ contact.FIRSTNAME }} / {{ contact.LICENSE_KEY }} (and {{ contact.PRODUCT }} if needed).
 /// </summary>
 public sealed class BrevoEmailService : IEmailService
 {
@@ -35,18 +36,21 @@ public sealed class BrevoEmailService : IEmailService
     private readonly ILogger<BrevoEmailService> _logger;
     private readonly string? _apiKey;
     private readonly int? _marketingListId;
+    private readonly int? _auditorListId;
 
     public BrevoEmailService(ILoggerFactory loggerFactory)
     {
         _logger = loggerFactory.CreateLogger<BrevoEmailService>();
         _apiKey = Environment.GetEnvironmentVariable("BREVO_API_KEY");
-        var listIdRaw = Environment.GetEnvironmentVariable("BREVO_MARKETING_LIST_ID");
-        _marketingListId = int.TryParse(listIdRaw, out var id) ? id : null;
+        _marketingListId = int.TryParse(Environment.GetEnvironmentVariable("BREVO_MARKETING_LIST_ID"), out var id) ? id : null;
+        _auditorListId = int.TryParse(Environment.GetEnvironmentVariable("BREVO_AUDITOR_LIST_ID"), out var aid) ? aid : null;
 
         if (string.IsNullOrWhiteSpace(_apiKey))
             _logger.LogWarning("BREVO_API_KEY is not configured — emails will be skipped.");
         if (_marketingListId is null)
-            _logger.LogWarning("BREVO_MARKETING_LIST_ID is not configured — marketing contacts will not be added.");
+            _logger.LogWarning("BREVO_MARKETING_LIST_ID is not configured — ServerBridge marketing contacts will not be added.");
+        if (_auditorListId is null)
+            _logger.LogWarning("BREVO_AUDITOR_LIST_ID is not configured — License Auditor marketing contacts will not be added.");
     }
 
     public async Task SendWelcomeEmailAsync(string toEmail, string? toName, string licenseKey, string product, CancellationToken cancellationToken)
@@ -70,40 +74,29 @@ public sealed class BrevoEmailService : IEmailService
         await PostBrevoAsync("/smtp/email", payload, cancellationToken);
     }
 
-    public async Task AddMarketingContactAsync(string email, string? name, string licenseKey, CancellationToken cancellationToken)
+    public async Task AddMarketingContactAsync(string email, string? name, string licenseKey, string product, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(_apiKey)) return;
 
-        var firstName = FirstName(name);
-        var lastName = LastName(name);
+        var isAuditor = string.Equals(product, "LicenseAuditor", StringComparison.OrdinalIgnoreCase);
+        var listId = isAuditor ? _auditorListId : _marketingListId;
 
-        var payload = _marketingListId.HasValue
-            ? (object)new
-            {
-                email,
-                attributes = new
-                {
-                    FIRSTNAME = firstName,
-                    LASTNAME = lastName,
-                    LICENSE_KEY = licenseKey,
-                    PURCHASE_DATE = DateTime.UtcNow.ToString("yyyy-MM-dd")
-                },
-                listIds = new[] { _marketingListId.Value },
-                updateEnabled = true
-            }
-            : new
-            {
-                email,
-                attributes = new
-                {
-                    FIRSTNAME = firstName,
-                    LASTNAME = lastName,
-                    LICENSE_KEY = licenseKey,
-                    PURCHASE_DATE = DateTime.UtcNow.ToString("yyyy-MM-dd")
-                },
-                listIds = Array.Empty<int>(),
-                updateEnabled = true
-            };
+        var attributes = new
+        {
+            FIRSTNAME = FirstName(name),
+            LASTNAME = LastName(name),
+            LICENSE_KEY = licenseKey,
+            PURCHASE_DATE = DateTime.UtcNow.ToString("yyyy-MM-dd"),
+            PRODUCT = product
+        };
+
+        var payload = new
+        {
+            email,
+            attributes,
+            listIds = listId.HasValue ? new[] { listId.Value } : Array.Empty<int>(),
+            updateEnabled = true
+        };
 
         await PostBrevoAsync("/contacts", payload, cancellationToken);
     }
