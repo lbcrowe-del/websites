@@ -101,6 +101,11 @@ public sealed class StripeWebhookFunction
                 tier = mt.GetString()!;
         }
 
+        // License Auditor tiers are flat-annual: the key is valid for one year (the resolver
+        // enforces expiry), so a simple one-time Payment Link maps to a year of access.
+        // ServerBridge Pro stays perpetual (no expiry).
+        var isAuditor = string.Equals(product, "LicenseAuditor", StringComparison.OrdinalIgnoreCase);
+
         var licenseKey = _keyGenerator.Generate();
         var record = new LicenseRecord
         {
@@ -108,6 +113,7 @@ public sealed class StripeWebhookFunction
             Tier = tier,
             Product = product,
             Active = true,
+            ExpiresAtUtc = isAuditor ? DateTimeOffset.UtcNow.AddYears(1) : null,
             StripeCustomerId = customerId,
             CustomerEmail = customerEmail,
             CustomerName = customerName
