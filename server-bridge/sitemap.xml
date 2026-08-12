@@ -40,4 +40,24 @@
     <lastmod>2026-07-06</lastmod>
     <priority>0.4</priority>
   </url>
+  <url>
+    <loc>https://server-bridge.com/license-auditor-eula.html</loc>
+    <lastmod>2026-08-12</lastmod>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://server-bridge.com/license-auditor-terms.html</loc>
+    <lastmod>2026-08-12</lastmod>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://server-bridge.com/license-auditor-privacy.html</loc>
+    <lastmod>2026-08-12</lastmod>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://server-bridge.com/license-auditor-refund.html</loc>
+    <lastmod>2026-08-12</lastmod>
+    <priority>0.3</priority>
+  </url>
 </urlset>

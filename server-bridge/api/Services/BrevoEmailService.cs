@@ -238,11 +238,11 @@ public sealed class BrevoEmailService : IEmailService
                     <td style="background:#161b2e;border-radius:0 0 12px 12px;padding:20px 36px;border-top:1px solid #2a3147;">
                       <p style="margin:0;font-size:12px;color:#6b7280;line-height:1.6;">
                         &copy; Lee Crowe Software Solutions LLC &nbsp;&middot;&nbsp;
-                        <a href="https://server-bridge.com/terms.html" style="color:#6b7280;">Terms</a>
+                        <a href="https://server-bridge.com/license-auditor-terms.html" style="color:#6b7280;">Terms</a>
                         &nbsp;&middot;&nbsp;
-                        <a href="https://server-bridge.com/privacy.html" style="color:#6b7280;">Privacy</a>
+                        <a href="https://server-bridge.com/license-auditor-privacy.html" style="color:#6b7280;">Privacy</a>
                         &nbsp;&middot;&nbsp;
-                        <a href="https://server-bridge.com/refund.html" style="color:#6b7280;">Refunds</a>
+                        <a href="https://server-bridge.com/license-auditor-refund.html" style="color:#6b7280;">Refunds</a>
                       </p>
                     </td>
                   </tr>

@@ -113,9 +113,9 @@ public sealed class StripeIssueLicenseFunction
             <div class="wrap">
               <span>&copy; <span id="yr"></span> Lee Crowe Software Solutions LLC</span>
               <span class="legal-links">
-                <a href="terms.html">Terms</a> &middot;
-                <a href="privacy.html">Privacy</a> &middot;
-                <a href="refund.html">Refunds</a>
+                <a href="license-auditor-terms.html">Terms</a> &middot;
+                <a href="license-auditor-privacy.html">Privacy</a> &middot;
+                <a href="license-auditor-refund.html">Refunds</a>
               </span>
             </div>
           </footer>
