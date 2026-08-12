@@ -49,12 +49,13 @@ public sealed class BrevoEmailService : IEmailService
             _logger.LogWarning("BREVO_MARKETING_LIST_ID is not configured — marketing contacts will not be added.");
     }
 
-    public async Task SendWelcomeEmailAsync(string toEmail, string? toName, string licenseKey, CancellationToken cancellationToken)
+    public async Task SendWelcomeEmailAsync(string toEmail, string? toName, string licenseKey, string product, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(_apiKey)) return;
 
         var firstName = FirstName(toName);
-        var htmlBody = WelcomeHtml
+        var isAuditor = string.Equals(product, "LicenseAuditor", StringComparison.OrdinalIgnoreCase);
+        var htmlBody = (isAuditor ? AuditorWelcomeHtml : WelcomeHtml)
             .Replace("{{CUSTOMER_NAME}}", HtmlEncode(firstName), StringComparison.Ordinal)
             .Replace("{{LICENSE_KEY}}", HtmlEncode(licenseKey), StringComparison.Ordinal);
 
@@ -62,7 +63,7 @@ public sealed class BrevoEmailService : IEmailService
         {
             sender = new { name = SenderName, email = SenderEmail },
             to = new[] { new { email = toEmail, name = toName ?? toEmail } },
-            subject = "Your ServerBridge Pro license key",
+            subject = isAuditor ? "Your ServerBridge License Auditor key" : "Your ServerBridge Pro license key",
             htmlContent = htmlBody
         };
 
@@ -142,6 +143,123 @@ public sealed class BrevoEmailService : IEmailService
 
     private static string HtmlEncode(string value) =>
         System.Net.WebUtility.HtmlEncode(value);
+
+    // License Auditor welcome email — CLI activation instructions (not the desktop sidebar).
+    // Substitution tokens: {{CUSTOMER_NAME}}, {{LICENSE_KEY}}
+    private const string AuditorWelcomeHtml = """
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <title>Your ServerBridge License Auditor key</title>
+        </head>
+        <body style="margin:0;padding:0;background:#0f1117;font-family:Arial,Helvetica,sans-serif;">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0f1117;">
+            <tr>
+              <td align="center" style="padding:40px 16px;">
+                <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;">
+                  <tr>
+                    <td style="background:#161b2e;border-radius:12px 12px 0 0;padding:28px 36px;">
+                      <span style="font-size:22px;font-weight:700;color:#ffffff;letter-spacing:-.3px;">
+                        <span style="display:inline-block;background:#5b6af0;color:#fff;border-radius:6px;
+                                     width:28px;height:28px;line-height:28px;text-align:center;
+                                     font-size:15px;font-weight:700;margin-right:8px;">S</span>
+                        ServerBridge License Auditor
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="background:#1a1f2e;padding:36px;">
+                      <p style="margin:0 0 8px;font-size:24px;font-weight:700;color:#ffffff;">
+                        You're all set, {{CUSTOMER_NAME}}! &#127881;
+                      </p>
+                      <p style="margin:0 0 28px;font-size:15px;color:#9ca3af;line-height:1.6;">
+                        Thanks for purchasing the ServerBridge License Auditor. Here's your license
+                        key &mdash; it unlocks the PDF report and recommendations.
+                      </p>
+                      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                          <td style="background:#0f1117;border:1px solid #3b4a6b;border-radius:8px;
+                                     padding:16px 20px;font-family:monospace;font-size:15px;
+                                     color:#a5b4fc;letter-spacing:.04em;word-break:break-all;">
+                            {{LICENSE_KEY}}
+                          </td>
+                        </tr>
+                      </table>
+                      <p style="margin:32px 0 16px;font-size:15px;font-weight:600;color:#ffffff;">
+                        Getting started
+                      </p>
+                      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                          <td width="36" valign="top" style="padding-bottom:14px;">
+                            <div style="background:#5b6af0;color:#fff;border-radius:50%;width:26px;height:26px;
+                                        line-height:26px;text-align:center;font-size:13px;font-weight:700;">1</div>
+                          </td>
+                          <td style="padding-bottom:14px;font-size:14px;color:#d1d5db;line-height:1.5;">
+                            Download the License Auditor for Windows, macOS, or Linux and unzip it.
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="36" valign="top" style="padding-bottom:14px;">
+                            <div style="background:#5b6af0;color:#fff;border-radius:50%;width:26px;height:26px;
+                                        line-height:26px;text-align:center;font-size:13px;font-weight:700;">2</div>
+                          </td>
+                          <td style="padding-bottom:14px;font-size:14px;color:#d1d5db;line-height:1.5;">
+                            Run a scan with your key:
+                            <div style="margin-top:8px;background:#0f1117;border:1px solid #3b4a6b;border-radius:6px;
+                                        padding:10px 12px;font-family:monospace;font-size:13px;color:#a5b4fc;word-break:break-all;">
+                              licenseauditor --report audit.pdf --license-key {{LICENSE_KEY}}
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="36" valign="top">
+                            <div style="background:#5b6af0;color:#fff;border-radius:50%;width:26px;height:26px;
+                                        line-height:26px;text-align:center;font-size:13px;font-weight:700;">3</div>
+                          </td>
+                          <td style="font-size:14px;color:#d1d5db;line-height:1.5;">
+                            Open <strong style="color:#fff;">audit.pdf</strong> &mdash; your recoverable-spend
+                            report with recommended actions. Questions? Just reply to this email.
+                          </td>
+                        </tr>
+                      </table>
+                      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:32px;">
+                        <tr>
+                          <td>
+                            <a href="https://server-bridge.com/license-auditor.html"
+                               style="display:inline-block;background:#5b6af0;color:#fff;text-decoration:none;
+                                      font-size:14px;font-weight:600;padding:12px 28px;border-radius:8px;">
+                              Download the License Auditor
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                      <p style="margin:28px 0 0;font-size:13px;color:#6b7280;line-height:1.5;">
+                        Your license key is tied to this purchase &mdash; keep it safe. A Stripe receipt
+                        has also been sent separately with your payment details.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="background:#161b2e;border-radius:0 0 12px 12px;padding:20px 36px;border-top:1px solid #2a3147;">
+                      <p style="margin:0;font-size:12px;color:#6b7280;line-height:1.6;">
+                        &copy; Lee Crowe Software Solutions LLC &nbsp;&middot;&nbsp;
+                        <a href="https://server-bridge.com/terms.html" style="color:#6b7280;">Terms</a>
+                        &nbsp;&middot;&nbsp;
+                        <a href="https://server-bridge.com/privacy.html" style="color:#6b7280;">Privacy</a>
+                        &nbsp;&middot;&nbsp;
+                        <a href="https://server-bridge.com/refund.html" style="color:#6b7280;">Refunds</a>
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </body>
+        </html>
+        """;
 
     // Inline HTML welcome email — email-safe (inline styles, single-column, no CSS variables).
     // Substitution tokens: {{CUSTOMER_NAME}}, {{LICENSE_KEY}}

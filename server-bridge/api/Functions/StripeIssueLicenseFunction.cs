@@ -30,17 +30,109 @@ public sealed class StripeIssueLicenseFunction
         var response = req.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type", "text/html; charset=utf-8");
 
-        var html = licenseKey is null ? BuildPendingPage() : BuildSuccessPage(licenseKey);
+        string html;
+        if (licenseKey is null)
+        {
+            html = BuildPendingPage();
+        }
+        else
+        {
+            var record = await _repository.GetAsync(licenseKey, cancellationToken);
+            html = BuildSuccessPage(licenseKey, record?.Product ?? "ServerBridge");
+        }
         await response.WriteStringAsync(html, cancellationToken);
         return response;
     }
 
-    private static string BuildSuccessPage(string licenseKey)
+    private static string BuildSuccessPage(string licenseKey, string product)
     {
         var encodedKey = System.Net.WebUtility.HtmlEncode(licenseKey);
-        return SuccessTemplate
+        var isAuditor = string.Equals(product, "LicenseAuditor", StringComparison.OrdinalIgnoreCase);
+        return (isAuditor ? AuditorSuccessTemplate : SuccessTemplate)
             .Replace("{{LICENSE_KEY}}", encodedKey, StringComparison.Ordinal);
     }
+
+    // License Auditor success page — CLI activation, not the desktop sidebar. {{LICENSE_KEY}} token.
+    private const string AuditorSuccessTemplate = """
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <title>Thank you &mdash; ServerBridge License Auditor</title>
+          <link rel="stylesheet" href="/styles.css" />
+          <style>
+            .key-box { background:#1a1f2e;border:1px solid #3b4a6b;border-radius:8px;padding:16px 20px;
+                       font-family:monospace;font-size:1.05rem;color:#a5b4fc;letter-spacing:.04em;
+                       word-break:break-all;display:flex;align-items:center;justify-content:space-between;gap:12px; }
+            .copy-btn { background:#5b6af0;color:#fff;border:none;border-radius:6px;padding:8px 16px;
+                        cursor:pointer;font-size:.85rem;white-space:nowrap; }
+            .copy-btn:hover { background:#4a58e0; }
+            .cmd { margin-top:14px;background:#0f1117;border:1px solid #3b4a6b;border-radius:6px;
+                   padding:12px 14px;font-family:monospace;font-size:.9rem;color:#a5b4fc;word-break:break-all; }
+            .steps { margin:28px 0 0;padding:0;list-style:none;counter-reset:steps; }
+            .steps li { counter-increment:steps;display:flex;align-items:flex-start;gap:14px;margin-bottom:14px; }
+            .steps li::before { content:counter(steps);background:#5b6af0;color:#fff;border-radius:50%;
+                                width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+                                font-size:.85rem;flex-shrink:0;margin-top:2px; }
+          </style>
+        </head>
+        <body>
+          <header class="wrap topbar">
+            <div class="brand"><span class="mark">S</span> ServerBridge</div>
+            <a class="home" href="license-auditor.html">License Auditor</a>
+          </header>
+          <main>
+            <section class="wrap" style="max-width:640px; padding-top:48px">
+              <div class="card" style="padding:36px">
+                <div style="font-size:2.5rem; margin-bottom:12px">&#127881;</div>
+                <h2 style="margin-bottom:8px">You're all set!</h2>
+                <p style="margin-bottom:24px">Thanks for purchasing the ServerBridge License Auditor.
+                Here's your license key &mdash; it unlocks the PDF report and recommendations.</p>
+                <div class="key-box">
+                  <span id="key">{{LICENSE_KEY}}</span>
+                  <button class="copy-btn" onclick="copyKey()">Copy</button>
+                </div>
+                <ol class="steps" style="margin-top:32px">
+                  <li><span>Download the License Auditor for Windows, macOS, or Linux and unzip it.</span></li>
+                  <li><span>Run a scan with your key:
+                    <div class="cmd">licenseauditor --report audit.pdf --license-key {{LICENSE_KEY}}</div></span></li>
+                  <li><span>Open <strong>audit.pdf</strong> &mdash; your recoverable-spend report. Questions?
+                    Email <a href="mailto:hello@leecrowesoftware.com">hello@leecrowesoftware.com</a>.</span></li>
+                </ol>
+                <p style="margin-top:32px">
+                  <a class="btn btn-primary" href="license-auditor.html">Download the License Auditor</a>
+                </p>
+                <p style="margin-top:24px; font-size:.85rem; color:#6b7280">
+                  A receipt has been sent to your email by Stripe. Your license key is tied to this purchase &mdash; keep it safe.
+                </p>
+              </div>
+            </section>
+          </main>
+          <footer>
+            <div class="wrap">
+              <span>&copy; <span id="yr"></span> Lee Crowe Software Solutions LLC</span>
+              <span class="legal-links">
+                <a href="terms.html">Terms</a> &middot;
+                <a href="privacy.html">Privacy</a> &middot;
+                <a href="refund.html">Refunds</a>
+              </span>
+            </div>
+          </footer>
+          <script>
+            document.getElementById('yr').textContent = new Date().getFullYear();
+            function copyKey() {
+              var key = document.getElementById('key').textContent;
+              navigator.clipboard.writeText(key).then(function() {
+                var btn = document.querySelector('.copy-btn');
+                btn.textContent = 'Copied!';
+                setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+              });
+            }
+          </script>
+        </body>
+        </html>
+        """;
 
     // Template uses {{LICENSE_KEY}} as the only placeholder; no C# string interpolation needed.
     private const string SuccessTemplate =

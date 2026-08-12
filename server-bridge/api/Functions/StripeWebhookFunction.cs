@@ -88,11 +88,25 @@ public sealed class StripeWebhookFunction
         }
         customerEmail ??= session.TryGetProperty("customer_email", out var ce) && ce.ValueKind == JsonValueKind.String ? ce.GetString() : null;
 
+        // Which product/tier was bought comes from the Payment Link's metadata, which Stripe
+        // copies onto the checkout session. Existing ServerBridge links carry no metadata, so
+        // they default to ServerBridge Pro (unchanged behavior). Auditor links set
+        // metadata product=LicenseAuditor and tier=Starter|Team|Enterprise.
+        var (product, tier) = ("ServerBridge", "Pro");
+        if (session.TryGetProperty("metadata", out var meta) && meta.ValueKind == JsonValueKind.Object)
+        {
+            if (meta.TryGetProperty("product", out var mp) && mp.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(mp.GetString()))
+                product = mp.GetString()!;
+            if (meta.TryGetProperty("tier", out var mt) && mt.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(mt.GetString()))
+                tier = mt.GetString()!;
+        }
+
         var licenseKey = _keyGenerator.Generate();
         var record = new LicenseRecord
         {
             RowKey = licenseKey,
-            Tier = "Pro",
+            Tier = tier,
+            Product = product,
             Active = true,
             StripeCustomerId = customerId,
             CustomerEmail = customerEmail,
@@ -110,7 +124,7 @@ public sealed class StripeWebhookFunction
 
         if (!string.IsNullOrEmpty(customerEmail))
         {
-            await _email.SendWelcomeEmailAsync(customerEmail, customerName, licenseKey, cancellationToken);
+            await _email.SendWelcomeEmailAsync(customerEmail, customerName, licenseKey, product, cancellationToken);
             await _email.AddMarketingContactAsync(customerEmail, customerName, licenseKey, cancellationToken);
         }
         else
