@@ -37,7 +37,7 @@
     },
     "offers": {
       "@type": "Offer",
-      "price": "299",
+      "price": "149",
       "priceCurrency": "USD",
       "category": "Annual subscription; free scan available"
     }
@@ -111,7 +111,7 @@
           <div class="readout-divide"></div>
           <div class="readout-cost">
             <span>Your recommended plan</span>
-            <span class="v" id="priceOut">$599/yr</span>
+            <span class="v" id="priceOut">$349/yr</span>
           </div>
           <span class="roi-pill" id="roiOut">Pays for itself 10.8×</span>
           <a class="btn btn-primary scan-cta" href="https://github.com/lbcrowe-del/ServerBridge-LicenseScan/releases/latest" id="scanCta">Get the free scan that finds this</a>
@@ -160,8 +160,8 @@
         <div class="tier">
           <h3>Starter</h3>
           <p class="seats">Up to 50 users</p>
-          <div class="price">$299<span>/yr</span></div>
-          <p class="price-note">or $699 one-time</p>
+          <div class="price">$149<span>/yr</span></div>
+          <p class="price-note">billed annually · no auto-renew</p>
           <ul>
             <li>Full unused-license audit</li>
             <li>Sign-in activity cross-check (90-day)</li>
@@ -175,7 +175,7 @@
           <span class="flag">Most tenants</span>
           <h3>Team</h3>
           <p class="seats">51–300 users</p>
-          <div class="price">$599<span>/yr</span></div>
+          <div class="price">$349<span>/yr</span></div>
           <p class="price-note">covers the entire M365 Business range</p>
           <ul>
             <li>Everything in Starter</li>
@@ -189,7 +189,7 @@
         <div class="tier">
           <h3>Enterprise</h3>
           <p class="seats">300+ users</p>
-          <div class="price">$1,200<span>/yr</span></div>
+          <div class="price">$799<span>/yr</span></div>
           <p class="price-note">multi-tenant &amp; custom above 1,000</p>
           <ul>
             <li>Everything in Team</li>
@@ -218,7 +218,7 @@
             <p class="meta">Read-only PowerShell · as-is</p>
           </div>
           <div class="col-paid">
-            <p class="kicker">Paid · from $299/yr</p>
+            <p class="kicker">Paid · from $149/yr</p>
             <p class="name">License Auditor</p>
             <p class="meta">Full audit · supported</p>
           </div>
@@ -322,9 +322,9 @@
       }
       function money(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
       function tierFor(n) {
-        if (n <= 50) return { label: '$299/yr', price: 299 };
-        if (n <= 300) return { label: '$599/yr', price: 599 };
-        return { label: '$1,200/yr', price: 1200 };
+        if (n <= 50) return { label: '$149/yr', price: 149 };
+        if (n <= 300) return { label: '$349/yr', price: 349 };
+        return { label: '$799/yr', price: 799 };
       }
       function recalc() {
         var n = Number(seats.value), w = Number(waste.value), cost = planCost();
