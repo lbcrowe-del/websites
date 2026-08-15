@@ -90,6 +90,9 @@ public sealed class BrevoEmailService : IEmailService
             PRODUCT = product
         };
 
+        // Create or update the contact, its attributes, and its list membership in one call.
+        // POST /contacts with listIds + updateEnabled enrolls both brand-new and existing
+        // contacts (verified against a live tenant), so no separate list-add call is needed.
         var payload = new
         {
             email,
