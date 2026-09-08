@@ -88,12 +88,32 @@ public sealed class StripeWebhookFunction
         }
         customerEmail ??= session.TryGetProperty("customer_email", out var ce) && ce.ValueKind == JsonValueKind.String ? ce.GetString() : null;
 
+        // Which product/tier was bought comes from the Payment Link's metadata, which Stripe
+        // copies onto the checkout session. Existing ServerBridge links carry no metadata, so
+        // they default to ServerBridge Pro (unchanged behavior). Auditor links set
+        // metadata product=LicenseAuditor and tier=Starter|Team|Enterprise.
+        var (product, tier) = ("ServerBridge", "Pro");
+        if (session.TryGetProperty("metadata", out var meta) && meta.ValueKind == JsonValueKind.Object)
+        {
+            if (meta.TryGetProperty("product", out var mp) && mp.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(mp.GetString()))
+                product = mp.GetString()!;
+            if (meta.TryGetProperty("tier", out var mt) && mt.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(mt.GetString()))
+                tier = mt.GetString()!;
+        }
+
+        // License Auditor tiers are flat-annual: the key is valid for one year (the resolver
+        // enforces expiry), so a simple one-time Payment Link maps to a year of access.
+        // ServerBridge Pro stays perpetual (no expiry).
+        var isAuditor = string.Equals(product, "LicenseAuditor", StringComparison.OrdinalIgnoreCase);
+
         var licenseKey = _keyGenerator.Generate();
         var record = new LicenseRecord
         {
             RowKey = licenseKey,
-            Tier = "Pro",
+            Tier = tier,
+            Product = product,
             Active = true,
+            ExpiresAtUtc = isAuditor ? DateTimeOffset.UtcNow.AddYears(1) : null,
             StripeCustomerId = customerId,
             CustomerEmail = customerEmail,
             CustomerName = customerName
@@ -110,8 +130,8 @@ public sealed class StripeWebhookFunction
 
         if (!string.IsNullOrEmpty(customerEmail))
         {
-            await _email.SendWelcomeEmailAsync(customerEmail, customerName, licenseKey, cancellationToken);
-            await _email.AddMarketingContactAsync(customerEmail, customerName, licenseKey, cancellationToken);
+            await _email.SendWelcomeEmailAsync(customerEmail, customerName, licenseKey, product, cancellationToken);
+            await _email.AddMarketingContactAsync(customerEmail, customerName, licenseKey, product, cancellationToken);
         }
         else
         {

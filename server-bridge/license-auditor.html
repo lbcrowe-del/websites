@@ -37,7 +37,7 @@
     },
     "offers": {
       "@type": "Offer",
-      "price": "299",
+      "price": "149",
       "priceCurrency": "USD",
       "category": "Annual subscription; free scan available"
     }
@@ -111,7 +111,7 @@
           <div class="readout-divide"></div>
           <div class="readout-cost">
             <span>Your recommended plan</span>
-            <span class="v" id="priceOut">$599/yr</span>
+            <span class="v" id="priceOut">$349/yr</span>
           </div>
           <span class="roi-pill" id="roiOut">Pays for itself 10.8×</span>
           <a class="btn btn-primary scan-cta" href="https://github.com/lbcrowe-del/ServerBridge-LicenseScan/releases/latest" id="scanCta">Get the free scan that finds this</a>
@@ -160,22 +160,21 @@
         <div class="tier">
           <h3>Starter</h3>
           <p class="seats">Up to 50 users</p>
-          <div class="price">$299<span>/yr</span></div>
-          <p class="price-note">or $699 one-time</p>
+          <div class="price">$149<span>/yr</span></div>
+          <p class="price-note">billed annually · no auto-renew</p>
           <ul>
             <li>Full unused-license audit</li>
             <li>Sign-in activity cross-check (90-day)</li>
             <li>Exportable report (PDF &amp; CSV)</li>
             <li>Downgrade recommendations by SKU</li>
           </ul>
-          <!-- TODO(launch): swap for free-scan download / Stripe buy -->
-          <a class="btn btn-ghost" href="mailto:hello@leecrowesoftware.com?subject=Notify%20me%3A%20License%20Auditor%20Starter">Notify me</a>
+          <a class="btn btn-ghost" href="https://buy.stripe.com/9B69AV0AoaHX94Abl02B202">Buy Starter</a>
         </div>
         <div class="tier featured">
           <span class="flag">Most tenants</span>
           <h3>Team</h3>
           <p class="seats">51–300 users</p>
-          <div class="price">$599<span>/yr</span></div>
+          <div class="price">$349<span>/yr</span></div>
           <p class="price-note">covers the entire M365 Business range</p>
           <ul>
             <li>Everything in Starter</li>
@@ -183,12 +182,12 @@
             <li>Service-level waste detection</li>
             <li>Shared license &amp; guest-account flags</li>
           </ul>
-          <a class="btn btn-primary" href="mailto:hello@leecrowesoftware.com?subject=Notify%20me%3A%20License%20Auditor%20Team">Notify me</a>
+          <a class="btn btn-primary" href="https://buy.stripe.com/dRmeVf1Es5nDa8Ebl02B203">Buy Team</a>
         </div>
         <div class="tier">
           <h3>Enterprise</h3>
           <p class="seats">300+ users</p>
-          <div class="price">$1,200<span>/yr</span></div>
+          <div class="price">$799<span>/yr</span></div>
           <p class="price-note">multi-tenant &amp; custom above 1,000</p>
           <ul>
             <li>Everything in Team</li>
@@ -196,7 +195,7 @@
             <li>Priority support &amp; onboarding</li>
             <li>Entra ID Health Dashboard upgrade path</li>
           </ul>
-          <a class="btn btn-ghost" href="mailto:hello@leecrowesoftware.com?subject=Notify%20me%3A%20License%20Auditor%20Enterprise">Talk to us</a>
+          <a class="btn btn-ghost" href="https://buy.stripe.com/eVqeVfere2brcgMagW2B204">Buy Enterprise</a>
         </div>
       </div>
       <p class="pricing-foot">Every plan starts with a free scan — you see the dollar figure before you pay a cent.</p>
@@ -217,7 +216,7 @@
             <p class="meta">Read-only PowerShell · as-is</p>
           </div>
           <div class="col-paid">
-            <p class="kicker">Paid · from $299/yr</p>
+            <p class="kicker">Paid · from $149/yr</p>
             <p class="name">License Auditor</p>
             <p class="meta">Full audit · supported</p>
           </div>
@@ -265,7 +264,7 @@
         <div class="fence-foot">
           <div class="note">Same tenant, same Graph connection — upgrading just unlocks the rest.</div>
           <div class="cell"><a class="btn btn-ghost" href="https://github.com/lbcrowe-del/ServerBridge-LicenseScan/releases/latest">Get the scan</a></div>
-          <div class="cell paidcol"><a class="btn btn-primary" href="mailto:hello@leecrowesoftware.com?subject=Notify%20me%3A%20License%20Auditor">Notify me</a></div>
+          <div class="cell paidcol"><a class="btn btn-primary" href="#pricing">See plans</a></div>
         </div>
       </div>
     </section>
@@ -291,10 +290,10 @@
     <div class="wrap">
       <span>© <span id="yr"></span> Lee Crowe Software Solutions LLC</span>
       <span class="legal-links">
-        <a href="eula.html">EULA</a> ·
-        <a href="terms.html">Terms</a> ·
-        <a href="privacy.html">Privacy</a> ·
-        <a href="refund.html">Refunds</a>
+        <a href="license-auditor-eula.html">EULA</a> ·
+        <a href="license-auditor-terms.html">Terms</a> ·
+        <a href="license-auditor-privacy.html">Privacy</a> ·
+        <a href="license-auditor-refund.html">Refunds</a>
       </span>
       <span><a href="index.html">ServerBridge</a> · <a href="https://leecrowesoftware.com">leecrowesoftware.com</a></span>
     </div>
@@ -321,9 +320,9 @@
       }
       function money(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
       function tierFor(n) {
-        if (n <= 50) return { label: '$299/yr', price: 299 };
-        if (n <= 300) return { label: '$599/yr', price: 599 };
-        return { label: '$1,200/yr', price: 1200 };
+        if (n <= 50) return { label: '$149/yr', price: 149 };
+        if (n <= 300) return { label: '$349/yr', price: 349 };
+        return { label: '$799/yr', price: 799 };
       }
       function recalc() {
         var n = Number(seats.value), w = Number(waste.value), cost = planCost();

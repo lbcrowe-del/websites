@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<!-- Brevo template: "Getting started with the License Auditor"
+     Trigger: 3 days after contact added to License Auditor Customers list
+     Brevo merge tags: {{ contact.FIRSTNAME | default : "there" }}, {{ contact.LICENSE_KEY }}
+     Subject line: Getting the most out of the License Auditor, {{ contact.FIRSTNAME | default : "there" }}
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Getting started with the License Auditor</title>
+</head>
+<body style="margin:0;padding:0;background:#0f1117;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0f1117;">
+    <tr>
+      <td align="center" style="padding:40px 16px;">
+        <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;">
+
+          <tr>
+            <td style="background:#161b2e;border-radius:12px 12px 0 0;padding:24px 36px;">
+              <span style="font-size:20px;font-weight:700;color:#ffffff;">
+                <span style="display:inline-block;background:#5b6af0;color:#fff;border-radius:6px;
+                             width:26px;height:26px;line-height:26px;text-align:center;
+                             font-size:14px;font-weight:700;margin-right:8px;">S</span>
+                ServerBridge License Auditor
+              </span>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="background:#1a1f2e;padding:36px;">
+              <p style="margin:0 0 20px;font-size:22px;font-weight:700;color:#ffffff;">
+                Getting the most out of the License Auditor, {{ contact.FIRSTNAME | default : "there" }}
+              </p>
+              <p style="margin:0 0 24px;font-size:15px;color:#9ca3af;line-height:1.6;">
+                You've had your license for a few days — here's how to turn it into recovered spend.
+              </p>
+
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+                <tr>
+                  <td style="background:#0f1117;border-left:3px solid #5b6af0;border-radius:0 6px 6px 0;padding:16px 20px;">
+                    <p style="margin:0 0 6px;font-size:14px;font-weight:700;color:#a5b4fc;">&#128202; Re-run it before every renewal</p>
+                    <p style="margin:0;font-size:14px;color:#9ca3af;line-height:1.5;">
+                      Dormant seats and unassigned licenses pile up between renewals. A fresh scan a
+                      week before your Microsoft renewal is the highest-leverage moment to trim.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+                <tr>
+                  <td style="background:#0f1117;border-left:3px solid #5b6af0;border-radius:0 6px 6px 0;padding:16px 20px;">
+                    <p style="margin:0 0 6px;font-size:14px;font-weight:700;color:#a5b4fc;">&#128188; Hand the PDF to finance</p>
+                    <p style="margin:0;font-size:14px;color:#9ca3af;line-height:1.5;">
+                      The report's "Recommended actions" and dollar total are built to forward straight
+                      to whoever signs off on the Microsoft bill — no reformatting needed.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:32px;">
+                <tr>
+                  <td style="background:#0f1117;border-left:3px solid #5b6af0;border-radius:0 6px 6px 0;padding:16px 20px;">
+                    <p style="margin:0 0 6px;font-size:14px;font-weight:700;color:#a5b4fc;">&#9881; Tune the dormancy window</p>
+                    <p style="margin:0;font-size:14px;color:#9ca3af;line-height:1.5;">
+                      Pass <strong style="color:#d1d5db;">--inactive-days 60</strong> (or 120) to match your
+                      org's policy for "inactive." Tighter windows surface more seats to review.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:0 0 8px;font-size:14px;color:#9ca3af;line-height:1.5;">Your license key, in case you need it again:</p>
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:32px;">
+                <tr>
+                  <td style="background:#0f1117;border:1px solid #3b4a6b;border-radius:8px;padding:14px 18px;
+                             font-family:monospace;font-size:14px;color:#a5b4fc;letter-spacing:.04em;word-break:break-all;">
+                    {{ contact.LICENSE_KEY }}
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:0;font-size:14px;color:#9ca3af;line-height:1.5;">Questions? Just reply to this email — I'm happy to help.</p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="background:#161b2e;border-radius:0 0 12px 12px;padding:20px 36px;border-top:1px solid #2a3147;">
+              <p style="margin:0;font-size:12px;color:#6b7280;line-height:1.6;">
+                &copy; Lee Crowe Software Solutions LLC &nbsp;&middot;&nbsp;
+                <a href="https://server-bridge.com/license-auditor-terms.html" style="color:#6b7280;">Terms</a> &nbsp;&middot;&nbsp;
+                <a href="https://server-bridge.com/license-auditor-privacy.html" style="color:#6b7280;">Privacy</a> &nbsp;&middot;&nbsp;
+                <a href="{{ unsubscribe }}" style="color:#6b7280;">Unsubscribe</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
