@@ -23,9 +23,29 @@ desktop app (which lives in the separate `lbcrowe-del/ServerBridge` repo, on-dis
   `az functionapp list` there returns AuthorizationFailed. Always `az account set --subscription
   4befc9c5-1865-41cb-9b94-911ccb757a6c` first.
 - **Function App:** `serverbridge-licensing`, resource group **`websites_rg`** (underscore),
-  **Windows Consumption (Dynamic)** plan, **.NET 10 isolated**, `httpsOnly` on. Reachable only at
-  **`https://serverbridge-licensing.azurewebsites.net/api/`**. Functions: `LicenseActivate`,
+  **Windows Consumption (Dynamic)** plan, **.NET 10 isolated**, `httpsOnly` on. Reachable at
+  **`https://api.server-bridge.com/api/`** (preferred — see below) and at its origin hostname
+  **`https://serverbridge-licensing.azurewebsites.net/api/`** (legacy, still load-bearing for
+  shipped desktop clients — do **not** delete it). Functions: `LicenseActivate`,
   `LicenseStatus`, `MigrationComplete`, `StripeWebhook`, `StripeIssueLicense`.
+- **Custom domain `api.server-bridge.com` (added 2026-09-11).** Cloudflare-proxied (orange cloud)
+  CNAME → `serverbridge-licensing.azurewebsites.net`, plus an `asuid.api` TXT record holding the
+  subscription's `customDomainVerificationId`. Azure holds a hostname binding with **no
+  certificate** (`sslState=null`): **Y1 classic Consumption cannot hold one** (App Service managed
+  certs require Basic+ or Flex Consumption), so **Cloudflare terminates TLS**. That forced two
+  **Configuration Rules** on the `server-bridge.com` zone, both scoped to `api.server-bridge.com`
+  only:
+  1. **SSL → Full** — the zone is **Full (strict)**, which rejects the `*.azurewebsites.net`
+     wildcard Azure serves on this hostname. Scoped so the marketing site keeps Full (strict).
+  2. **Browser Integrity Check → Off** — BIC 403s legitimate API clients on browser-signature
+     heuristics (`error code: 1010`, hit live during setup). An API must not sit behind browser
+     checks; the failure mode is a silent 403 on the Stripe webhook.
+  **Both rules are scaffolding, not architecture.** They exist solely because of Y1. When this app
+  moves to **Flex Consumption** it gets a real free managed certificate (the mechanism is proven —
+  see `api.gethalera.com`); at that point delete both rules and turn the proxy off. Verified
+  2026-09-11: all five routes return byte-identical responses via both hostnames.
+- **Never point a client at `server-bridge.com/api`** — the Free Static Web App reserves `/api` and
+  405s every POST. This has bitten twice. Use the `api.` subdomain.
 - **Static Web Apps** (both **Free** SKU, RG `websites_rg`): `serverbridge-site` serves
   `server-bridge.com` (default host `ashy-stone-0a8502f10.7.azurestaticapps.net`);
   `leecrowesoftware-site` serves `leecrowesoftware.com` (default host
