@@ -27,19 +27,12 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # Keep the Function App's runtime stack in lockstep with the package's target framework.
-      # Setting it here, before the publish below, means the package swap (which restarts the
-      # app) lands on the already-correct stack instead of a mismatched one.
-      - name: Ensure .NET 10 isolated runtime stack
-        run: |
-          az functionapp config set \
-            --name serverbridge-licensing \
-            --resource-group websites_rg \
-            --net-framework-version v10.0
-
-      - name: Deploy to Azure Functions
+      # serverbridge-licensing-fc is a Flex Consumption (Linux) app: the runtime stack is set
+      # on the app itself (functionAppConfig.runtime = dotnet-isolated 10.0), so the old
+      # `az functionapp config set --net-framework-version` step that Windows Consumption
+      # needed does not apply and has been removed.
+      - name: Deploy to Azure Functions (Flex Consumption)
         uses: Azure/functions-action@v1
         with:
-          app-name: serverbridge-licensing
+          app-name: serverbridge-licensing-fc
           package: ./publish
-          publish-profile: ${{ secrets.AZURE_FUNCTION_PUBLISH_PROFILE }}
