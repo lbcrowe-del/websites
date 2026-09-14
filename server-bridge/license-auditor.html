@@ -59,8 +59,15 @@
         against real activity and shows you exactly which seats are dead weight — and what they
         cost. Nothing to install in your tenant. The full License Auditor, with a boardroom-ready
         PDF report and costed recommended actions, is available now.</p>
+      <div class="install" id="install">
+          <div class="install-code">
+            <pre aria-label="PowerShell commands to install and run the free scan"><code><span class="ln"><span class="ps" aria-hidden="true">PS&gt; </span><span class="tok">Install-Module</span> <span class="tok">ServerBridge.LicenseScan</span> <span class="tok">-Scope CurrentUser</span></span>
+<span class="ln"><span class="ps" aria-hidden="true">PS&gt; </span><span class="tok">Invoke-LicenseScan</span></span></code></pre>
+            <button type="button" class="copy-btn" data-copy="Install-Module ServerBridge.LicenseScan -Scope CurrentUser&#10;Invoke-LicenseScan">Copy</button>
+          </div>
+          <p class="install-alt">Windows PowerShell 5.1 or PowerShell 7 · or <a href="https://github.com/lbcrowe-del/ServerBridge-LicenseScan/releases/latest">download the signed script</a></p>
+        </div>
       <div class="cta">
-        <a class="btn btn-primary" href="https://github.com/lbcrowe-del/ServerBridge-LicenseScan/releases/latest">Get the free scan</a>
         <a class="btn btn-ghost" href="#pricing">See paid plans</a>
       </div>
     </section>
@@ -114,7 +121,7 @@
             <span class="v" id="priceOut">$349/yr</span>
           </div>
           <span class="roi-pill" id="roiOut">Pays for itself 10.8×</span>
-          <a class="btn btn-primary scan-cta" href="https://github.com/lbcrowe-del/ServerBridge-LicenseScan/releases/latest" id="scanCta">Get the free scan that finds this</a>
+          <a class="btn btn-primary scan-cta" href="#install" id="scanCta">Get the free scan that finds this</a>
           <p class="scan-sub">Read-only PowerShell · no app registration · runs in 5 minutes</p>
         </div>
       </div>
@@ -257,7 +264,7 @@
         </div>
         <div class="fence-foot">
           <div class="note">Same tenant, same read-only sign-in — the paid Auditor just shows you more.</div>
-          <div class="cell"><a class="btn btn-ghost" href="https://github.com/lbcrowe-del/ServerBridge-LicenseScan/releases/latest">Get the scan</a></div>
+          <div class="cell"><a class="btn btn-ghost" href="#install">Get the scan</a></div>
           <div class="cell paidcol"><a class="btn btn-primary" href="#pricing">See plans</a></div>
         </div>
       </div>
@@ -272,8 +279,15 @@
             ready to recover it, the paid Auditor adds the PDF report, costed recommended actions
             and scheduled re-audits.</p>
         </div>
+        <div class="install">
+          <div class="install-code">
+            <pre aria-label="PowerShell commands to install and run the free scan"><code><span class="ln"><span class="ps" aria-hidden="true">PS&gt; </span><span class="tok">Install-Module</span> <span class="tok">ServerBridge.LicenseScan</span> <span class="tok">-Scope CurrentUser</span></span>
+<span class="ln"><span class="ps" aria-hidden="true">PS&gt; </span><span class="tok">Invoke-LicenseScan</span></span></code></pre>
+            <button type="button" class="copy-btn" data-copy="Install-Module ServerBridge.LicenseScan -Scope CurrentUser&#10;Invoke-LicenseScan">Copy</button>
+          </div>
+          <p class="install-alt">Windows PowerShell 5.1 or PowerShell 7 · or <a href="https://github.com/lbcrowe-del/ServerBridge-LicenseScan/releases/latest">download the signed script</a></p>
+        </div>
         <div class="cta">
-          <a class="btn btn-primary" href="https://github.com/lbcrowe-del/ServerBridge-LicenseScan/releases/latest">Get the free scan</a>
           <a class="btn btn-ghost" href="#pricing">See plans</a>
         </div>
       </div>
@@ -295,6 +309,29 @@
 
   <script>
     document.getElementById('yr').textContent = new Date().getFullYear();
+    Array.prototype.slice.call(document.querySelectorAll('.copy-btn')).forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var text = btn.getAttribute('data-copy');
+        function done(ok) {
+          btn.textContent = ok ? 'Copied' : 'Press Ctrl+C';
+          setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
+        }
+        function fallback() {
+          var code = btn.parentNode.querySelector('code');
+          var range = document.createRange();
+          range.selectNodeContents(code);
+          var sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+          done(false);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () { done(true); }, fallback);
+        } else {
+          fallback();
+        }
+      });
+    });
     (function () {
       var seats = document.getElementById('seats');
       var waste = document.getElementById('waste');

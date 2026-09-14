@@ -63,6 +63,29 @@ a:hover { text-decoration: underline; }
 .btn-ghost { border-color: var(--border); color: var(--text); }
 .btn-ghost:hover { border-color: #2f3d5c; background: var(--bg-soft); text-decoration: none; }
 
+/* Install command box (free scan) */
+.install { max-width: 680px; margin: 0 auto 18px; text-align: left; }
+.install-code {
+  display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px 12px;
+  background: #070c18; border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 14px 18px;
+}
+.install-code pre { flex: 1 1 30ch; min-width: 0; margin: 0; white-space: pre-wrap; }
+.install-code .tok { white-space: nowrap; }
+.install-code code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 14px; line-height: 1.6; color: var(--text);
+}
+.install-code .ln { display: inline-block; padding-left: 4ch; text-indent: -4ch; }
+.install-code .ps { color: var(--muted); user-select: none; -webkit-user-select: none; }
+.copy-btn {
+  flex: none; margin-left: auto; font-family: var(--font); font-size: 13px; font-weight: 600; padding: 7px 14px; min-width: 76px;
+  background: var(--accent); color: #fff; border: 0; border-radius: 8px; cursor: pointer;
+}
+.copy-btn:hover { background: #2f74e6; }
+.copy-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.install-alt { font-size: 13px; color: var(--muted); margin: 8px 0 0; text-align: center; }
+.install + .cta { margin-top: 4px; }
+
 /* Sections */
 section { padding: 40px 0; }
 .section-head { text-align: center; margin-bottom: 32px; }
