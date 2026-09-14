@@ -18,27 +18,35 @@
   <main>
     <section class="wrap legal">
       <h1>Privacy Policy</h1>
-      <p class="updated">Last updated: September 8, 2026 &middot; ServerBridge License Auditor</p>
+      <p class="updated">Last updated: September 14, 2026 &middot; ServerBridge License Auditor</p>
 
       <p>This Privacy Policy describes what information Lee Crowe Software Solutions LLC ("we,"
         "us," or "our") collects in connection with the ServerBridge License Auditor and this
         website, and how we use it.</p>
 
       <h2>What we don't collect</h2>
-      <p>The License Auditor reads your Microsoft 365 license and activity data using read-only,
-        delegated Microsoft Graph permissions, under your own sign-in, solely to produce your
-        report. That data flows directly between your device and your own Microsoft 365 tenant via
+      <p>The License Auditor reads your Microsoft 365 license and activity data using read-only
+        Microsoft Graph permissions &mdash; delegated permissions under your own sign-in or, for
+        scheduled and multi-tenant audits, read-only application permissions on an app registration
+        you create and control in your own tenant &mdash; solely to produce your report. That data flows directly between your device and your own Microsoft 365 tenant via
         the Microsoft Graph API. <strong>We never see, upload, store, or retain your tenant data,
         your report, or your authentication tokens</strong>, and the tool contains no telemetry,
         analytics, or "phone-home" behavior. Your report and CSV output are written locally on your
         own device.</p>
 
-      <p><strong>Optional local drift file (Team tier).</strong> If you use the Team tier's
-        scheduled re-audit ("drift") feature, the Software keeps a small summary of each audit &mdash;
-        such as dormant-seat identifiers, counts, and recoverable-spend totals &mdash; in a file
-        stored locally on your own device, so it can report what changed since your last audit. This
-        file stays on your device and is never transmitted to us or any third party. The Free and
-        Starter tiers do not create it.</p>
+      <p><strong>Local drift file (Team and Enterprise tiers).</strong> On the Team and Enterprise
+        tiers, the Software keeps a small summary of each single-tenant audit &mdash; the tenant name,
+        the user principal names of dormant seats, counts, and recoverable-spend totals &mdash; in a
+        file stored locally on your own device, with access limited to your user account, so it can
+        report what changed since your last audit. This file stays on your device and is never
+        transmitted to us or any third party. The Free and Starter tiers do not create it.</p>
+
+      <p><strong>Saved license (paid tiers).</strong> After your license key is validated, the
+        Software saves the key, your plan, the date it was last validated, and the random device
+        identifier described below in your user account's application-data folder, with access
+        limited to your user account, so you don't have to enter the key on every run and a brief
+        network outage doesn't interrupt your plan. It is sent only to our licensing server, for
+        validation. Run <code>licenseauditor --deactivate</code> to remove the saved license.</p>
 
       <h2>What we do collect</h2>
       <ul>
@@ -144,9 +152,10 @@
         to take action on your request, you may appeal our decision within a reasonable period of
         time by emailing the same address. Within sixty (60) days of receipt of an appeal, we will
         inform you in writing of any action taken or not taken in response to the appeal, including
-        a written explanation of the reasons for the decision. If the appeal is denied, you may
-        contact the Kentucky Attorney General or your jurisdiction's applicable data protection or
-        consumer protection authority.</p>
+        a written explanation of the reasons for the decision. If the appeal is denied, you may contact the Kentucky Attorney General using the Attorney General's
+        <a href="https://kyoag.highq.com/kyoag/renderSmartForm.action?formId=dc0f5031-93d0-4d3a-bfb0-e2bf5f5a782a">online
+        consumer data privacy complaint form</a>, or your jurisdiction's applicable data protection or
+        consumer protection authority. We will include this link in any written decision denying an appeal.</p>
     </section>
   </main>
 
