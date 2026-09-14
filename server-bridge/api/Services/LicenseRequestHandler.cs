@@ -27,6 +27,11 @@ public sealed class LicenseRequestHandler
             return Invalid("License key not found or inactive.");
         }
 
+        if (IsExpired(record))
+        {
+            return Invalid("This license has expired.");
+        }
+
         record.DeviceId = deviceId;
 
         // Record the EULA acceptance the first time we see one for this license. Once stored,
@@ -66,10 +71,18 @@ public sealed class LicenseRequestHandler
     public async Task<LicenseResponseBody> StatusAsync(string licenseKey, string deviceId, string? product, CancellationToken cancellationToken)
     {
         var record = await _repository.GetAsync(licenseKey, cancellationToken);
-        return record is { Active: true } && ProductMatches(record, product)
-            ? Valid(record.Tier, record.Product, record.ExpiresAtUtc)
-            : Invalid("License key not found or inactive.");
+        if (record is not { Active: true } || !ProductMatches(record, product))
+            return Invalid("License key not found or inactive.");
+
+        return IsExpired(record)
+            ? Invalid("This license has expired.")
+            : Valid(record.Tier, record.Product, record.ExpiresAtUtc);
     }
+
+    /// <summary>Expiry is enforced here on the server clock, not only by the client (whose clock the
+    /// user controls). Keys with no expiry (ServerBridge Pro, perpetual) never expire.</summary>
+    private static bool IsExpired(LicenseRecord record) =>
+        record.ExpiresAtUtc is { } expires && expires <= DateTimeOffset.UtcNow;
 
     /// <summary>A key only unlocks the product it was issued for. Missing request product
     /// defaults to "ServerBridge" so existing desktop clients keep matching their own keys.</summary>
