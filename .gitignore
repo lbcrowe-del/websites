@@ -13,3 +13,4 @@ server-bridge/api/local.settings.json
 # Licensing API integration tests (server-bridge/api-tests)
 server-bridge/api-tests/bin/
 server-bridge/api-tests/obj/
+.venv-comp/
