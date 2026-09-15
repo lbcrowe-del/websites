@@ -223,7 +223,7 @@ public sealed class BrevoEmailService : IEmailService
                       <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:32px;">
                         <tr>
                           <td>
-                            <a href="https://server-bridge.com/license-auditor.html"
+                            <a href="https://github.com/lbcrowe-del/ServerBridge-LicenseAuditor-releases/releases/latest"
                                style="display:inline-block;background:#5b6af0;color:#fff;text-decoration:none;
                                       font-size:14px;font-weight:600;padding:12px 28px;border-radius:8px;">
                               Download the License Auditor

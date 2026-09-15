@@ -94,14 +94,14 @@ public sealed class StripeIssueLicenseFunction
                   <button class="copy-btn" onclick="copyKey()">Copy</button>
                 </div>
                 <ol class="steps" style="margin-top:32px">
-                  <li><span>Download the License Auditor for Windows, macOS, or Linux and unzip it.</span></li>
+                  <li><span><a href="https://github.com/lbcrowe-del/ServerBridge-LicenseAuditor-releases/releases/latest">Download the License Auditor</a> for Windows, macOS, or Linux and unzip it.</span></li>
                   <li><span>Run a scan with your key:
                     <div class="cmd">licenseauditor --report audit.pdf --license-key {{LICENSE_KEY}}</div></span></li>
                   <li><span>Open <strong>audit.pdf</strong> &mdash; your recoverable-spend report. Questions?
                     Email <a href="mailto:hello@leecrowesoftware.com">hello@leecrowesoftware.com</a>.</span></li>
                 </ol>
                 <p style="margin-top:32px">
-                  <a class="btn btn-primary" href="license-auditor.html">Download the License Auditor</a>
+                  <a class="btn btn-primary" href="https://github.com/lbcrowe-del/ServerBridge-LicenseAuditor-releases/releases/latest">Download the License Auditor</a>
                 </p>
                 <p style="margin-top:24px; font-size:.85rem; color:#6b7280">
                   A receipt has been sent to your email by Stripe. Your license key is tied to this purchase &mdash; keep it safe.

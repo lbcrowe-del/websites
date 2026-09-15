@@ -221,6 +221,7 @@ input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-of
 .tier li::before { content: ""; position: absolute; left: 2px; top: 6px; width: 12px; height: 7px; border-left: 2px solid var(--ok); border-bottom: 2px solid var(--ok); transform: rotate(-45deg); }
 .tier .btn { margin-top: auto; text-align: center; }
 .pricing-foot { text-align: center; color: var(--muted); font-size: 13px; margin: 24px 0 0; }
+.pricing-links { text-align: center; font-size: 14px; margin: 10px 0 0; color: var(--muted); }
 
 /* Free vs paid fence */
 .fence { max-width: 900px; margin: 0 auto; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
