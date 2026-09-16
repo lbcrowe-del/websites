@@ -61,11 +61,12 @@
         PDF report and costed recommended actions, is available now.</p>
       <div class="install" id="install">
           <div class="install-code">
-            <pre aria-label="PowerShell commands to install and run the free scan"><code><span class="ln"><span class="ps" aria-hidden="true">PS&gt; </span><span class="tok">Install-Module</span> <span class="tok">ServerBridge.LicenseScan</span> <span class="tok">-Scope CurrentUser</span></span>
-<span class="ln"><span class="ps" aria-hidden="true">PS&gt; </span><span class="tok">Invoke-LicenseScan</span></span></code></pre>
-            <button type="button" class="copy-btn" data-copy="Install-Module ServerBridge.LicenseScan -Scope CurrentUser&#10;Invoke-LicenseScan">Copy</button>
+            <pre aria-label="PowerShell commands to install and run the free scans"><code><span class="ln"><span class="ps" aria-hidden="true">PS&gt; </span><span class="tok">Install-Module</span> <span class="tok">ServerBridge.LicenseScan</span> <span class="tok">-Scope CurrentUser</span></span>
+<span class="ln"><span class="ps" aria-hidden="true">PS&gt; </span><span class="tok">Invoke-LicenseScan</span></span>
+<span class="ln"><span class="ps" aria-hidden="true">PS&gt; </span><span class="tok">Invoke-OffboardingCheck</span></span></code></pre>
+            <button type="button" class="copy-btn" data-copy="Install-Module ServerBridge.LicenseScan -Scope CurrentUser&#10;Invoke-LicenseScan&#10;Invoke-OffboardingCheck">Copy</button>
           </div>
-          <p class="install-alt">Windows PowerShell 5.1 or PowerShell 7 · or <a href="https://github.com/lbcrowe-del/ServerBridge-LicenseScan/releases/latest">download the signed script</a></p>
+          <p class="install-alt">Two free commands: unused licenses, and what the leavers still hold · Windows PowerShell 5.1 or PowerShell 7 · or <a href="https://github.com/lbcrowe-del/ServerBridge-LicenseScan/releases/latest">download the signed scripts</a></p>
         </div>
       <div class="cta">
         <a class="btn btn-ghost" href="#pricing">See paid plans</a>
@@ -188,6 +189,8 @@
             <li>Scheduled re-audits (runs unattended)</li>
             <li>Month-over-month drift tracking</li>
             <li>PDF shows what changed since the last audit</li>
+            <li>Offboarding list: what each leaver still holds</li>
+            <li>Licensed guests &amp; shared mailboxes, flagged for review</li>
           </ul>
           <a class="btn btn-primary" href="https://buy.stripe.com/dRmeVf1Es5nDa8Ebl02B203">Buy Team</a>
         </div>
@@ -249,6 +252,11 @@
           <div class="cell paidcol"><span class="mk yes"><span class="tick"></span>Yes</span></div>
         </div>
         <div class="frow">
+          <div class="feat">Offboarding: what the leavers still hold</div>
+          <div class="cell"><span class="mk partial"><span class="dash"></span>Console + CSV</span></div>
+          <div class="cell paidcol"><span class="mk yes"><span class="tick"></span>Team · in the PDF</span></div>
+        </div>
+        <div class="frow">
           <div class="feat">Scheduled re-audits &amp; drift tracking</div>
           <div class="cell"><span class="mk no"><span class="dash"></span>No</span></div>
           <div class="cell paidcol"><span class="mk yes"><span class="tick"></span>Team</span></div>
@@ -308,7 +316,8 @@
           <summary>What's actually in the PDF?</summary>
           <p>Your recoverable spend as a headline figure, the dormant and disabled seats behind it
             priced by SKU, costed recommended actions, and — on Team and Enterprise — what changed
-            since the last audit.
+            since the last audit, a review of licensed guests and shared mailboxes, and an
+            offboarding list showing what each leaver still holds.
             <a href="license-auditor-sample-report.pdf">See a sample report</a>.</p>
         </details>
         <details>
@@ -318,10 +327,11 @@
         </details>
         <details>
           <summary>How is this different from the free scan?</summary>
-          <p>The free PowerShell scan gives you the headline number as raw CSV. The Auditor adds the
-            PDF report, costed recommendations, scheduled re-audits with drift tracking, a review of
-            licensed guest accounts and shared mailboxes, and support. The table above compares them
-            line by line.</p>
+          <p>The free PowerShell module gives you two commands and raw CSV: the headline wasted-spend
+            number, and a basic offboarding check. The Auditor adds the PDF report, costed
+            recommendations, scheduled re-audits with drift tracking, a review of licensed guest
+            accounts and shared mailboxes, and the offboarding list in the report itself — per person,
+            with what each one still holds. The table above compares them line by line.</p>
         </details>
         <details>
           <summary>What if it doesn't find enough to justify the price?</summary>
@@ -356,11 +366,12 @@
         </div>
         <div class="install">
           <div class="install-code">
-            <pre aria-label="PowerShell commands to install and run the free scan"><code><span class="ln"><span class="ps" aria-hidden="true">PS&gt; </span><span class="tok">Install-Module</span> <span class="tok">ServerBridge.LicenseScan</span> <span class="tok">-Scope CurrentUser</span></span>
-<span class="ln"><span class="ps" aria-hidden="true">PS&gt; </span><span class="tok">Invoke-LicenseScan</span></span></code></pre>
-            <button type="button" class="copy-btn" data-copy="Install-Module ServerBridge.LicenseScan -Scope CurrentUser&#10;Invoke-LicenseScan">Copy</button>
+            <pre aria-label="PowerShell commands to install and run the free scans"><code><span class="ln"><span class="ps" aria-hidden="true">PS&gt; </span><span class="tok">Install-Module</span> <span class="tok">ServerBridge.LicenseScan</span> <span class="tok">-Scope CurrentUser</span></span>
+<span class="ln"><span class="ps" aria-hidden="true">PS&gt; </span><span class="tok">Invoke-LicenseScan</span></span>
+<span class="ln"><span class="ps" aria-hidden="true">PS&gt; </span><span class="tok">Invoke-OffboardingCheck</span></span></code></pre>
+            <button type="button" class="copy-btn" data-copy="Install-Module ServerBridge.LicenseScan -Scope CurrentUser&#10;Invoke-LicenseScan&#10;Invoke-OffboardingCheck">Copy</button>
           </div>
-          <p class="install-alt">Windows PowerShell 5.1 or PowerShell 7 · or <a href="https://github.com/lbcrowe-del/ServerBridge-LicenseScan/releases/latest">download the signed script</a></p>
+          <p class="install-alt">Two free commands: unused licenses, and what the leavers still hold · Windows PowerShell 5.1 or PowerShell 7 · or <a href="https://github.com/lbcrowe-del/ServerBridge-LicenseScan/releases/latest">download the signed scripts</a></p>
         </div>
         <div class="cta">
           <a class="btn btn-ghost" href="#pricing">See plans</a>
