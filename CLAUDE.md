@@ -22,6 +22,13 @@ desktop app (which lives in the separate `lbcrowe-del/ServerBridge` repo, on-dis
   "Azure subscription 1"**; the *other* one (`a59ecd1a-…`, tenant `a7560271-…`) **denies access** —
   `az functionapp list` there returns AuthorizationFailed. Always `az account set --subscription
   4befc9c5-1865-41cb-9b94-911ccb757a6c` first.
+- **TWO Function Apps exist (verified 2026-09-16).** `serverbridge-licensing-fc` (Linux) holds the
+  **`api.server-bridge.com`** custom-domain binding and receives Stripe's webhook, so it is the app that
+  serves buyers today. The original `serverbridge-licensing` (Windows) is still **running** with a full copy
+  of every app setting (Brevo key, Stripe webhook secret, table connection) and is reachable at
+  `serverbridge-licensing.azurewebsites.net`; older shipped desktop clients may still call that host. Decide
+  its fate before deleting anything — see TASKS.md in the license-auditor repo. The paragraph below describes
+  the ORIGINAL app.
 - **Function App:** `serverbridge-licensing`, resource group **`websites_rg`** (underscore),
   **Windows Consumption (Dynamic)** plan, **.NET 10 isolated**, `httpsOnly` on. Reachable at
   **`https://api.server-bridge.com/api/`** (preferred — see below) and at its origin hostname
