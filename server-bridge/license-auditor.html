@@ -27,7 +27,7 @@
     "name": "ServerBridge License Auditor",
     "applicationCategory": "BusinessApplication",
     "applicationSubCategory": "License optimization",
-    "operatingSystem": "Windows, macOS",
+    "operatingSystem": "Windows, macOS, Linux",
     "description": "Finds unused and over-provisioned Microsoft 365 licenses by cross-checking assigned licenses against real sign-in activity, and reports the recoverable spend.",
     "url": "https://server-bridge.com/license-auditor.html",
     "publisher": {
@@ -268,6 +268,80 @@
           <div class="cell"><a class="btn btn-ghost" href="#install">Get the scan</a></div>
           <div class="cell paidcol"><a class="btn btn-primary" href="#pricing">See plans</a></div>
         </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="wrap" id="faq">
+      <div class="section-head">
+        <h2>Questions people ask first</h2>
+        <p>Short answers. If yours isn't here, just email me.</p>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>Does it change anything in my tenant?</summary>
+          <p>No. The free scan and the paid Auditor both use read-only, least-privilege Microsoft
+            Graph permissions. Nothing is created, removed or modified — you act on the findings
+            yourself in the admin center.</p>
+        </details>
+        <details>
+          <summary>Do I need Entra ID P1?</summary>
+          <p>No, but it sharpens the results. With P1 the Auditor reads each user's last sign-in
+            directly. Without it, it falls back to Microsoft 365's usage reports, which are less
+            precise — and if your tenant conceals user names in those reports, it can only flag
+            disabled accounts that still hold a license. Turning that setting off for a single run
+            gives you the full picture.</p>
+        </details>
+        <details>
+          <summary>Does it need an app registration?</summary>
+          <p>Not for a normal run — you sign in with a device code using your own admin account.
+            Scheduled unattended re-audits and multi-tenant roll-ups do use an app registration
+            that you create in your own tenant.</p>
+        </details>
+        <details>
+          <summary>Where does my data go?</summary>
+          <p>Nowhere. The PDF and CSV are written to your own machine, and the tool contains no
+            telemetry or analytics. The only outbound call is the license check on paid tiers. The
+            details are in the <a href="license-auditor-privacy.html">privacy policy</a>.</p>
+        </details>
+        <details>
+          <summary>What's actually in the PDF?</summary>
+          <p>Your recoverable spend as a headline figure, the dormant and disabled seats behind it
+            priced by SKU, costed recommended actions, and — on Team and Enterprise — what changed
+            since the last audit.
+            <a href="license-auditor-sample-report.pdf">See a sample report</a>.</p>
+        </details>
+        <details>
+          <summary>What do I run it on?</summary>
+          <p>It's a command-line tool for Windows (x64), Linux (x64) and macOS on Apple Silicon.
+            The Windows build is code-signed and the macOS build is signed and notarized.</p>
+        </details>
+        <details>
+          <summary>How is this different from the free scan?</summary>
+          <p>The free PowerShell scan gives you the headline number as raw CSV. The Auditor adds the
+            PDF report, costed recommendations, scheduled re-audits with drift tracking, a review of
+            licensed guest accounts and shared mailboxes, and support. The table above compares them
+            line by line.</p>
+        </details>
+        <details>
+          <summary>What if it doesn't find enough to justify the price?</summary>
+          <p>Run the free scan first — you see your number before paying anything. Licenses are a
+            flat annual price with no auto-renew; the
+            <a href="license-auditor-refund.html">refund policy</a> covers the rest.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- Cross-link: ServerBridge -->
+    <section class="wrap">
+      <div class="card crosslink">
+        <div class="crosslink-copy">
+          <p class="kicker">Also from Lee Crowe Software</p>
+          <h2>Still running a file server next to Microsoft 365?</h2>
+          <p>ServerBridge is a guided desktop wizard that moves on-premises file shares into
+            SharePoint, OneDrive and Teams — with a full scan of the source before anything moves.</p>
+        </div>
+        <a class="btn btn-primary" href="index.html">See ServerBridge</a>
       </div>
     </section>
 
