@@ -226,6 +226,10 @@ input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-of
 /* Free vs paid fence */
 .fence { max-width: 900px; margin: 0 auto; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
 .fence-head, .frow, .fence-foot { display: grid; grid-template-columns: 1.6fr 1fr 1fr; }
+/* Grid items default to min-width:auto, so a long header label ("Paid · from $149/yr") can force
+   its column wider than the same column in the body rows. min-width:0 lets every row resolve to
+   the same 1.6fr/1fr/1fr split, keeping each heading over its own column at any width. */
+.fence-head > div, .frow > div, .fence-foot > div { min-width: 0; }
 .fence-head > div { padding: 20px; }
 .fence-head .col-free, .fence-head .col-paid { border-left: 1px solid var(--border); }
 .fence-head .col-paid { background: var(--accent-soft); }
@@ -252,8 +256,46 @@ input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-of
 .fence-foot .cell.paidcol { background: var(--accent-soft); }
 .fence-foot .note { font-size: 12.5px; color: var(--muted); align-self: center; }
 
+/* FAQ */
+.faq { max-width: 820px; margin: 0 auto; display: grid; gap: 10px; }
+.faq details { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 0 18px; }
+.faq summary { cursor: pointer; list-style: none; padding: 15px 0; font-weight: 600; font-size: 15px; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: ""; width: 9px; height: 9px; flex: none; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); margin-bottom: 3px; transition: transform .15s ease; }
+.faq details[open] summary::after { transform: rotate(-135deg); margin-bottom: -3px; }
+.faq details p { margin: 0 0 16px; font-size: 14px; color: var(--muted); }
+.faq details p:last-child { margin-bottom: 16px; }
+
+/* Cross-link card (each site points at the other product) */
+.crosslink { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.crosslink .kicker { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+.crosslink h2 { font-size: 22px; margin: 0 0 8px; letter-spacing: -0.01em; }
+.crosslink p { margin: 0; color: var(--muted); font-size: 14.5px; max-width: 62ch; }
+.crosslink .btn { flex: none; }
+
 @media (max-width: 820px) {
   .calc { grid-template-columns: 1fr; }
   .calc-controls { border-right: none; border-bottom: 1px solid var(--border); }
   .tiers { grid-template-columns: 1fr; }
+}
+
+/* Phone width: the fence stays a real table, just tighter. */
+@media (max-width: 720px) {
+  .fence-head, .frow { grid-template-columns: 1.35fr 1fr 1fr; }
+  .fence-head > div { padding: 14px 10px; }
+  .fence-head .kicker { font-size: 10px; }
+  .fence-head .name { font-size: 15px; }
+  .fence-head .meta { display: none; }
+  .fence-head .lead-cell h3 { font-size: 15px; }
+  .frow > div { padding: 10px; font-size: 12.5px; }
+  .frow .cell { text-align: center; }
+  .mk { flex-direction: column; gap: 4px; font-size: 11.5px; text-align: center; }
+  .fence-foot { grid-template-columns: 1fr 1fr; }
+  .fence-foot > div { padding: 12px; }
+  .fence-foot .note { grid-column: 1 / -1; border-bottom: 1px solid var(--border); padding: 14px 12px; }
+  .fence-foot .cell { border-left: none; }
+  .fence-foot .cell.paidcol { border-left: 1px solid var(--border); }
+  .fence-foot .btn { width: 100%; padding: 10px 14px; font-size: 13.5px; text-align: center; }
+  .crosslink { flex-direction: column; align-items: flex-start; }
+  .crosslink .btn { width: 100%; text-align: center; }
 }
