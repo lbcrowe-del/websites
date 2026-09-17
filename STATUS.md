@@ -3,7 +3,7 @@
 > Living state doc. **Read first each session; update at the end of any session that changes
 > something here, then commit.** Architecture that's stable belongs in `CLAUDE.md`, not here.
 
-_Last updated: 2026-07-04_
+_Last updated: 2026-07-04 (one correction 2026-09-17)_
 
 ## Current state
 - 🚀 **ServerBridge v1.0.1 shipped (2026-07-04).** `download.html` now fetches releases from the
@@ -60,10 +60,10 @@ _Last updated: 2026-07-04_
 - ⏳ **Finish DKIM enable** for `leecrowesoftware.com` — config + CNAMEs are in place (see Current
   state); once M365 syncs the CNAMEs, run `Set-DkimSigningConfig -Identity leecrowesoftware.com
   -Enabled $true`.
-- **Branding deferred:** staying on the `azurewebsites.net` host for the API (no free TLS on
-  Consumption). Revisit at launch (SWA Standard ~$9/mo would give `server-bridge.com/api` + free cert).
+- ~~Branding deferred~~ **Superseded 2026-09-11:** the API is live at `api.server-bridge.com` (see CLAUDE.md
+  Azure topology). The `azurewebsites.net` host stays up for desktop builds ≤1.1.0.
 - **Deploy publishes** the API framework-dependent (RID dropped 2026-06-28); takes effect next API deploy.
 
 ## Recent decisions (don't re-litigate)
-- Client + Stripe should target the `azurewebsites.net` host, not `server-bridge.com/api`.
+- Client + Stripe should never target `server-bridge.com/api`. New clients use `api.server-bridge.com` (2026-09-11).
 - Everything targets .NET 10; the SP-based stack automation keeps runtime + package in sync.

@@ -24,10 +24,11 @@ desktop app (which lives in the separate `lbcrowe-del/ServerBridge` repo, on-dis
   4befc9c5-1865-41cb-9b94-911ccb757a6c` first.
 - **TWO Function Apps exist (verified 2026-09-16).** `serverbridge-licensing-fc` (Linux) holds the
   **`api.server-bridge.com`** custom-domain binding and receives Stripe's webhook, so it is the app that
-  serves buyers today. The original `serverbridge-licensing` (Windows) is still **running** with a full copy
-  of every app setting (Brevo key, Stripe webhook secret, table connection) and is reachable at
-  `serverbridge-licensing.azurewebsites.net`; older shipped desktop clients may still call that host. Decide
-  its fate before deleting anything — see TASKS.md in the license-auditor repo. The paragraph below describes
+  serves buyers today. The original `serverbridge-licensing` (Windows) was stopped 2026-09-16 and **restarted 2026-09-17**:
+  it keeps a full copy of every app setting (Brevo key, Stripe webhook secret, table connection) and serves
+  `serverbridge-licensing.azurewebsites.net`, which desktop builds **≤1.1.0** call. The desktop app has no
+  auto-update, so those installs never drain on their own; **keep it running until ServerBridge 2.0 ships
+  and customers have moved** (decision in the desktop repo's DECISIONS.md, 2026-09-17). The paragraph below describes
   the ORIGINAL app.
 - **Function App:** `serverbridge-licensing`, resource group **`websites_rg`** (underscore),
   **Windows Consumption (Dynamic)** plan, **.NET 10 isolated**, `httpsOnly` on. Reachable at
