@@ -131,7 +131,9 @@
         // Offer the newest SHIPPING release. Prereleases, drafts and 0.x test builds (used to
         // rehearse signing and auto-update) must never become the public download: before this,
         // the page simply took the most recent release, whatever it was.
-        const isShipping = r => !r.prerelease && !r.draft && !/^v?0\./.test(r.tag_name || '');
+        const isShipping = r => !r.prerelease && !r.draft
+          && !/^v?0\./.test(r.tag_name || '')
+          && !/\[test build\]/i.test(r.name || '');
         const rel = releases.find(isShipping) || releases[0];
 
         if (rel.prerelease) prerelNotice.hidden = false;
