@@ -197,6 +197,9 @@ public sealed class StripeWebhookFunction
         }
 
         record.Active = false;
+        // Starts the 120-day retention clock the nightly anonymisation job counts from. Only set
+        // on the first deactivation: a dispute opened after a refund must not push the date out.
+        record.DeactivatedUtc ??= DateTimeOffset.UtcNow;
         await _repository.UpsertAsync(record, cancellationToken);
         _logger.LogInformation("Deactivated license {LicenseKey} due to {Reason} ({SourceEventObjectId}).", licenseKey, reason, sourceEventObjectId);
     }

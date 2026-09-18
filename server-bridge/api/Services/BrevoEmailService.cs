@@ -104,6 +104,42 @@ public sealed class BrevoEmailService : IEmailService
         await PostBrevoAsync("/contacts", payload, cancellationToken);
     }
 
+    public async Task DeleteMarketingContactAsync(string email, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(_apiKey)) return;
+        if (string.IsNullOrWhiteSpace(email)) return;
+
+        var path = "/contacts/" + Uri.EscapeDataString(email);
+
+        try
+        {
+            using var request = new HttpRequestMessage(HttpMethod.Delete, BaseUrl + path);
+            request.Headers.Add("api-key", _apiKey);
+
+            using var response = await _http.SendAsync(request, cancellationToken);
+
+            // 404 means there is no such contact — already deleted, or never enrolled. That is the
+            // state we wanted, so it is not a failure.
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                _logger.LogInformation("Brevo had no contact to delete for this address.");
+                return;
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var body = await response.Content.ReadAsStringAsync(cancellationToken);
+                _logger.LogError("Brevo contact delete returned {Status}: {Body}", (int)response.StatusCode, body);
+            }
+        }
+        catch (Exception ex)
+        {
+            // Never propagate — see PostBrevoAsync. The caller decides what to do about a failure;
+            // the anonymisation job deliberately blanks our own row either way.
+            _logger.LogError(ex, "Brevo contact delete failed.");
+        }
+    }
+
     private async Task PostBrevoAsync(string path, object payload, CancellationToken cancellationToken)
     {
         try

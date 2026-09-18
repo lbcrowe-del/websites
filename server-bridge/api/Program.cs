@@ -11,6 +11,7 @@ var host = new HostBuilder()
         services.AddSingleton<StripeSignatureVerifier>();
         services.AddSingleton<LicenseRequestHandler>();
         services.AddSingleton<IEmailService, BrevoEmailService>();
+        services.AddSingleton<LicenseAnonymisationService>();
     })
     .Build();
 

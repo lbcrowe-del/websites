@@ -37,6 +37,18 @@ public sealed class TableLicenseRepository : ILicenseRepository
         await _table.UpsertEntityAsync(record, TableUpdateMode.Replace, cancellationToken);
     }
 
+    public async IAsyncEnumerable<LicenseRecord> ListDeactivatedAsync(
+        [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken)
+    {
+        // Filtered server-side: the job should never page through active customers' rows.
+        var query = _table.QueryAsync<LicenseRecord>(
+            filter: "PartitionKey eq 'license' and Active eq false",
+            cancellationToken: cancellationToken);
+
+        await foreach (var record in query)
+            yield return record;
+    }
+
     public async Task LinkCheckoutSessionAsync(string sessionId, string licenseKey, CancellationToken cancellationToken)
     {
         var link = new CheckoutSessionLink { RowKey = sessionId, LicenseKey = licenseKey };

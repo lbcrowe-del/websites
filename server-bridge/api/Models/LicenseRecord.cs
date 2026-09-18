@@ -30,8 +30,20 @@ public sealed class LicenseRecord : ITableEntity
     public string? EulaAcceptedFromDeviceId { get; set; }
 
     // Customer contact info captured from the Stripe checkout session at purchase time.
+    // Blanked by the nightly anonymisation job 120 days after deactivation — see
+    // LicenseAnonymisationService.
     public string? CustomerEmail { get; set; }
     public string? CustomerName { get; set; }
+
+    // When the key was deactivated (refund or dispute). Starts the retention clock that the
+    // nightly anonymisation job counts from. Null on an active key. Rows deactivated before this
+    // column existed have it stamped the first time the job sees them, so their clock starts then
+    // rather than the job guessing a date it doesn't have.
+    public DateTimeOffset? DeactivatedUtc { get; set; }
+
+    // When the contact details were blanked. Doubles as the job's idempotency marker (a row with
+    // this set is never touched again) and as the audit trail for the privacy policy's promise.
+    public DateTimeOffset? AnonymisedUtc { get; set; }
 
     // Set when the client reports a completed migration. Used by the refund policy's
     // soft completed-migration check (no file names/content, just completion + count).

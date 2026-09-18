@@ -8,6 +8,10 @@ public interface ILicenseRepository
 
     Task UpsertAsync(LicenseRecord record, CancellationToken cancellationToken);
 
+    /// <summary>Every deactivated (refunded or disputed) license row. Used by the nightly
+    /// anonymisation job; active keys are never returned because they are never anonymised.</summary>
+    IAsyncEnumerable<LicenseRecord> ListDeactivatedAsync(CancellationToken cancellationToken);
+
     /// <summary>Stores a session-id → license-key mapping so the post-checkout redirect can look up the key.</summary>
     Task LinkCheckoutSessionAsync(string sessionId, string licenseKey, CancellationToken cancellationToken);
 

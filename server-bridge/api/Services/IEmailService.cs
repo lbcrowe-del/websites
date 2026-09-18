@@ -16,4 +16,13 @@ public interface IEmailService
     /// has its own nurture stream. Implementations must never throw — log and swallow.
     /// </summary>
     Task AddMarketingContactAsync(string email, string? name, string licenseKey, string product, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Deletes the marketing contact for <paramref name="email"/>, ending every nurture sequence
+    /// it is enrolled in. Called by the nightly anonymisation job once a refunded customer's
+    /// retention period is up: their address is about to be erased from our table, so it must not
+    /// survive in Brevo either. A contact that is already gone is not an error. Implementations
+    /// must never throw — log and swallow.
+    /// </summary>
+    Task DeleteMarketingContactAsync(string email, CancellationToken cancellationToken);
 }

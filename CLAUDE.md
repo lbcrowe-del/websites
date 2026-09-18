@@ -35,7 +35,8 @@ desktop app (which lives in the separate `lbcrowe-del/ServerBridge` repo, on-dis
   **`https://api.server-bridge.com/api/`** (preferred — see below) and at its origin hostname
   **`https://serverbridge-licensing.azurewebsites.net/api/`** (legacy, still load-bearing for
   shipped desktop clients — do **not** delete it). Functions: `LicenseActivate`,
-  `LicenseStatus`, `MigrationComplete`, `StripeWebhook`, `StripeIssueLicense`.
+  `LicenseStatus`, `MigrationComplete`, `StripeWebhook`, `StripeIssueLicense`,
+  `LicenseAnonymisation` (timer, 03:20 UTC daily).
 - **Custom domain `api.server-bridge.com` (added 2026-09-11).** Cloudflare-proxied (orange cloud)
   CNAME → `serverbridge-licensing.azurewebsites.net`, plus an `asuid.api` TXT record holding the
   subscription's `customDomainVerificationId`. Azure holds a hostname binding with **no
@@ -68,6 +69,31 @@ desktop app (which lives in the separate `lbcrowe-del/ServerBridge` repo, on-dis
 - **App installers are NOT in this repo's domain** — `download.html` fetches releases from the
   public `lbcrowe-del/ServerBridge-releases` repo (the app source repo is private). See the
   ServerBridge desktop repo's CLAUDE.md for the release-publishing topology.
+
+
+## Licence-data retention (the nightly anonymisation job)
+
+`LicenseAnonymisation` is a timer-triggered function (03:20 UTC daily) that erases a refunded or
+disputed customer's contact details **120 days after deactivation**, which is what the privacy page
+commits to. The logic lives in `Services/LicenseAnonymisationService.cs` so it can be tested against
+Azurite without the Functions host (`LicenseAnonymisationIntegrationTests`, 5 tests).
+
+- **Erased:** `CustomerName`, `CustomerEmail`, and the Brevo marketing contact (otherwise the
+  address outlives our own copy inside a nurture sequence).
+- **Kept:** the licence key, `StripeCustomerId`, the EULA acceptance trail, migration counters —
+  the business record needed to answer a chargeback or a tax question.
+- **The clock** is `DeactivatedUtc`, stamped by `StripeWebhookFunction` on refund/dispute and never
+  moved once set. Rows deactivated before that column existed get it stamped the first time the job
+  sees them, so their 120 days start then — the job never guesses a date it doesn't have, because
+  erasing early is not recoverable.
+- **Idempotent:** a handled row carries `AnonymisedUtc` and is skipped for good.
+- **The 120 days is a constant, not an app setting** (`LicenseAnonymisationService.RetentionPeriod`).
+  A mistyped setting here would erase live customer data early. To exercise it, seed a row with an
+  old `DeactivatedUtc` rather than shortening the period.
+- **Deployed only to `serverbridge-licensing-fc`** — `deploy-licensing-api.yml` targets that app
+  alone, so it runs once a night even though the old `serverbridge-licensing` app is still up on the
+  same storage account. If it is ever deployed to both, disable it on one with the app setting
+  `AzureWebJobs.LicenseAnonymisation.Disabled = true`.
 
 ## ⚠️ `server-bridge.com/api` does NOT reach the Function App
 **History (reconciled 2026-06-28):** the licensing API originally ran as **SWA managed functions**
