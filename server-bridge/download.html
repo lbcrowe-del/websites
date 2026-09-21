@@ -78,16 +78,40 @@
     document.getElementById('yr').textContent = new Date().getFullYear();
 
     // Detect the user's OS so we can highlight the right installer.
-    function detectPlatform() {
+    //
+    // Macs are the hard case: every browser on an Apple Silicon Mac still reports "MacIntel" in
+    // navigator.platform, and the user agent says nothing about the chip. Guessing Intel from that
+    // sent every M-series visitor the wrong build, which then runs under Rosetta. So: ask the
+    // browser properly where we can, infer from the GPU where we can't, and when neither answers,
+    // recommend nothing and let the person choose (see the hint under the cards).
+    async function detectPlatform() {
       const ua = navigator.userAgent || '';
       const plat = navigator.platform || '';
       if (/Win/i.test(plat) || /Windows/i.test(ua)) return 'win';
-      if (/Mac/i.test(plat) || /Mac OS/i.test(ua)) {
-        // Best-effort Apple Silicon hint; many browsers report Intel for compat.
-        if (/arm|aarch64/i.test(ua)) return 'osx-arm64';
-        return 'osx-x64';
-      }
-      return 'unknown';
+      if (!/Mac/i.test(plat) && !/Mac OS/i.test(ua)) return 'unknown';
+
+      // 1. Chromium-based browsers can be asked outright.
+      try {
+        if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
+          const hints = await navigator.userAgentData.getHighEntropyValues(['architecture']);
+          if (hints && hints.architecture) {
+            return /arm/i.test(hints.architecture) ? 'osx-arm64' : 'osx-x64';
+          }
+        }
+      } catch (e) { /* fall through to the GPU check */ }
+
+      // 2. Safari and Firefox: the GPU name gives it away. Apple Silicon Macs report an Apple GPU;
+      //    Intel Macs report Intel, AMD or NVIDIA.
+      try {
+        const gl = document.createElement('canvas').getContext('webgl');
+        const ext = gl && gl.getExtension('WEBGL_debug_renderer_info');
+        const renderer = ext ? String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)) : '';
+        if (/apple\s*m\d|apple gpu|apple silicon/i.test(renderer)) return 'osx-arm64';
+        if (/intel|amd|radeon|nvidia|geforce/i.test(renderer)) return 'osx-x64';
+      } catch (e) { /* fall through */ }
+
+      // 3. Genuinely unknown — say so rather than picking one.
+      return 'osx-unknown';
     }
 
     // Classify a release asset filename into a platform bucket.
@@ -108,7 +132,7 @@
     const PLATFORM_META = {
       'win':       { title: 'Windows',                  sub: 'Windows 10/11, 64-bit' },
       'osx-x64':   { title: 'macOS (Intel)',            sub: 'macOS 11 Big Sur or later' },
-      'osx-arm64': { title: 'macOS (Apple Silicon)',    sub: 'M1/M2/M3 Macs' },
+      'osx-arm64': { title: 'macOS (Apple Silicon)',    sub: 'M-series Macs (M1 and later)' },
     };
 
     async function loadRelease() {
@@ -146,7 +170,7 @@
           if (!buckets[p] || /setup/i.test(asset.name)) buckets[p] = asset;
         }
 
-        const detected = detectPlatform();
+        const detected = await detectPlatform();
         const order = ['win', 'osx-arm64', 'osx-x64'].filter(k => buckets[k]);
         if (order.length === 0) {
           throw new Error('Release ' + rel.tag_name + ' has no platform installers attached yet.');
@@ -158,7 +182,7 @@
           const meta = PLATFORM_META[key];
           const card = document.createElement('a');
           card.href = a.browser_download_url;
-          card.className = 'dl-card' + (key === detected || (detected === 'osx-x64' && key === 'osx-x64') ? ' recommended' : '');
+          card.className = 'dl-card' + (key === detected ? ' recommended' : '');
           card.innerHTML =
             '<h3>' + meta.title +
             (key === detected ? '<span class="badge">For your device</span>' : '') +
@@ -167,6 +191,15 @@
             '<div class="btn btn-primary" style="width:100%;text-align:center">Download</div>' +
             '<div class="dl-meta">' + a.name + ' · ' + Math.round(a.size / (1024 * 1024)) + ' MB</div>';
           grid.appendChild(card);
+        }
+
+        if (detected === 'osx-unknown') {
+          const hint = document.createElement('p');
+          hint.className = 'dl-status';
+          hint.innerHTML = "We couldn't tell which Mac you have. Open the Apple menu \u2192 " +
+            "<strong>About This Mac</strong>: if it says <strong>Chip</strong>, choose Apple Silicon; " +
+            "if it says <strong>Processor</strong>, choose Intel.";
+          grid.insertAdjacentElement('afterend', hint);
         }
 
         versionLine.textContent = 'Version ' + (rel.tag_name || rel.name) +
