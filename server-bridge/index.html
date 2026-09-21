@@ -61,8 +61,8 @@
       <h1>ServerBridge</h1>
       <p class="tagline">File server → Microsoft 365 migration, done right.</p>
       <p class="lead">A guided desktop wizard that helps IT professionals move on-premises file
-        shares to SharePoint, OneDrive, and Teams — with real scanning, per-folder routing,
-        and verifiable results.</p>
+        shares to SharePoint, OneDrive, and Teams — with real scanning, per-folder routing, and
+        verification that checks Microsoft 365 itself.</p>
       <div class="cta">
         <a class="btn btn-primary" href="download.html">Download for Windows or Mac</a>
         <a class="btn btn-ghost" href="buy.html">Buy a Pro license</a>
@@ -84,22 +84,28 @@
         <div class="feature">
           <div class="ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
           <h3>Real scan &amp; analysis</h3>
-          <p>A full inventory of your source — file counts, total size, structure, and problem items.</p>
+          <p>A full inventory of your source — file counts, total size, structure and problem items —
+            plus anything it couldn't read, listed rather than quietly skipped.</p>
         </div>
         <div class="feature">
           <div class="ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="9" r="3"/><path d="M6 9v6"/><path d="M18 12a6 6 0 0 1-6 6H9"/></svg></div>
           <h3>Per-folder routing</h3>
-          <p>Send each top-level folder to its own SharePoint site, library, OneDrive, or Teams.</p>
+          <p>Send each top-level folder to its own SharePoint site, a Teams site, or a named person's
+            OneDrive — so home folders land in their owners' drives. Migrating into someone else's
+            OneDrive needs access granted first; ServerBridge checks up front and tells you exactly
+            whose.</p>
         </div>
         <div class="feature">
           <div class="ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 16l-4-4-4 4"/><path d="M12 12v9"/><path d="M20.4 18.4A5 5 0 0 0 18 9h-1.3A8 8 0 1 0 4 16.2"/></svg></div>
           <h3>Resilient migration engine</h3>
-          <p>Resumable uploads for large files, live progress, per-item logging, cancel and resume.</p>
+          <p>Large files upload in chunks, with live progress, per-item logging and cancel at any time.
+            Run the job again and it moves only what has changed since.</p>
         </div>
         <div class="feature">
           <div class="ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
           <h3>Verification &amp; reporting</h3>
-          <p>Confirm every item landed correctly, then export a sign-off report for the customer.</p>
+          <p>Reads every migrated file back from Microsoft 365 and compares it with the source, then
+            exports a sign-off report that says what was confirmed — and what wasn't.</p>
         </div>
         <div class="feature">
           <div class="ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
@@ -133,7 +139,7 @@
           <span class="chip"><b>Microsoft Graph</b> + MSAL</span>
           <span class="chip"><b>SQLite</b> + EF Core</span>
           <span class="chip"><b>CommunityToolkit</b>.Mvvm</span>
-          <span class="chip">Resumable large-file uploads</span>
+          <span class="chip">Chunked large-file uploads</span>
           <span class="chip">CI-tested &amp; security-analyzed</span>
         </div>
         <p class="note">Clean separation of UI and business logic, an automated test suite, and

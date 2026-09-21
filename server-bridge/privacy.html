@@ -38,12 +38,14 @@
           license key and a randomly generated device identifier (not tied to any personal
           hardware identifier) to our licensing server to activate and periodically re-validate
           your license.</li>
-        <li><strong>Migration completion status.</strong> When a migration run finishes
-          successfully, the ServerBridge desktop app sends an anonymous completion signal — your
-          license key, the randomly generated device identifier, a count of the number of files
-          migrated, and the completion timestamp — to our licensing server. This contains no file
-          names, folder paths, or file contents, and is used to support our refund policy and
-          understand whether migrations are completing successfully.</li>
+        <li><strong>Migration completion status.</strong> When a migration run completes with no
+          failures and has actually moved files, the ServerBridge desktop app sends a completion
+          signal — your license key, the randomly generated device identifier, a count of the
+          number of files moved, and the completion timestamp — to our licensing server. It is tied
+          to your license key, so it is not anonymous, but it contains no file names, folder paths,
+          or file contents. It is used to support our refund policy and to understand whether
+          migrations are completing successfully. A run that failed, was cancelled, or moved
+          nothing new sends nothing.</li>
         <li><strong>Marketing contact.</strong> When you purchase ServerBridge Pro, we add your name and email address to our email service provider (Brevo) so we can send your license key, a short series of onboarding emails and, occasionally, news about our other product, the ServerBridge License Auditor. You can unsubscribe at any time using the link in any of these emails.</li>
         <li><strong>Website contact requests.</strong> If you email us (e.g. to ask a question or
           request a refund), we keep that correspondence to respond to you.</li>
