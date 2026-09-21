@@ -49,6 +49,22 @@ _Last updated: 2026-07-04 (one correction 2026-09-17)_
 - **New Stripe product (2026-06-29):** old product/price archived; new one uses lookup key
   `serverbridge_pro_onetime`. Same $99 + tax. `buy.html` updated to the new Payment Link.
 
+## Licence data retention (deployed 2026-09-21)
+`LicenseAnonymisation` timer function (03:20 UTC daily) erases refunded customers' contact details
+120 days after deactivation — name, email and Brevo contact go; the licence key and the Stripe
+payment linkage stay, so refund and dispute history still works. Deployed to
+`serverbridge-licensing-fc` only.
+
+**Verified in production, not just deployed:** a marked test row (`SB-ANON-TEST-…`, deactivated
+200 days earlier) was seeded, the timer was triggered by hand, and the row came back with name and
+email empty, `AnonymisedUtc` stamped, key and Stripe id intact. Test row deleted afterwards; a
+count-only audit confirmed no other row was touched (11 rows, 2 active, 0 anonymised).
+
+**Worth knowing:** rows that were deactivated before `DeactivatedUtc` existed have their clock
+started at the pass that first sees them (deliberate — guessing a date risks erasing early), so the
+legacy comp/refunded rows become eligible around **mid-January 2027**, not 120 days after they were
+actually deactivated.
+
 ## Open items / decisions
 - ⏰ **DMARC follow-up — revisit on/after ~2026-07-25** (≥3 weeks of `p=none` report data).
   `leecrowesoftware.com` DMARC is currently `p=none` (monitoring). Before tightening: (1) confirm
