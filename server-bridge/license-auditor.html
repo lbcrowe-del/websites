@@ -173,7 +173,8 @@
           <ul>
             <li>Full unused-license audit</li>
             <li>Sign-in activity cross-check (90-day)</li>
-            <li>Exportable report (PDF &amp; CSV)</li>
+            <li>PDF report you can hand to someone</li>
+            <li>Licensed guests &amp; shared mailboxes, flagged for review</li>
             <li>Recommended actions, costed by SKU</li>
           </ul>
           <a class="btn btn-ghost" href="https://buy.stripe.com/9B69AV0AoaHX94Abl02B202">Buy Starter</a>
@@ -190,7 +191,6 @@
             <li>Month-over-month drift tracking</li>
             <li>PDF shows what changed since the last audit</li>
             <li>Offboarding list: what each leaver still holds</li>
-            <li>Licensed guests &amp; shared mailboxes, flagged for review</li>
           </ul>
           <a class="btn btn-primary" href="https://buy.stripe.com/dRmeVf1Es5nDa8Ebl02B203">Buy Team</a>
         </div>
@@ -248,6 +248,11 @@
         </div>
         <div class="frow">
           <div class="feat">Recommended actions, costed by SKU</div>
+          <div class="cell"><span class="mk no"><span class="dash"></span>No</span></div>
+          <div class="cell paidcol"><span class="mk yes"><span class="tick"></span>Yes</span></div>
+        </div>
+        <div class="frow">
+          <div class="feat">Licensed guests &amp; shared mailboxes, flagged for review</div>
           <div class="cell"><span class="mk no"><span class="dash"></span>No</span></div>
           <div class="cell paidcol"><span class="mk yes"><span class="tick"></span>Yes</span></div>
         </div>
@@ -315,9 +320,9 @@
         <details>
           <summary>What's actually in the PDF?</summary>
           <p>Your recoverable spend as a headline figure, the dormant and disabled seats behind it
-            priced by SKU, costed recommended actions, and — on Team and Enterprise — what changed
-            since the last audit, a review of licensed guests and shared mailboxes, and an
-            offboarding list showing what each leaver still holds.
+            priced by SKU, costed recommended actions, and a review of licensed guests and shared
+            mailboxes. On Team and Enterprise it also shows what changed since the last audit, and an
+            offboarding list of what each leaver still holds.
             <a href="license-auditor-sample-report.pdf">See a sample report</a>.</p>
         </details>
         <details>
@@ -332,6 +337,16 @@
             recommendations, scheduled re-audits with drift tracking, a review of licensed guest
             accounts and shared mailboxes, and the offboarding list in the report itself — per person,
             with what each one still holds. The table above compares them line by line.</p>
+        </details>
+        <details>
+          <summary>Will it find a shared mailbox nobody uses?</summary>
+          <p>Sometimes — and it tells you when it can't. Mailbox types come from Microsoft's usage
+            report, which only lists mailboxes that have had activity, so a shared mailbox sitting
+            completely untouched doesn't appear in it at all. Its type is reported as
+            <em>unknown</em> rather than guessed. The free PowerShell module can read types straight
+            from Exchange Online instead, which sees every mailbox whether it's been used or not —
+            that's <code>Invoke-OffboardingCheck -UseExchangeOnline</code>, and it needs a second
+            sign-in. The same option is planned for the Auditor.</p>
         </details>
         <details>
           <summary>What if it doesn't find enough to justify the price?</summary>
