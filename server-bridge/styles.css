@@ -299,3 +299,9 @@ input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-of
   .crosslink { flex-direction: column; align-items: flex-start; }
   .crosslink .btn { width: 100%; text-align: center; }
 }
+
+/* Support section — three plain columns, stacking on narrow screens. */
+.support { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; align-items: start; }
+.support h3 { margin: 0 0 8px; font-size: 15px; }
+.support p { margin: 0; font-size: 14px; color: var(--muted); }
+@media (max-width: 720px) { .support { grid-template-columns: 1fr; gap: 22px; } }
