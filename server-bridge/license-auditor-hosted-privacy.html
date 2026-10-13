@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy Policy — ServerBridge License Auditor (Hosted)</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="canonical" href="https://server-bridge.com/license-auditor-hosted-privacy.html" />
+</head>
+<body>
+  <header class="wrap topbar">
+    <div class="brand"><span class="mark">S</span> ServerBridge</div>
+    <a class="home" href="license-auditor.html">&larr; Back</a>
+  </header>
+
+  <main>
+    <section class="wrap legal">
+      <h1>Privacy Policy</h1>
+      <p class="updated">Last updated: October 13, 2026 &middot; ServerBridge License Auditor &mdash; Hosted Service</p>
+      <p class="updated">Hosted service documents: <a href="license-auditor-hosted-dpa.html">Data Processing Agreement</a> &middot; <a href="license-auditor-hosted-terms.html">Terms of Service</a> &middot; For the downloadable License Auditor, see its <a href="license-auditor-privacy.html">Privacy Policy</a> and <a href="license-auditor-terms.html">Terms</a>.</p>
+
+<h2 id="who-we-are-and-what-this-covers">1. Who we are and what this covers</h2>
+<p>Lee Crowe Software Solutions LLC (“we”, “us”) provides the ServerBridge License Auditor Hosted
+Service (“the Service”): a subscription service that audits Microsoft 365 licence usage across the
+Microsoft 365 tenants a customer connects, and produces a consolidated report.</p>
+<p>This policy covers the Service only. The downloadable ServerBridge License Auditor and the free
+ServerBridge LicenseScan PowerShell module are covered by a separate policy, and neither sends us
+any tenant data.</p>
+<h2 id="two-different-roles-and-why-the-distinction-matters">2. Two different roles, and why the distinction matters</h2>
+<p><strong>For your own account information we are the controller.</strong> Your name, your contact email, your
+subscription record — we decide how those are handled, and this policy governs them.</p>
+<p><strong>For the directory data we read from the tenants you connect we are a processor, and you are the
+controller.</strong> That data belongs to you and your clients. We read it only to produce your reports,
+only on your instructions, and we do not use it for any purpose of our own. The terms on which we do
+this are set out in our Data Processing Agreement, which forms part of your contract.</p>
+<p>If the tenants you connect belong to your clients rather than to you, you are responsible for having
+the authority to connect them and for telling those clients that their data is processed by us.</p>
+<h2 id="what-the-service-reads-from-a-connected-tenant">3. What the Service reads from a connected tenant</h2>
+<p>Each scan reads, using read-only Microsoft Graph permissions:</p>
+<ul>
+<li>Licensed user accounts: display name, user principal name, account enabled state, account type
+(member or guest), and assigned licences.</li>
+<li>Sign-in activity dates, or, where that is unavailable, Microsoft 365 usage-report activity dates.</li>
+<li>Subscribed licence inventory for the organisation: product, seats enabled, seats assigned.</li>
+<li>For each licensed mailbox: mailbox type (user, shared, room, equipment), size, and whether an
+archive exists.</li>
+<li>For accounts that look like leavers: the <em>number</em> of groups and directory roles they still belong
+to. A count is all that is read.</li>
+</ul>
+<p>The Service reads nothing else. It never reads message content, file content, calendar content, chat
+content, or any password or secret. The permissions it holds are read-only and cannot write, modify
+or delete anything in a connected tenant.</p>
+<h2 id="what-we-keep-and-what-we-do-not">4. What we keep, and what we do not</h2>
+<p><strong>We keep:</strong></p>
+<ul>
+<li><strong>The reports we produce for you.</strong> A report lists the accounts it identifies as dormant,
+including their display names and user principal names. <strong>Reports therefore contain personal data
+about individuals in the tenants you connect.</strong> That is the purpose of the report.</li>
+<li><strong>Per-run totals</strong>: number of tenants scanned and failed, recoverable annual spend, dormant seat
+count, unassigned seat count, accounts-to-review count. Numbers only.</li>
+<li><strong>The list of tenants you have connected</strong>: the Microsoft tenant ID and the organisation’s name.</li>
+<li><strong>Your own account information</strong>: your name, contact email, and the subscription record Microsoft
+sends us. We never see or hold your payment details.</li>
+</ul>
+<p><strong>We do not keep:</strong></p>
+<ul>
+<li><strong>Any credential belonging to you or to a connected tenant.</strong> None is ever created, transmitted or
+stored. Access is granted when a tenant’s administrator consents to our application, and we then
+authenticate as ourselves using a certificate we hold. There is no customer password, secret or
+token anywhere in the Service.</li>
+<li><strong>A database of the users in your tenants.</strong> The per-user rows a scan reads exist only in memory
+for the duration of that scan and are discarded when the report has been produced. What survives
+is the report and the totals above.</li>
+<li><strong>Message, file, calendar or chat content</strong>, which the Service never reads at all.</li>
+</ul>
+<h2 id="your-own-account-information">5. Your own account information</h2>
+<ul>
+<li><strong>Billing.</strong> The Service is sold only through the Microsoft commercial marketplace. Microsoft
+bills you; <strong>we never see or hold your payment details at all</strong>, and no payment processor of ours
+is involved. We receive the subscription identifier and the information Microsoft provides with
+it.</li>
+<li><strong>Email.</strong> We send your name and contact email to Brevo so we can deliver your reports, service
+notices and account email. You may unsubscribe from non-essential email at any time.</li>
+<li><strong>Correspondence.</strong> If you contact us for support, we keep that correspondence to answer you.</li>
+</ul>
+<h2 id="where-the-service-runs-and-who-else-is-involved">6. Where the Service runs, and who else is involved</h2>
+<p>The Service runs on Microsoft Azure in the <strong>Azure Central US</strong> region, in the United States. Reports are
+stored in
+Azure Blob Storage with no public access; they are retrievable only through a short-lived,
+single-purpose link issued to a signed-in user of your account.</p>
+<p>Our sub-processors:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Sub-processor</th>
+<th>Purpose</th>
+<th>Data involved</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Microsoft Azure</td>
+<td>Hosting, storage, key management</td>
+<td>Everything the Service holds</td>
+</tr>
+<tr>
+<td>Microsoft (Graph)</td>
+<td>Source of the data audited</td>
+<td>Read-only access to connected tenants</td>
+</tr>
+<tr>
+<td>Microsoft commercial marketplace</td>
+<td>Billing and subscription management</td>
+<td>Your subscription record</td>
+</tr>
+<tr>
+<td>Brevo</td>
+<td>Transactional email</td>
+<td>Your name and contact email</td>
+</tr>
+</tbody>
+</table>
+<p>We will give notice before adding or replacing a sub-processor, as set out in the DPA.</p>
+<h2 id="how-long-we-keep-things">7. How long we keep things</h2>
+<ul>
+<li><strong>Reports: 13 months.</strong> Long enough to compare a month with the same month last year; the
+per-run totals below cover longer comparisons, so older reports are deleted to limit what a
+breach could expose. You may delete any report at any time from the portal.</li>
+<li><strong>Per-run totals: for the life of your subscription</strong>, so month-over-month comparison works.</li>
+<li><strong>Connected tenant records: for the life of your subscription</strong>, including tenants whose consent
+has been withdrawn, so you can see what happened to them.</li>
+<li><strong>Account and subscription records</strong>: for the life of your subscription, plus the period required for
+tax and accounting purposes (typically up to seven years for financial records).</li>
+</ul>
+<p>On termination we delete your reports, totals and tenant records within <strong>thirty (30) days</strong>, except
+where law requires retention.</p>
+<h2 id="ending-access">8. Ending access</h2>
+<p>A connected tenant’s administrator can withdraw our access at any time from their own Microsoft 365
+admin centre, without going through us, and without needing our cooperation. When access is
+withdrawn the tenant stops being scanned. We keep the record of that tenant, marked as revoked, so
+it does not silently disappear from your reports — if you want it removed entirely, you can delete
+it.</p>
+<h2 id="your-rights">9. Your rights</h2>
+<p>Where you are a data subject in relation to the account information we hold as controller, you may
+request access, correction, deletion, restriction, or portability, or object to processing. Email
+<strong>hello@leecrowesoftware.com</strong>. We respond to verified requests within forty-five (45) days,
+extendable once by a further forty-five (45) days with notice and reasons.</p>
+<p>Where the request concerns directory data we process on your behalf — for example, a request from an
+employee of one of your clients — <strong>the request belongs to you as controller</strong>. We will tell you
+promptly, will not respond directly unless you instruct us to, and will help you respond.</p>
+<h3 id="kentucky-residents-kcdpa">9.1 Kentucky residents (KCDPA)</h3>
+<p>Under the Kentucky Consumer Data Protection Act, Kentucky residents have the right to: confirm
+whether we process their personal data; access it; correct inaccuracies; delete it; obtain a
+portable copy; and opt out of processing for targeted advertising, the sale of personal data, or
+profiling with significant legal effects. <strong>We do none of those three things</strong>, but the right
+exists and is stated here.</p>
+<h3 id="how-to-exercise-them-and-how-to-appeal">9.2 How to exercise them, and how to appeal</h3>
+<p>Email <strong>hello@leecrowesoftware.com</strong>. We respond to verified requests within <strong>forty-five (45)
+days</strong>. If we decline to act, you may <strong>appeal within sixty (60) days</strong> by replying to that address;
+we will tell you the outcome and our reasons. If the appeal is denied you may contact the Kentucky Attorney General using the Attorney General's <a href="https://kyoag.highq.com/kyoag/renderSmartForm.action?formId=dc0f5031-93d0-4d3a-bfb0-e2bf5f5a782a">online consumer data privacy complaint form</a>.</p>
+<h2 id="where-data-is-held-and-customers-outside-the-united-states">10. Where data is held, and customers outside the United States</h2>
+<p><strong>The Service is offered to customers in the United States.</strong> All processing and storage takes place
+in the United States, and we do not currently offer the Service to customers established in the
+European Economic Area or the United Kingdom.</p>
+<p>If you connect a tenant whose users are located outside the United States, their personal data will
+be processed in the United States. As controller, it is your responsibility to ensure you have a
+lawful basis and, where required, a valid transfer mechanism for doing so.</p>
+<h2 id="security-and-telling-you-when-something-goes-wrong">11. Security, and telling you when something goes wrong</h2>
+<p>We protect the Service with: encryption in transit and at rest; no customer credentials to steal;
+private report storage with short-lived access links; a single service certificate held in Azure Key
+Vault; and least-privilege, read-only access to connected tenants.</p>
+<p>If a breach affects personal data we process on your behalf, we will notify you <strong>without undue
+delay and in any event within seventy-two (72) hours</strong> of becoming aware of it, with the information
+you need to meet your own notification obligations. If a breach affects your account information, we
+will notify you directly.</p>
+<p><strong>Kentucky residents.</strong> Where unencrypted personal information (as defined in KRS 365.732 and the
+Kentucky Consumer Data Protection Act) was, or is reasonably believed to have been, acquired by an
+unauthorised person, we will notify the affected Kentucky resident <strong>in the most expedient time
+possible and without unreasonable delay</strong>, consistent with the legitimate needs of law enforcement
+and any measures necessary to determine the scope of the breach and restore the integrity of the
+system.</p>
+<p>No method of transmission or storage is completely secure, and we do not claim otherwise.</p>
+<h2 id="governing-law">12. Governing law</h2>
+<p>This Policy is governed by the laws of the Commonwealth of Kentucky, United States. Disputes arising
+under it are subject to the exclusive jurisdiction of the state and federal courts located in
+Kentucky, consistent with the dispute resolution process in our hosted Terms of Service.</p>
+<h2 id="changes">13. Changes</h2>
+<p>We will post changes here with a new “last updated” date, and will give advance notice by email of
+any change that materially reduces the protections described above.</p>
+
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>&copy; <span id="yr"></span> Lee Crowe Software Solutions LLC</span>
+      <span><a href="https://leecrowesoftware.com">leecrowesoftware.com</a></span>
+    </div>
+  </footer>
+
+  <script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "1dd7b99606b2470b86ee6e97cafd2ab3"}'></script>
+  <!-- End Cloudflare Web Analytics -->
+</body>
+</html>
