@@ -1,7 +1,7 @@
 # ServerBridge — End User License Agreement (EULA)
 
-**Effective Date:** June 29, 2026
-**Version:** 1.4
+**Effective Date:** October 14, 2026
+**Version:** 1.6
 
 > **IMPORTANT — READ CAREFULLY BEFORE INSTALLING OR USING THIS SOFTWARE.**
 >
@@ -34,17 +34,37 @@ For the purposes of this Agreement, the following definitions apply:
 
 Subject to the terms of this Agreement, Licensor grants Licensee a limited, non-exclusive,
 non-transferable, revocable license to install and use the Software on an Authorized Device
-solely for Licensee's internal business purposes.
+solely for Licensee's internal business purposes. The Free Tier includes the full core
+migration workflow (scanning, compatibility analysis, destination routing, migration, and
+reporting) subject to a per-job data limit of twenty-five (25) gigabytes of migrated data. A
+migration job that reaches this limit stops before exceeding it; the remaining files are left
+un-migrated and may be migrated by upgrading to the Pro Tier.
 
 ### 2.2 Pro Tier
 
 Upon a one-time purchase of a Pro license key, Licensor grants Licensee a limited,
 non-exclusive, non-transferable, revocable license to install and use the Software on an
 Authorized Device, solely for Licensee's internal business purposes, with access to all
-features included in the Pro Tier as described in the current feature documentation. The
+features included in the Pro Tier as described in the current feature documentation. The Pro
+Tier removes the Free Tier's per-job data limit (unlimited data per migration job). The
 license is perpetual unless this Agreement is terminated as set forth in Section 10.
 
-### 2.3 License Restrictions
+### 2.3 Feature Tiers
+
+The following table summarizes the differences between the Free and Pro Tiers. Where this
+table conflicts with the descriptions in Sections 2.1 and 2.2, those Sections control.
+
+| Feature | Free | Pro |
+| --- | --- | --- |
+| Source scanning & inventory | ✅ | ✅ |
+| Microsoft 365 compatibility pre-flight checks | ✅ | ✅ |
+| Per-folder destination routing | ✅ | ✅ |
+| Migration to SharePoint / OneDrive / Teams | ✅ | ✅ |
+| Verification & report export | ✅ | ✅ |
+| Data migrated per job | Up to 25 GB | Unlimited |
+| Future Pro-tier capabilities (e.g. Clean ROT, Permission Review) | — | ✅ |
+
+### 2.4 License Restrictions
 
 Except as expressly permitted in this Agreement, Licensee shall not:
 
@@ -90,7 +110,7 @@ The Software, including all copies, modifications, and derivative works thereof,
 remain the exclusive property of Lee Crowe Software Solutions LLC. This Agreement does not convey to Licensee any
 ownership interest in the Software, but only a limited right of use as set forth herein. All
 rights not expressly granted to Licensee are reserved by Licensor. To the extent Licensee creates
-any derivative work of the Software notwithstanding the restriction in Section 2.3, Licensee
+any derivative work of the Software notwithstanding the restriction in Section 2.4, Licensee
 hereby irrevocably assigns to Licensor, effective immediately upon creation, all right, title,
 and interest in and to such derivative work. ServerBridge and associated logos and marks are
 proprietary to Lee Crowe Software Solutions LLC.
@@ -104,12 +124,15 @@ for the purpose of performing file migration operations as directed by Licensee.
 not collect, store, transmit, or retain any of Licensee's files, file contents, or
 Microsoft 365 data on Licensor's servers.
 
-### 5.2 Telemetry and Usage Data
+### 5.2 Migration Completion Report
 
-The Software may collect anonymous, non-identifiable usage telemetry (such as feature usage
-frequency and error reports) to improve the Software. This data does not include any file
-contents, file names, user data, or M365 tenant data. Licensee may opt out of telemetry
-collection in the Software's settings.
+When a migration completes successfully, the Software sends Licensor's licensing server the
+Licensee's license key, a randomly generated device identifier, and the number of files migrated.
+It does not send file contents, file names, paths, user data, or Microsoft 365 tenant data.
+Licensor uses this report to apply the refund policy, which treats a license that has completed a
+migration differently. Because it is part of how the license is administered, it cannot be turned
+off. The Software collects no other usage telemetry. No report is sent from the Free tier, which
+has no license key.
 
 ### 5.3 Licensee Responsibility
 
