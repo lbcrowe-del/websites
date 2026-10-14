@@ -77,7 +77,7 @@
     <section class="wrap">
       <div class="section-head">
         <h2>How much are you wasting?</h2>
-        <p>Drag to match your tenant. The audit finds the seats behind these numbers.</p>
+        <p>Drag to match your tenant. The audit finds the real ones.</p>
       </div>
       <div class="calc" role="group" aria-label="Savings estimator">
         <div class="calc-controls">
@@ -105,15 +105,15 @@
           </div>
           <div class="field">
             <div class="field-top">
-              <label for="waste">Estimated waste</label>
+              <label for="waste">Your estimate of unused seats</label>
               <span class="field-val" id="wasteOut">15%</span>
             </div>
             <input type="range" id="waste" min="5" max="30" step="1" value="15" />
-            <p class="field-hint">Audits typically surface 15–30% unused or over-provisioned seats.</p>
+            <p class="field-hint">Your guess &mdash; the free scan replaces it with your real figure.</p>
           </div>
         </div>
         <div class="calc-readout">
-          <p class="readout-label">Wasted license spend we'd surface</p>
+          <p class="readout-label">Spend on unused seats, at your estimate</p>
           <div class="readout-big" id="savOut">$6,480</div>
           <p class="readout-per">per year · <span id="seatsFound">15</span> reclaimable seats</p>
           <div class="readout-divide"></div>
@@ -121,8 +121,8 @@
             <span>Your recommended plan</span>
             <span class="v" id="priceOut">$349/yr</span>
           </div>
-          <span class="roi-pill" id="roiOut">Pays for itself 10.8×</span>
-          <a class="btn btn-primary scan-cta" href="#install" id="scanCta">Get the free scan that finds this</a>
+          <span class="roi-pill" id="roiOut">Would pay for itself 18.6× at this estimate</span>
+          <a class="btn btn-primary scan-cta" href="#install" id="scanCta">Get your real number with the free scan</a>
           <p class="scan-sub">Read-only PowerShell · no app registration · runs in 5 minutes</p>
         </div>
       </div>
@@ -180,7 +180,7 @@
           <a class="btn btn-ghost" href="https://buy.stripe.com/9B69AV0AoaHX94Abl02B202">Buy Starter</a>
         </div>
         <div class="tier featured">
-          <span class="flag">Most tenants</span>
+          <span class="flag">Fits M365 Business</span>
           <h3>Team</h3>
           <p class="seats">51–300 users</p>
           <div class="price">$349<span>/yr</span></div>
@@ -498,7 +498,7 @@
         savOut.textContent = money(annual);
         seatsFound.textContent = reclaim.toLocaleString('en-US');
         priceOut.textContent = tier.label;
-        roiOut.textContent = 'Pays for itself ' + roi.toFixed(1) + '×';
+        roiOut.textContent = 'Would pay for itself ' + roi.toFixed(1) + '× at this estimate';
       }
       seats.addEventListener('input', recalc);
       waste.addEventListener('input', recalc);
