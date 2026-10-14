@@ -49,6 +49,20 @@ public sealed class TableLicenseRepository : ILicenseRepository
             yield return record;
     }
 
+    public async IAsyncEnumerable<LicenseRecord> ListExpiredActiveAsync(
+        DateTimeOffset expiredBeforeUtc,
+        [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken)
+    {
+        // Filtered server-side, like ListDeactivatedAsync. A row with no ExpiresAtUtc (a licence
+        // that never expires) cannot satisfy "lt", so it is never returned — which is the point.
+        var filter = TableClient.CreateQueryFilter(
+            $"PartitionKey eq 'license' and Active eq true and ExpiresAtUtc lt {expiredBeforeUtc}");
+        var query = _table.QueryAsync<LicenseRecord>(filter: filter, cancellationToken: cancellationToken);
+
+        await foreach (var record in query)
+            yield return record;
+    }
+
     public async Task LinkCheckoutSessionAsync(string sessionId, string licenseKey, CancellationToken cancellationToken)
     {
         var link = new CheckoutSessionLink { RowKey = sessionId, LicenseKey = licenseKey };

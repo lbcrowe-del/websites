@@ -73,17 +73,21 @@ desktop app (which lives in the separate `lbcrowe-del/ServerBridge` repo, on-dis
 
 ## Licence-data retention (the nightly anonymisation job)
 
-`LicenseAnonymisation` is a timer-triggered function (03:20 UTC daily) that erases a refunded or
-disputed customer's contact details **120 days after deactivation**, which is what the privacy page
-commits to. The logic lives in `Services/LicenseAnonymisationService.cs` so it can be tested against
-Azurite without the Functions host (`LicenseAnonymisationIntegrationTests`, 5 tests).
+`LicenseAnonymisation` is a timer-triggered function (03:20 UTC daily) that erases a customer's
+contact details **120 days after their licence ends**, which is what both privacy pages commit to. A
+licence ends one of two ways, and the job handles both:
+- **Deactivated** (refund or dispute) — clock starts at `DeactivatedUtc`.
+- **Expired naturally** — clock starts at `ExpiresAtUtc`. Added 2026-10-14: nothing sets
+  `Active=false` on natural expiry, so before then an expired licence was never anonymised at all.
+  A licence with no `ExpiresAtUtc` never ends and is never touched. The logic lives in `Services/LicenseAnonymisationService.cs` so it can be tested against
+Azurite without the Functions host (`LicenseAnonymisationIntegrationTests`, 9 tests).
 
 - **Erased:** `CustomerName`, `CustomerEmail`, and the Brevo marketing contact (otherwise the
   address outlives our own copy inside a nurture sequence).
 - **Kept:** the licence key, `StripeCustomerId`, the EULA acceptance trail, migration counters —
   the business record needed to answer a chargeback or a tax question.
-- **The clock** is `DeactivatedUtc`, stamped by `StripeWebhookFunction` on refund/dispute and never
-  moved once set. Rows deactivated before that column existed get it stamped the first time the job
+- **The clock** is `DeactivatedUtc` for refunds/disputes (stamped by `StripeWebhookFunction` and never
+  moved once set) and `ExpiresAtUtc` for natural expiry. Rows deactivated before that column existed get it stamped the first time the job
   sees them, so their 120 days start then — the job never guesses a date it doesn't have, because
   erasing early is not recoverable.
 - **Idempotent:** a handled row carries `AnonymisedUtc` and is skipped for good.

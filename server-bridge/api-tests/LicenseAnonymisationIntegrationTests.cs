@@ -53,7 +53,8 @@ public sealed class LicenseAnonymisationIntegrationTests
         }
     }
 
-    private static string Seed(TableClient table, bool active, DateTimeOffset? deactivatedUtc, DateTimeOffset? anonymisedUtc = null)
+    private static string Seed(TableClient table, bool active, DateTimeOffset? deactivatedUtc, DateTimeOffset? anonymisedUtc = null,
+        DateTimeOffset? expiresAtUtc = null)
     {
         var rowKey = $"ANON-IT-{Guid.NewGuid():N}";
         var entity = new TableEntity("license", rowKey)
@@ -70,6 +71,8 @@ public sealed class LicenseAnonymisationIntegrationTests
             entity["DeactivatedUtc"] = deactivatedUtc.Value;
         if (anonymisedUtc is not null)
             entity["AnonymisedUtc"] = anonymisedUtc.Value;
+        if (expiresAtUtc is not null)
+            entity["ExpiresAtUtc"] = expiresAtUtc.Value;
         table.UpsertEntity(entity, TableUpdateMode.Replace);
         return rowKey;
     }
@@ -138,12 +141,14 @@ public sealed class LicenseAnonymisationIntegrationTests
     }
 
     [SkippableFact]
-    public async Task ActiveLicense_IsNeverTouched()
+    public async Task ActiveLicense_ThatHasNotExpired_IsNeverTouched()
     {
         var table = ConnectOrSkip();
         var now = DateTimeOffset.UtcNow;
-        // An active key with an ancient deactivation date — nonsense state, but if the job ever
-        // keyed off the date alone instead of Active it would erase a paying customer's details.
+        // An active key with an ancient deactivation date and NO expiry — nonsense state, but if the
+        // job ever keyed off DeactivatedUtc alone instead of Active it would erase a current
+        // customer's details. (An active key that has EXPIRED is a different case — see the
+        // natural-expiry tests below.)
         var rowKey = Seed(table, active: true, deactivatedUtc: now - TimeSpan.FromDays(400));
         try
         {
@@ -213,6 +218,106 @@ public sealed class LicenseAnonymisationIntegrationTests
             // for an address we erased months ago.
             Assert.Equal(anonymisedAt.ToUnixTimeSeconds(), row.AnonymisedUtc!.Value.ToUnixTimeSeconds());
             Assert.Empty(email.Deleted);
+        }
+        finally
+        {
+            table.DeleteEntity("license", rowKey);
+        }
+    }
+
+    // ---- natural expiry (added 2026-10-14) ----------------------------------------------------
+    // Nothing sets Active=false when a licence simply runs out, so before this change an expired
+    // licence was never anonymised at all. The clock for these rows is ExpiresAtUtc.
+
+    [SkippableFact]
+    public async Task ExpiredLicense_PastRetention_IsAnonymised()
+    {
+        var table = ConnectOrSkip();
+        var now = DateTimeOffset.UtcNow;
+        var rowKey = Seed(table, active: true, deactivatedUtc: null, expiresAtUtc: now - TimeSpan.FromDays(121));
+        try
+        {
+            var (service, email) = CreateService();
+
+            await service.RunAsync(now, CancellationToken.None);
+
+            var row = table.GetEntity<LicenseRecord>("license", rowKey).Value;
+            Assert.Null(row.CustomerEmail);
+            Assert.Null(row.CustomerName);
+            Assert.NotNull(row.AnonymisedUtc);
+            Assert.Equal("cus_test_" + rowKey, row.StripeCustomerId);   // business record survives
+            Assert.Contains($"{rowKey}@example.test", email.Deleted);
+        }
+        finally
+        {
+            table.DeleteEntity("license", rowKey);
+        }
+    }
+
+    [SkippableFact]
+    public async Task ExpiredLicense_InsideRetention_IsLeftAlone()
+    {
+        var table = ConnectOrSkip();
+        var now = DateTimeOffset.UtcNow;
+        // One day short. Erasing early is the failure that cannot be undone.
+        var rowKey = Seed(table, active: true, deactivatedUtc: null, expiresAtUtc: now - TimeSpan.FromDays(119));
+        try
+        {
+            var (service, email) = CreateService();
+
+            await service.RunAsync(now, CancellationToken.None);
+
+            var row = table.GetEntity<LicenseRecord>("license", rowKey).Value;
+            Assert.Equal($"{rowKey}@example.test", row.CustomerEmail);
+            Assert.Null(row.AnonymisedUtc);
+            Assert.DoesNotContain($"{rowKey}@example.test", email.Deleted);
+        }
+        finally
+        {
+            table.DeleteEntity("license", rowKey);
+        }
+    }
+
+    [SkippableFact]
+    public async Task LicenseThatHasNotExpiredYet_IsLeftAlone()
+    {
+        var table = ConnectOrSkip();
+        var now = DateTimeOffset.UtcNow;
+        var rowKey = Seed(table, active: true, deactivatedUtc: null, expiresAtUtc: now + TimeSpan.FromDays(200));
+        try
+        {
+            var (service, email) = CreateService();
+
+            await service.RunAsync(now, CancellationToken.None);
+
+            var row = table.GetEntity<LicenseRecord>("license", rowKey).Value;
+            Assert.Equal($"{rowKey}@example.test", row.CustomerEmail);
+            Assert.Null(row.AnonymisedUtc);
+        }
+        finally
+        {
+            table.DeleteEntity("license", rowKey);
+        }
+    }
+
+    /// <summary>A licence with no expiry date never ends, so it must never be treated as expired —
+    /// otherwise the fix for missed expiries would erase current customers.</summary>
+    [SkippableFact]
+    public async Task LicenseWithNoExpiryDate_IsNeverTreatedAsExpired()
+    {
+        var table = ConnectOrSkip();
+        var now = DateTimeOffset.UtcNow;
+        var rowKey = Seed(table, active: true, deactivatedUtc: null, expiresAtUtc: null);
+        try
+        {
+            var (service, email) = CreateService();
+
+            await service.RunAsync(now, CancellationToken.None);
+
+            var row = table.GetEntity<LicenseRecord>("license", rowKey).Value;
+            Assert.Equal($"{rowKey}@example.test", row.CustomerEmail);
+            Assert.Null(row.AnonymisedUtc);
+            Assert.DoesNotContain($"{rowKey}@example.test", email.Deleted);
         }
         finally
         {
