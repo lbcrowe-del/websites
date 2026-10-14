@@ -18,7 +18,7 @@
   <main>
     <section class="wrap legal">
       <h1>End User License Agreement</h1>
-      <p class="updated">Last updated: June 29, 2026 &middot; Version 1.4</p>
+      <p class="updated">Last updated: October 14, 2026 &middot; Version 1.6</p>
 
       <p>This End User License Agreement ("Agreement") is a legal contract between you ("Licensee"
       or "You") and Lee Crowe Software Solutions LLC ("Licensor," "We," or "Us") for the use of ServerBridge software.
@@ -45,14 +45,68 @@
       <h3>2.1 Free Tier</h3>
       <p>Subject to the terms of this Agreement, Licensor grants Licensee a limited, non-exclusive,
       non-transferable, revocable license to install and use the Software on an Authorized Device
-      solely for Licensee's internal business purposes.</p>
+      solely for Licensee's internal business purposes. The Free Tier includes the full core
+      migration workflow (scanning, compatibility analysis, destination routing, migration, and
+      reporting) subject to a per-job data limit of twenty-five (25) gigabytes of migrated data. A
+      migration job that reaches this limit stops before exceeding it; the remaining files are left
+      un-migrated and may be migrated by upgrading to the Pro Tier.</p>
       <h3>2.2 Pro Tier</h3>
       <p>Upon a one-time purchase of a Pro license key, Licensor grants Licensee a limited,
       non-exclusive, non-transferable, revocable license to install and use the Software on an
       Authorized Device, solely for Licensee's internal business purposes, with access to all
-      features included in the Pro Tier as described in the current feature documentation. The
+      features included in the Pro Tier as described in the current feature documentation. The Pro
+      Tier removes the Free Tier's per-job data limit (unlimited data per migration job). The
       license is perpetual unless this Agreement is terminated as set forth in Section 10.</p>
-      <h3>2.3 License Restrictions</h3>
+      <h3>2.3 Feature Tiers</h3>
+      <p>The following table summarizes the differences between the Free and Pro Tiers. Where this
+      table conflicts with the descriptions in Sections 2.1 and 2.2, those Sections control.</p>
+      <table>
+      <thead>
+      <tr>
+      <th>Feature</th>
+      <th>Free</th>
+      <th>Pro</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>Source scanning &amp; inventory</td>
+      <td>✅</td>
+      <td>✅</td>
+      </tr>
+      <tr>
+      <td>Microsoft 365 compatibility pre-flight checks</td>
+      <td>✅</td>
+      <td>✅</td>
+      </tr>
+      <tr>
+      <td>Per-folder destination routing</td>
+      <td>✅</td>
+      <td>✅</td>
+      </tr>
+      <tr>
+      <td>Migration to SharePoint / OneDrive / Teams</td>
+      <td>✅</td>
+      <td>✅</td>
+      </tr>
+      <tr>
+      <td>Verification &amp; report export</td>
+      <td>✅</td>
+      <td>✅</td>
+      </tr>
+      <tr>
+      <td>Data migrated per job</td>
+      <td>Up to 25 GB</td>
+      <td>Unlimited</td>
+      </tr>
+      <tr>
+      <td>Future Pro-tier capabilities (e.g. Clean ROT, Permission Review)</td>
+      <td>—</td>
+      <td>✅</td>
+      </tr>
+      </tbody>
+      </table>
+      <h3>2.4 License Restrictions</h3>
       <p>Except as expressly permitted in this Agreement, Licensee shall not:</p>
       <ul>
       <li>Copy, modify, adapt, translate, or create derivative works based on the Software;</li>
@@ -87,7 +141,7 @@
       remain the exclusive property of Lee Crowe Software Solutions LLC. This Agreement does not convey to Licensee any
       ownership interest in the Software, but only a limited right of use as set forth herein. All
       rights not expressly granted to Licensee are reserved by Licensor. To the extent Licensee creates
-      any derivative work of the Software notwithstanding the restriction in Section 2.3, Licensee
+      any derivative work of the Software notwithstanding the restriction in Section 2.4, Licensee
       hereby irrevocably assigns to Licensor, effective immediately upon creation, all right, title,
       and interest in and to such derivative work. ServerBridge and associated logos and marks are
       proprietary to Lee Crowe Software Solutions LLC.</p>
@@ -97,11 +151,14 @@
       for the purpose of performing file migration operations as directed by Licensee. Licensor does
       not collect, store, transmit, or retain any of Licensee's files, file contents, or
       Microsoft 365 data on Licensor's servers.</p>
-      <h3>5.2 Telemetry and Usage Data</h3>
-      <p>The Software may collect anonymous, non-identifiable usage telemetry (such as feature usage
-      frequency and error reports) to improve the Software. This data does not include any file
-      contents, file names, user data, or M365 tenant data. Licensee may opt out of telemetry
-      collection in the Software's settings.</p>
+      <h3>5.2 Migration Completion Report</h3>
+      <p>When a migration completes successfully, the Software sends Licensor's licensing server the
+      Licensee's license key, a randomly generated device identifier, and the number of files migrated.
+      It does not send file contents, file names, paths, user data, or Microsoft 365 tenant data.
+      Licensor uses this report to apply the refund policy, which treats a license that has completed a
+      migration differently. Because it is part of how the license is administered, it cannot be turned
+      off. The Software collects no other usage telemetry. No report is sent from the Free tier, which
+      has no license key.</p>
       <h3>5.3 Licensee Responsibility</h3>
       <p>Licensee is solely responsible for ensuring that its use of the Software complies with all
       applicable data protection, privacy, and security laws and regulations, including but not
