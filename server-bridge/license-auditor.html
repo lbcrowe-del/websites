@@ -93,15 +93,16 @@
           <div class="field">
             <div class="field-top">
               <label>Dominant plan</label>
-              <span class="field-val" id="planOut">E3 · $36/mo</span>
+              <span class="field-val" id="planOut">M365 E3 · $39/mo</span>
             </div>
             <div class="segmented" id="plan" role="group" aria-label="Dominant license plan">
-              <button type="button" data-cost="7" aria-pressed="false">Basic</button>
-              <button type="button" data-cost="16" aria-pressed="false">Standard</button>
-              <button type="button" data-cost="36" aria-pressed="true">E3</button>
-              <button type="button" data-cost="59" aria-pressed="false">E5</button>
+              <button type="button" data-cost="7" aria-pressed="false" title="Microsoft 365 Business Basic">Basic</button>
+              <button type="button" data-cost="14" aria-pressed="false" title="Microsoft 365 Business Standard">Standard</button>
+              <button type="button" data-cost="26" aria-pressed="false" title="Office 365 E3">O365 E3</button>
+              <button type="button" data-cost="39" aria-pressed="true" title="Microsoft 365 E3">M365 E3</button>
+              <button type="button" data-cost="60" aria-pressed="false" title="Microsoft 365 E5">M365 E5</button>
             </div>
-            <p class="field-hint">Sets the average monthly price per recovered seat.</p>
+            <p class="field-hint">Sets the average monthly price per recovered seat. Microsoft list prices from July 1, 2026; you may still pay the old price until renewal.</p>
           </div>
           <div class="field">
             <div class="field-top">
@@ -114,14 +115,14 @@
         </div>
         <div class="calc-readout">
           <p class="readout-label">Spend on unused seats, at your estimate</p>
-          <div class="readout-big" id="savOut">$6,480</div>
+          <div class="readout-big" id="savOut">$7,020</div>
           <p class="readout-per">per year · <span id="seatsFound">15</span> reclaimable seats</p>
           <div class="readout-divide"></div>
           <div class="readout-cost">
             <span>Your recommended plan</span>
             <span class="v" id="priceOut">$349/yr</span>
           </div>
-          <span class="roi-pill" id="roiOut">Would pay for itself 18.6× at this estimate</span>
+          <span class="roi-pill" id="roiOut">Would pay for itself 20.1× at this estimate</span>
           <a class="btn btn-primary scan-cta" href="#install" id="scanCta">Get your real number with the free scan</a>
           <p class="scan-sub">Read-only PowerShell · no app registration · runs in 5 minutes</p>
         </div>
@@ -468,7 +469,7 @@
       var seats = document.getElementById('seats');
       var waste = document.getElementById('waste');
       var planBtns = Array.prototype.slice.call(document.querySelectorAll('#plan button'));
-      var planNames = { 7: 'Basic · $7/mo', 16: 'Standard · $16/mo', 36: 'E3 · $36/mo', 59: 'E5 · $59/mo' };
+      var planNames = { 7: 'Business Basic · $7/mo', 14: 'Business Standard · $14/mo', 26: 'O365 E3 · $26/mo', 39: 'M365 E3 · $39/mo', 60: 'M365 E5 · $60/mo' };
       var seatsOut = document.getElementById('seatsOut');
       var wasteOut = document.getElementById('wasteOut');
       var planOut = document.getElementById('planOut');
@@ -479,7 +480,7 @@
 
       function planCost() {
         var b = planBtns.find(function (x) { return x.getAttribute('aria-pressed') === 'true'; });
-        return b ? Number(b.dataset.cost) : 36;
+        return b ? Number(b.dataset.cost) : 39;
       }
       function money(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
       function tierFor(n) {
