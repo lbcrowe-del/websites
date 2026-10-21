@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy — Lee Crowe Software</title>
+  <meta name="description" content="What leecrowesoftware.com records about visits, and what it doesn't." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="wrap topbar">
+    <div class="brand"><span class="mark">L</span> Lee Crowe Software</div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="mailto:hello@leecrowesoftware.com">Contact</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section class="about">
+      <h1>Privacy</h1>
+      <p>Last updated: October 21, 2026</p>
+      <p>This page covers this website, leecrowesoftware.com, run by Lee Crowe Software Solutions LLC.
+        Each product has its own privacy policy:
+        <a href="https://server-bridge.com/privacy.html">ServerBridge</a>,
+        <a href="https://server-bridge.com/license-auditor-privacy.html">License Auditor</a> and
+        <a href="https://gethalera.com/privacy">Halera</a>.</p>
+
+      <h2>What this website records</h2>
+      <p>We use PostHog to see how people find this site. For each visit it records the page address
+        (including any campaign tags in it, such as <code>utm_source</code>), the referring site, your
+        browser type and approximate location.</p>
+      <p>It sets no cookies and stores nothing on your device. It doesn't build a profile of you, and
+        we don't use it to identify you. Because nothing is stored on your device, there's no consent
+        banner. PostHog, in the United States, processes this data for us.</p>
+
+      <h2>Questions</h2>
+      <p>Email <a href="mailto:hello@leecrowesoftware.com">hello@leecrowesoftware.com</a>.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© <span id="yr"></span> Lee Crowe Software</span>
+      <span><a href="https://server-bridge.com">ServerBridge</a> · <a href="/privacy.html">Privacy</a> · <a href="mailto:hello@leecrowesoftware.com">hello@leecrowesoftware.com</a></span>
+    </div>
+  </footer>
+
+  <script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+  <!-- PostHog website analytics (cookieless) — see /js/site-analytics.js -->
+  <script src="/assets/posthog.js" defer></script>
+  <script src="/js/site-analytics.js" data-site="leecrowesoftware" defer></script>
+</body>
+</html>

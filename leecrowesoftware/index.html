@@ -80,10 +80,13 @@
   <footer>
     <div class="wrap">
       <span>© <span id="yr"></span> Lee Crowe Software</span>
-      <span><a href="https://server-bridge.com">ServerBridge</a> · <a href="mailto:hello@leecrowesoftware.com">hello@leecrowesoftware.com</a></span>
+      <span><a href="https://server-bridge.com">ServerBridge</a> · <a href="/privacy.html">Privacy</a> · <a href="mailto:hello@leecrowesoftware.com">hello@leecrowesoftware.com</a></span>
     </div>
   </footer>
 
   <script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+  <!-- PostHog website analytics (cookieless) — see /js/site-analytics.js -->
+  <script src="/assets/posthog.js" defer></script>
+  <script src="/js/site-analytics.js" data-site="leecrowesoftware" defer></script>
 </body>
 </html>

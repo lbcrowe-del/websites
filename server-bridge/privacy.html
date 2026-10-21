@@ -18,7 +18,7 @@
   <main>
     <section class="wrap legal">
       <h1>Privacy Policy</h1>
-      <p class="updated">Last updated: October 14, 2026</p>
+      <p class="updated">Last updated: October 21, 2026</p>
 
       <p>This Privacy Policy describes what information Lee Crowe Software Solutions LLC ("we," "us," or "our")
         collects in connection with ServerBridge and this website, and how we use it.</p>
@@ -49,11 +49,13 @@
         <li><strong>Marketing contact.</strong> When you purchase ServerBridge Pro, we add your name and email address to our email service provider (Brevo) so we can send your license key, a short series of onboarding emails and, occasionally, news about our other product, the ServerBridge License Auditor. You can unsubscribe at any time using the link in any of these emails.</li>
         <li><strong>Website contact requests.</strong> If you email us (e.g. to ask a question or
           request a refund), we keep that correspondence to respond to you.</li>
-        <li><strong>Aggregate website analytics.</strong> We use Cloudflare Web Analytics, a
-          privacy-first, cookieless service, to understand how many people visit this website and
-          which pages they view. It sets no cookies, does not fingerprint or track you across
-          sites, and collects no personal data — only aggregate counts (page views, referrers,
-          approximate country). Because it uses no cookies and no personal identifiers, no consent
+        <li><strong>Website analytics.</strong> We use two cookieless services to understand how
+          people find and use this website. Cloudflare Web Analytics counts page views, referrers
+          and approximate country. PostHog records each page view (including the page address and
+          any campaign tags in it, such as <code>utm_source</code> or <code>ct</code>), clicks on
+          the Buy and download buttons, your browser type and approximate location. Neither sets
+          cookies or stores an identifier on your device, neither builds a profile of you, and we
+          don't use them to identify you. Because nothing is stored on your device, no consent
           banner is required.</li>
       </ul>
 
@@ -72,8 +74,9 @@
           so we can validate your license.</li>
         <li><strong>Brevo</strong> (transactional and marketing email) — receives your name and email address to deliver your license key, onboarding emails and occasional product news, which you can unsubscribe from at any time.</li>
         <li><strong>Cloudflare</strong> (website analytics) — processes aggregate, cookieless
-          website traffic statistics on our behalf. It does not receive personal data and does not
-          track you across sites.</li>
+          traffic statistics. It does not track you across sites.</li>
+        <li><strong>PostHog</strong> (website analytics, United States) — receives the page views
+          and button clicks described above. It sets no cookies and builds no profile of you.</li>
       </ul>
       <p>We do not sell or share your data with any other third party, and we do not transfer
         data to any third party for advertising purposes.</p>
@@ -152,5 +155,8 @@
   <!-- Cloudflare Web Analytics -->
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "1dd7b99606b2470b86ee6e97cafd2ab3"}'></script>
   <!-- End Cloudflare Web Analytics -->
+  <!-- PostHog website analytics (cookieless) — see /js/site-analytics.js -->
+  <script src="/assets/posthog.js" defer></script>
+  <script src="/js/site-analytics.js" data-site="server-bridge" defer></script>
 </body>
 </html>

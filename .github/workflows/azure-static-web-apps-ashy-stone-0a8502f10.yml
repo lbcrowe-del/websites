@@ -19,6 +19,18 @@ jobs:
         with:
           submodules: true
           lfs: false
+      # The PostHog project token is public by design but kept out of git; fill it in here.
+      # Without the secret the placeholder stays, and site-analytics.js does nothing.
+      - name: Inject PostHog project token
+        env:
+          PHK: ${{ secrets.POSTHOG_PROJECT_API_KEY }}
+        run: |
+          if [ -n "$PHK" ]; then
+            sed -i "s/__POSTHOG_PROJECT_API_KEY__/$PHK/" server-bridge/js/site-analytics.js
+            grep -q "__POSTHOG_PROJECT_API_KEY__" server-bridge/js/site-analytics.js && { echo "::error::token not injected"; exit 1; } || true
+          else
+            echo "::warning::POSTHOG_PROJECT_API_KEY is not set; website analytics stay off."
+          fi
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
