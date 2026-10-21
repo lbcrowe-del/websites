@@ -305,3 +305,12 @@ input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-of
 .support h3 { margin: 0 0 8px; font-size: 15px; }
 .support p { margin: 0; font-size: 14px; color: var(--muted); }
 @media (max-width: 720px) { .support { grid-template-columns: 1fr; gap: 22px; } }
+
+/* Company mark (the Lee Crowe Software crow) beside the copyright line in every footer.
+   Done in CSS so the generated legal pages pick it up without template changes. The product
+   mark in the header stays the ServerBridge "S" — the crow is the company, not the product. */
+footer .wrap > span:first-child::before {
+  content: ""; display: inline-block; width: 20px; height: 20px; margin-right: 8px;
+  vertical-align: -5px;
+  background: url("/brand/lcs-crow-on-dark-tight.svg") center / contain no-repeat;
+}

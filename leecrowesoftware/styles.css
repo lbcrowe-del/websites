@@ -26,6 +26,8 @@ a:hover { text-decoration: underline; }
 
 .topbar { display: flex; align-items: center; justify-content: space-between; padding: 22px 0; }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 20px; letter-spacing: -0.02em; }
+a.brand, a.brand:hover { color: var(--text); text-decoration: none; }
+.brand .crow { width: 36px; height: 36px; display: block; }
 .brand .mark { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, #6366f1, #22d3ee);
   display: inline-grid; place-items: center; color: #07101f; font-weight: 800; font-size: 16px; }
 .topbar nav a { color: var(--muted); font-size: 15px; margin-left: 22px; }
