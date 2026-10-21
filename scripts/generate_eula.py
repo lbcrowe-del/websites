@@ -56,6 +56,9 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
   <!-- Cloudflare Web Analytics -->
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{{"token": "1dd7b99606b2470b86ee6e97cafd2ab3"}}'></script>
   <!-- End Cloudflare Web Analytics -->
+  <!-- PostHog website analytics (cookieless) — see /js/site-analytics.js -->
+  <script src="/assets/posthog.js" defer></script>
+  <script src="/js/site-analytics.js" data-site="server-bridge" defer></script>
 </body>
 </html>
 """
