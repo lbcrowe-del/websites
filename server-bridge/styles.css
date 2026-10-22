@@ -32,7 +32,7 @@ a:hover { text-decoration: underline; }
 .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
 
 /* Top bar */
-.topbar { display: flex; align-items: center; justify-content: space-between; padding: 22px 0; }
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 22px 24px; }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 20px; letter-spacing: -0.02em; }
 .brand .mark {
   width: 30px; height: 30px; border-radius: 8px;
@@ -42,7 +42,7 @@ a:hover { text-decoration: underline; }
 .topbar .home { color: var(--muted); font-size: 14px; }
 
 /* Hero */
-.hero { padding: 56px 0 40px; text-align: center; }
+.hero { padding: 56px 24px 40px; text-align: center; }
 .eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
   background: var(--accent-soft); color: #bcd4ff;
@@ -123,7 +123,7 @@ section { padding: 40px 0; }
 }
 
 /* Buy / country picker */
-.buy { padding: 64px 0; }
+.buy { padding: 64px 24px; }
 .buy-card { max-width: 480px; margin: 0 auto; padding: 34px 30px; }
 .field-label { display: block; font-size: 14px; color: var(--muted); margin-bottom: 8px; }
 .field-select {
@@ -137,7 +137,7 @@ section { padding: 40px 0; }
 .price-period { color: var(--muted); font-size: 15px; margin-left: 4px; }
 
 /* Legal pages */
-.legal { padding: 48px 0 64px; }
+.legal { padding: 48px 24px 64px; } /* keep .wrap's 24px sides; '48px 0' used to zero them and text touched the edges on phones */
 .legal h1 { font-size: clamp(28px, 4vw, 38px); letter-spacing: -0.02em; margin: 0 0 6px; }
 .legal .updated { color: var(--muted); font-size: 14px; margin: 0 0 32px; }
 .legal h2 { font-size: 19px; margin: 32px 0 10px; }
@@ -314,3 +314,15 @@ footer .wrap > span:first-child::before {
   vertical-align: -5px;
   background: url("/brand/lcs-crow-on-dark-tight.svg") center / contain no-repeat;
 }
+
+/* Guides (/guides/): long-form pages on the .legal layout, plus tables and code. */
+.guide { max-width: 780px; }
+.guide table { border-collapse: collapse; width: 100%; margin: 14px 0 22px; font-size: 14px; }
+@media (max-width: 640px) { .guide table { display: block; overflow-x: auto; white-space: nowrap; } }
+.guide th, .guide td { border-bottom: 1px solid var(--border); padding: 8px 10px; text-align: left; color: var(--muted); }
+.guide th { color: var(--text); }
+.guide pre { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; overflow-x: auto; }
+.guide code { font-size: 13.5px; }
+.guide-list { list-style: none; padding: 0; }
+.guide-list li { margin: 0 0 22px; }
+.guide-list a { font-size: 18px; font-weight: 600; }

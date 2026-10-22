@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Find inactive users in Microsoft 365 and what leavers still hold</title>
+  <meta name="description" content="Find inactive and disabled Microsoft 365 accounts and the licenses, groups and mailboxes they still hold. Free read-only PowerShell check." />
+  <meta property="og:title" content="Find inactive users in Microsoft 365 and what leavers still hold" />
+  <meta property="og:description" content="Find inactive and disabled Microsoft 365 accounts and the licenses, groups and mailboxes they still hold. Free read-only PowerShell check." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://server-bridge.com/guides/find-inactive-users-microsoft-365.html" />
+  <meta property="og:image" content="https://server-bridge.com/og-image.png" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="canonical" href="https://server-bridge.com/guides/find-inactive-users-microsoft-365.html" />
+</head>
+<body>
+  <header class="wrap topbar">
+    <div class="brand"><a href="/license-auditor.html" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:10px"><span class="mark">S</span> ServerBridge</a></div>
+    <a class="home" href="/guides/">&larr; All guides</a>
+  </header>
+
+  <main>
+    <article class="wrap legal guide">
+<h1 id="find-inactive-users-in-microsoft-365-and-what-the-leavers-still-hold">Find inactive users in Microsoft 365, and what the leavers still hold</h1>
+<p>When someone leaves, the license is usually the only thing anyone remembers to remove. The account keeps its group memberships, and its mailbox is never converted to shared. Then it sits there until an audit finds it, or until someone signs in with it.</p>
+<p>This page covers how to find those accounts and what to check on each one.</p>
+<h2 id="option-1-the-entra-admin-center-one-off-manual">Option 1: the Entra admin center (one-off, manual)</h2>
+<p>Microsoft documents a manual way to do this (<a href="https://learn.microsoft.com/en-us/entra/identity/monitoring-health/howto-manage-inactive-user-accounts">Microsoft Learn</a>):</p>
+<ol type="1">
+<li>Sign in to the Microsoft Entra admin center as at least a <strong>Reports Reader</strong>.</li>
+<li>Go to <strong>Entra ID → Users → Manage view → Edit columns</strong>, and add <strong>Last interactive sign-in time</strong>.</li>
+<li>Filter on that column for a date range.</li>
+</ol>
+<p>It's fine for a quick look, but there are limits:</p>
+<ul>
+<li>It shows <strong>interactive</strong> sign-ins. People who only use Outlook or Teams on a phone sign in non-interactively, so they can look inactive when they aren't.</li>
+<li>Sign-in activity in Graph needs <strong>Microsoft Entra ID P1 or P2</strong> (same page).</li>
+<li>It tells you <em>who</em>, but not what they still hold: licenses, groups, mailbox type.</li>
+</ul>
+<p>Microsoft's own guidance on the window: "In many organizations, a reasonable window for inactive user accounts is between 90 and 180 days." Leave, sabbaticals and seasonal work all look like inactivity.</p>
+<h2 id="option-2-a-free-read-only-check-that-shows-what-each-leaver-still-holds">Option 2: a free read-only check that shows what each leaver still holds</h2>
+<p>I built a free PowerShell check for exactly this:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Install-Module ServerBridge<span class="op">.</span><span class="fu">LicenseScan</span> <span class="op">-</span>Scope CurrentUser</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>Invoke-OffboardingCheck</span></code></pre></div>
+<p>It finds accounts that <strong>look like leavers</strong>, meaning disabled or with no activity for 90 days (<code>-InactiveDays</code> changes it). It prints one row per person (<a href="https://github.com/lbcrowe-del/ServerBridge-LicenseScan">README</a>):</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What it tells you</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Reason</code></td>
+<td><code>disabled</code>, or <code>inactive</code></td>
+</tr>
+<tr>
+<td><code>Licenses</code></td>
+<td>paid licenses still assigned (free SKUs aren't counted)</td>
+</tr>
+<tr>
+<td><code>GroupCount</code></td>
+<td>how many groups and directory roles it still belongs to</td>
+</tr>
+<tr>
+<td><code>MailboxType</code></td>
+<td><code>user</code> means nobody converted it to a shared mailbox</td>
+</tr>
+<tr>
+<td><code>AnnualCost</code></td>
+<td>what that account's paid licenses cost per year, at list-price estimates</td>
+</tr>
+</tbody>
+</table>
+<p>The full list goes to a CSV. It's read-only: delegated read permissions only, nothing in the tenant changes, and nothing leaves your machine except the calls to Microsoft Graph. <strong>Global Reader</strong> is enough to run it.</p>
+<p><strong>Two honest limits</strong>, both in the README:</p>
+<ul>
+<li>Mailbox type comes from Microsoft's mailbox usage report. A mailbox nobody has used can take a long time to appear there. In our own testing, one only showed up at around eighteen days old. Until then the check says <code>unknown</code> rather than guessing. To read Exchange directly, use <code>Invoke-OffboardingCheck -UseExchangeOnline</code>. It needs a second sign-in and the <code>ExchangeOnlineManagement</code> module.</li>
+<li>If your tenant conceals user names in reports, only disabled accounts can be checked. A Global Administrator can turn that setting off under <strong>Settings → Org settings → Services → Reports</strong> (<a href="https://learn.microsoft.com/en-us/microsoft-365/admin/activity-reports/activity-reports">Microsoft Learn</a>).</li>
+</ul>
+<h2 id="what-to-do-with-each-leaver">What to do with each leaver</h2>
+<p>Microsoft's <a href="https://learn.microsoft.com/en-us/microsoft-365/admin/add-users/remove-former-employee">former-employee checklist</a> runs in this order:</p>
+<ol type="1">
+<li><strong>Block sign-in.</strong></li>
+<li><strong>Save the mailbox contents</strong> if someone needs them.</li>
+<li><strong>Wipe and block their mobile device.</strong></li>
+<li><strong>Forward their email or convert the mailbox to shared.</strong> The mailbox needs a license <em>while</em> you convert it. Afterwards, a shared mailbox under 50 GB needs no license. Keep the user account, because the shared mailbox is anchored to it (<a href="https://learn.microsoft.com/en-us/microsoft-365/admin/email/convert-user-mailbox-to-shared-mailbox">Microsoft Learn</a>).</li>
+<li><strong>Give someone access to their OneDrive and Outlook data.</strong></li>
+<li><strong>Remove the license.</strong> Microsoft says that after you remove it, email, contacts and calendar are kept for 30 days and then deleted permanently.</li>
+<li><strong>Delete the account</strong> once you no longer need it.</li>
+</ol>
+<p>Group memberships and directory roles aren't a billing problem, but they are an access problem. Clear them as part of step 1 or 7.</p>
+<h2 id="doing-this-every-month-without-thinking-about-it">Doing this every month without thinking about it</h2>
+<p>The free check is a snapshot you run when you remember to. The paid <a href="https://server-bridge.com/license-auditor.html?ct=laseo_inactive">ServerBridge License Auditor</a> Team plan ($349/year, 51–300 users) re-runs the audit on a schedule, shows what changed since the last run, and includes the offboarding list. Starter is $149/year for up to 50 users. If the free check finds nothing worth paying for, it says so.</p>
+
+    </article>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>&copy; <span id="yr"></span> Lee Crowe Software Solutions LLC</span>
+      <span><a href="/license-auditor.html">License Auditor</a> &middot; <a href="/license-auditor-privacy.html">Privacy</a> &middot; <a href="https://leecrowesoftware.com">leecrowesoftware.com</a></span>
+    </div>
+  </footer>
+
+  <script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "1dd7b99606b2470b86ee6e97cafd2ab3"}'></script>
+  <!-- End Cloudflare Web Analytics -->
+  <!-- PostHog website analytics (cookieless) — see /js/site-analytics.js -->
+  <script src="/assets/posthog.js" defer></script>
+  <script src="/js/site-analytics.js" data-site="server-bridge" defer></script>
+</body>
+</html>

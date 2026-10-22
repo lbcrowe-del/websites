@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Microsoft 365 price increase July 2026: old vs new prices</title>
+  <meta name="description" content="Microsoft 365 list prices rose July 1, 2026. Old and new prices for E3, E5, Business and Frontline, when you pay them, and checking unused seats." />
+  <meta property="og:title" content="Microsoft 365 price increase July 2026: old vs new prices" />
+  <meta property="og:description" content="Microsoft 365 list prices rose July 1, 2026. Old and new prices for E3, E5, Business and Frontline, when you pay them, and checking unused seats." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://server-bridge.com/guides/microsoft-365-price-increase-july-2026.html" />
+  <meta property="og:image" content="https://server-bridge.com/og-image.png" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="canonical" href="https://server-bridge.com/guides/microsoft-365-price-increase-july-2026.html" />
+</head>
+<body>
+  <header class="wrap topbar">
+    <div class="brand"><a href="/license-auditor.html" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:10px"><span class="mark">S</span> ServerBridge</a></div>
+    <a class="home" href="/guides/">&larr; All guides</a>
+  </header>
+
+  <main>
+    <article class="wrap legal guide">
+<h1 id="the-july-2026-microsoft-365-price-increase-what-changed">The July 2026 Microsoft 365 price increase: what changed</h1>
+<p>On July 1, 2026, Microsoft raised list prices on several Microsoft 365 commercial suites. If your renewal is coming up, the price rise matters less than the question of how many seats you actually need.</p>
+<h2 id="the-new-list-prices-usd-per-user-per-month-suites-with-teams">The new list prices (USD per user per month, suites with Teams)</h2>
+<p>From Microsoft's own <a href="https://www.microsoft.com/en-us/licensing/news/2026-m365-packaging-pricing-updates">pricing and packaging update</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Plan</th>
+<th>Before July 1, 2026</th>
+<th>From July 1, 2026</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Microsoft 365 Business Basic</td>
+<td>$6.00</td>
+<td>$7.00</td>
+<td>16%</td>
+</tr>
+<tr>
+<td>Microsoft 365 Business Standard</td>
+<td>$12.50</td>
+<td>$14.00</td>
+<td>12%</td>
+</tr>
+<tr>
+<td>Microsoft 365 Business Premium</td>
+<td>$22.00</td>
+<td>$22.00</td>
+<td>none</td>
+</tr>
+<tr>
+<td>Office 365 E1</td>
+<td>$10.00</td>
+<td>$10.00</td>
+<td>none</td>
+</tr>
+<tr>
+<td>Office 365 E3</td>
+<td>$23.00</td>
+<td>$26.00</td>
+<td>13%</td>
+</tr>
+<tr>
+<td>Office 365 E5</td>
+<td>$38.00</td>
+<td>$41.00</td>
+<td>8%</td>
+</tr>
+<tr>
+<td>Microsoft 365 E3</td>
+<td>$36.00</td>
+<td>$39.00</td>
+<td>8%</td>
+</tr>
+<tr>
+<td>Microsoft 365 E5</td>
+<td>$57.00</td>
+<td>$60.00</td>
+<td>5%</td>
+</tr>
+<tr>
+<td>Microsoft 365 F1</td>
+<td>$2.25</td>
+<td>$3.00</td>
+<td>33%</td>
+</tr>
+<tr>
+<td>Microsoft 365 F3</td>
+<td>$8.00</td>
+<td>$10.00</td>
+<td>25%</td>
+</tr>
+</tbody>
+</table>
+<p>Microsoft also lists versions without Teams, standalone components such as Entra ID P1 ($6 → $7) and EMS E3 ($10.60 → $12), and nonprofit and government pricing on the same page. These list prices "may vary by country and currency", and your agreement or reseller price may differ.</p>
+<h2 id="when-you-actually-pay-it">When you actually pay it</h2>
+<p>Microsoft says <strong>existing customers remain on current pricing until renewal</strong>. New purchases pay the new price now. Existing subscriptions move to it at their next renewal.</p>
+<p>The price change came with new features, which roll out by August 1, 2026. Microsoft 365 E3, for example, gains Defender for Office 365 Plan 1, Intune Plan 2, Intune Remote Help and Intune Advanced Analytics. The full list is on <a href="https://www.microsoft.com/en-us/licensing/news/2026-m365-packaging-pricing-updates">Microsoft's page</a>.</p>
+<h2 id="why-unused-seats-matter-more-after-a-rise">Why unused seats matter more after a rise</h2>
+<p>An unused seat used to cost you the old price. After renewal, it costs you the new one. A simple illustration using Microsoft's list prices, not a figure from any real tenant:</p>
+<ul>
+<li><strong>10 unused Microsoft 365 E3 seats:</strong> $4,320/year at the old $36, and $4,680/year at the new $39.</li>
+<li><strong>5 unused Business Standard seats:</strong> $750/year at the old $12.50, and $840/year at the new $14.</li>
+</ul>
+<p>So the price rise on unused seats is small. The real cost is the seats themselves. Renewal is when you can lower the seat count, so it's the time to check. Some subscriptions can only be reduced in a limited window after purchase or renewal (<a href="https://learn.microsoft.com/en-us/microsoft-365/admin/manage/remove-licenses-from-users">Microsoft Learn</a>).</p>
+<h2 id="check-your-tenant-before-renewal">Check your tenant before renewal</h2>
+<p>I wrote a free, read-only PowerShell scan that lists licensed accounts with no activity in 90 days and disabled accounts that still hold a paid license, then prices them:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Install-Module ServerBridge<span class="op">.</span><span class="fu">LicenseScan</span> <span class="op">-</span>Scope CurrentUser</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>Invoke-LicenseScan</span></code></pre></div>
+<ul>
+<li><strong>Read-only:</strong> delegated read permissions only. It never changes licenses, users or settings, and never reads mail, files or chats.</li>
+<li><strong>Global Reader</strong> can run it. A Global Administrator approves the app once.</li>
+<li><strong>Prices are list-price estimates</strong> taken from Microsoft's July 2026 list. If you haven't renewed yet, you are probably still paying the old price. Edit the price table to match your contract for exact figures.</li>
+<li>Source and docs are on <a href="https://github.com/lbcrowe-del/ServerBridge-LicenseScan">GitHub</a>. It is MIT-licensed.</li>
+</ul>
+<p>How it decides whether someone is "inactive" (sign-in data with Entra ID P1/P2, usage reports without it) is covered in <a href="/guides/unused-microsoft-365-licenses.html">How to find and clean up unused Microsoft 365 licenses</a>.</p>
+<h2 id="if-someone-has-to-sign-off-the-renewal">If someone has to sign off the renewal</h2>
+<p>The paid <a href="https://server-bridge.com/license-auditor.html?ct=laseo_price2026">ServerBridge License Auditor</a> turns the same findings into a PDF with recommended actions, costed by SKU, for whoever approves the spend. It starts at $149/year for up to 50 users. If the free scan finds less waste than that, it tells you the paid tool wouldn't pay for itself.</p>
+
+    </article>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>&copy; <span id="yr"></span> Lee Crowe Software Solutions LLC</span>
+      <span><a href="/license-auditor.html">License Auditor</a> &middot; <a href="/license-auditor-privacy.html">Privacy</a> &middot; <a href="https://leecrowesoftware.com">leecrowesoftware.com</a></span>
+    </div>
+  </footer>
+
+  <script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "1dd7b99606b2470b86ee6e97cafd2ab3"}'></script>
+  <!-- End Cloudflare Web Analytics -->
+  <!-- PostHog website analytics (cookieless) — see /js/site-analytics.js -->
+  <script src="/assets/posthog.js" defer></script>
+  <script src="/js/site-analytics.js" data-site="server-bridge" defer></script>
+</body>
+</html>
