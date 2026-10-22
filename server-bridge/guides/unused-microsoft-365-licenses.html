@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Find and clean up unused Microsoft 365 licenses (free PowerShell)</title>
+  <meta name="description" content="Find Microsoft 365 licenses nobody uses, priced in dollars, with a free read-only PowerShell scan. What counts as unused, the traps, and safe cleanup." />
+  <meta property="og:title" content="Find and clean up unused Microsoft 365 licenses (free PowerShell)" />
+  <meta property="og:description" content="Find Microsoft 365 licenses nobody uses, priced in dollars, with a free read-only PowerShell scan. What counts as unused, the traps, and safe cleanup." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://server-bridge.com/guides/unused-microsoft-365-licenses.html" />
+  <meta property="og:image" content="https://server-bridge.com/og-image.png" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="canonical" href="https://server-bridge.com/guides/unused-microsoft-365-licenses.html" />
+</head>
+<body>
+  <header class="wrap topbar">
+    <div class="brand"><a href="/license-auditor.html" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:10px"><span class="mark">S</span> ServerBridge</a></div>
+    <a class="home" href="/guides/">&larr; All guides</a>
+  </header>
+
+  <main>
+    <article class="wrap legal guide">
+<h1 id="how-to-find-and-clean-up-unused-microsoft-365-licenses">How to find and clean up unused Microsoft 365 licenses</h1>
+<p>I've been a Microsoft 365 and Windows admin for over 20 years. The licence bill is the one thing that gets cleaned up once and then quietly grows again. People leave, contractors finish, a mailbox gets parked "for now". Each of those seats keeps billing every month.</p>
+<p>This page covers what "unused" really means, the traps that make a quick check give the wrong answer, and a free read-only way to get a dollar figure for your own tenant.</p>
+<h2 id="how-common-is-this">How common is this?</h2>
+<p>CoreView's 2020 study looked at 5 million enterprise workers. It found that on average <strong>56% of a business's Office 365 licenses were inactive, underutilized, oversized or unassigned</strong>. It also estimated that better managing <em>inactive</em> licenses alone could cut total Office 365 costs by about 14% (<a href="https://www.businesswire.com/news/home/20200407005154/en/56-of-Businesses-Microsoft-Office-365-Licenses-are-Not-Fully-Exploited-CoreView-Research-Finds">BusinessWire, April 2020</a>). That is a vendor's own data from 2020, so treat it as a sign that the problem is common, not as a forecast for your tenant. Your number could be far lower.</p>
+<h2 id="what-counts-as-unused">What counts as "unused"</h2>
+<p>There are two kinds of seat worth looking at first:</p>
+<ol type="1">
+<li><strong>Licensed accounts with no activity for a long time.</strong> Microsoft's own guidance says "a reasonable window for inactive user accounts is between 90 and 180 days" (<a href="https://learn.microsoft.com/en-us/entra/identity/monitoring-health/howto-manage-inactive-user-accounts">Microsoft Learn</a>).</li>
+<li><strong>Disabled accounts that still hold a paid license.</strong> These are usually leavers. The sign-in was blocked but the license was never removed.</li>
+</ol>
+<h2 id="the-traps">The traps</h2>
+<ul>
+<li><strong>Last sign-in "attempts" are not activity.</strong> In Microsoft Graph, <code>lastSignInDateTime</code> records the last interactive sign-in <em>attempt</em>, including failures (<a href="https://learn.microsoft.com/en-us/graph/api/resources/signinactivity">Microsoft Learn: signInActivity</a>). An account that is being password-sprayed looks freshly active. Microsoft says to use <code>lastSuccessfulSignInDateTime</code> "if you need to determine when the account was truly accessed."</li>
+<li><strong>Phone-only users.</strong> Someone who only uses Outlook or Teams on a phone may have no recent <em>interactive</em> sign-in at all. Their activity shows up as non-interactive sign-ins (<code>lastNonInteractiveSignInDateTime</code>). If you only look at interactive sign-ins, you could take a license from someone who uses it every day.</li>
+<li><strong>Sign-in data needs Entra ID P1 or P2.</strong> Reading <code>lastSuccessfulSignInDateTime</code> through Graph needs a Microsoft Entra ID P1 or P2 license (<a href="https://learn.microsoft.com/en-us/entra/identity/monitoring-health/howto-manage-inactive-user-accounts">Microsoft Learn</a>). Without it, Microsoft 365 usage reports are the fallback. They cover the last 7, 30, 90 and 180 days (<a href="https://learn.microsoft.com/en-us/microsoft-365/admin/activity-reports/activity-reports">Microsoft Learn: activity reports</a>).</li>
+<li><strong>Hidden names in reports.</strong> Usage reports can conceal user, group and site names. A Global Administrator can turn that off under <strong>Settings → Org settings → Services → Reports</strong> (<a href="https://learn.microsoft.com/en-us/microsoft-365/admin/activity-reports/activity-reports">Microsoft Learn</a>). While names are hidden, a report can't tell you <em>who</em> is inactive.</li>
+</ul>
+<h2 id="a-free-read-only-scan">A free, read-only scan</h2>
+<p>I built a free PowerShell module that handles those traps and prints the waste in dollars:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Install-Module ServerBridge<span class="op">.</span><span class="fu">LicenseScan</span> <span class="op">-</span>Scope CurrentUser</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>Invoke-LicenseScan</span></code></pre></div>
+<p>What it does, from the <a href="https://github.com/lbcrowe-del/ServerBridge-LicenseScan">project README</a>:</p>
+<ul>
+<li>Reads your subscribed SKUs and who holds each one.</li>
+<li>With Entra ID P1/P2, it uses the most recent of <code>lastSuccessfulSignInDateTime</code> and <code>lastNonInteractiveSignInDateTime</code>, and deliberately not <code>lastSignInDateTime</code>. Without P1, it switches to usage reports automatically and tells you it did.</li>
+<li>Flags accounts with no activity for <strong>90 days</strong> (change it with <code>-InactiveDays</code>) and <strong>disabled accounts that still hold a paid license</strong>.</li>
+<li>Prices the flagged seats at <strong>list-price estimates</strong>. You can edit the price table to match your contract. It then saves a per-user CSV.</li>
+<li>Skips free SKUs, and skips guests unless you add <code>-IncludeGuests</code>.</li>
+</ul>
+<p><strong>What it can't change:</strong> anything. It is read-only. It asks only for delegated read permissions (<code>User.Read.All</code>, <code>Organization.Read.All</code>, <code>AuditLog.Read.All</code>, <code>Reports.Read.All</code>), never reads mail, files or chats, and sends nothing anywhere except the calls to Microsoft Graph. <strong>Global Reader</strong> is enough to run it. The first time anyone in your tenant runs it, a Global Administrator has to approve the app.</p>
+<p>It is MIT-licensed and on the <a href="https://www.powershellgallery.com/packages/ServerBridge.LicenseScan">PowerShell Gallery</a>.</p>
+<h2 id="cleaning-up-safely">Cleaning up safely</h2>
+<p>The scan gives you a list. What to do with it is your call. A careful order:</p>
+<ol type="1">
+<li><strong>Check the list with a human.</strong> People on long leave, seasonal staff and service accounts all look inactive. The scan errs toward "active" on purpose, but you know your people.</li>
+<li><strong>For leavers with a mailbox someone still needs, convert it to a shared mailbox before removing the license.</strong> Microsoft notes the mailbox needs a license <em>while</em> you convert it. After that, a shared mailbox under 50 GB doesn't need one. Don't delete the user account, because the shared mailbox needs it as an anchor (<a href="https://learn.microsoft.com/en-us/microsoft-365/admin/email/convert-user-mailbox-to-shared-mailbox">Microsoft Learn</a>).</li>
+<li><strong>Remove the license</strong> (<a href="https://learn.microsoft.com/en-us/microsoft-365/admin/manage/remove-licenses-from-users">Microsoft Learn: remove licenses from users</a>). Know what that does first: Microsoft notes that once the license is removed, the user's mailbox is no longer searchable with eDiscovery tools such as Content Search. If you have legal-hold or retention needs, sort those out before you remove anything.</li>
+<li><strong>Reduce the seat count on the subscription.</strong> Unassigning a license doesn't by itself shrink the bill. Microsoft's advice is to remove licenses you don't plan to reassign from the subscription "so that you're not paying for more licenses than you need". Some subscriptions can only be reduced or cancelled in a limited window after purchase or renewal (same page), so check your renewal date.</li>
+<li><strong>Re-run it after the next round of leavers.</strong></li>
+</ol>
+<h2 id="if-you-need-more-than-a-list">If you need more than a list</h2>
+<p>The scan is free and stays free. If you need to hand the result to whoever approves the spend, the paid <a href="https://server-bridge.com/license-auditor.html?ct=laseo_unused">ServerBridge License Auditor</a> turns it into a PDF report with recommended actions, costed by SKU. Team and above re-run the audit on a schedule. It starts at $149/year for up to 50 users. If your scan finds less waste than that, the scan will say so. Keep the money.</p>
+<p><em>Prices in the scan are list-price estimates, not your invoice. Your contract price may differ.</em></p>
+
+    </article>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>&copy; <span id="yr"></span> Lee Crowe Software Solutions LLC</span>
+      <span><a href="/license-auditor.html">License Auditor</a> &middot; <a href="/license-auditor-privacy.html">Privacy</a> &middot; <a href="https://leecrowesoftware.com">leecrowesoftware.com</a></span>
+    </div>
+  </footer>
+
+  <script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "1dd7b99606b2470b86ee6e97cafd2ab3"}'></script>
+  <!-- End Cloudflare Web Analytics -->
+  <!-- PostHog website analytics (cookieless) — see /js/site-analytics.js -->
+  <script src="/assets/posthog.js" defer></script>
+  <script src="/js/site-analytics.js" data-site="server-bridge" defer></script>
+</body>
+</html>

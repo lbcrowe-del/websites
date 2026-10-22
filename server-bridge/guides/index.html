@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Microsoft 365 licence guides — ServerBridge</title>
+  <meta name="description" content="Guides to finding unused Microsoft 365 licences, inactive users and the July 2026 price changes." />
+  <meta property="og:title" content="Microsoft 365 licence guides — ServerBridge" />
+  <meta property="og:description" content="Guides to finding unused Microsoft 365 licences, inactive users and the July 2026 price changes." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://server-bridge.com/guides/" />
+  <meta property="og:image" content="https://server-bridge.com/og-image.png" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="canonical" href="https://server-bridge.com/guides/" />
+</head>
+<body>
+  <header class="wrap topbar">
+    <div class="brand"><a href="/license-auditor.html" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:10px"><span class="mark">S</span> ServerBridge</a></div>
+    <a class="home" href="/guides/">&larr; All guides</a>
+  </header>
+
+  <main>
+    <article class="wrap legal guide">
+      <h1>Microsoft 365 licence guides</h1>
+      <p class="updated">Practical, read-only ways to find what you are paying for and not using.</p>
+      <ul class="guide-list">
+      <li><a href="/guides/unused-microsoft-365-licenses.html">How to find and clean up unused Microsoft 365 licenses</a><br />Find Microsoft 365 licenses nobody uses, priced in dollars, with a free read-only PowerShell scan. What counts as unused, the traps, and safe cleanup.</li>
+      <li><a href="/guides/microsoft-365-price-increase-july-2026.html">The July 2026 Microsoft 365 price increase: what changed</a><br />Microsoft 365 list prices rose July 1, 2026. Old and new prices for E3, E5, Business and Frontline, when you pay them, and checking unused seats.</li>
+      <li><a href="/guides/find-inactive-users-microsoft-365.html">Find inactive users in Microsoft 365, and what the leavers still hold</a><br />Find inactive and disabled Microsoft 365 accounts and the licenses, groups and mailboxes they still hold. Free read-only PowerShell check.</li>
+      </ul>
+    </article>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>&copy; <span id="yr"></span> Lee Crowe Software Solutions LLC</span>
+      <span><a href="/license-auditor.html">License Auditor</a> &middot; <a href="/license-auditor-privacy.html">Privacy</a> &middot; <a href="https://leecrowesoftware.com">leecrowesoftware.com</a></span>
+    </div>
+  </footer>
+
+  <script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "1dd7b99606b2470b86ee6e97cafd2ab3"}'></script>
+  <!-- End Cloudflare Web Analytics -->
+  <!-- PostHog website analytics (cookieless) — see /js/site-analytics.js -->
+  <script src="/assets/posthog.js" defer></script>
+  <script src="/js/site-analytics.js" data-site="server-bridge" defer></script>
+</body>
+</html>

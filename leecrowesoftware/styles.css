@@ -24,7 +24,7 @@ a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
 
-.topbar { display: flex; align-items: center; justify-content: space-between; padding: 22px 0; }
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 22px 24px; }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 20px; letter-spacing: -0.02em; }
 a.brand, a.brand:hover { color: var(--text); text-decoration: none; }
 .brand .crow { width: 36px; height: 36px; display: block; }
@@ -32,7 +32,7 @@ a.brand, a.brand:hover { color: var(--text); text-decoration: none; }
   display: inline-grid; place-items: center; color: #07101f; font-weight: 800; font-size: 16px; }
 .topbar nav a { color: var(--muted); font-size: 15px; margin-left: 22px; }
 
-.hero { padding: 64px 0 36px; max-width: 720px; }
+.hero { padding: 64px 24px 36px; max-width: 720px; }
 .hero h1 { font-size: clamp(40px, 7vw, 64px); line-height: 1.05; letter-spacing: -0.03em; margin: 0 0 14px; }
 .hero p { font-size: clamp(17px, 2.4vw, 20px); color: var(--muted); margin: 0; }
 
