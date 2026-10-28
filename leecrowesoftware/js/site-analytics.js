@@ -39,6 +39,9 @@
 
   function linkEvent(a) {
     var href = a.href || "";
+    if (href.indexOf("marketplace.microsoft.com") !== -1) {
+      return ["checkout_click", { tier: "hosted-marketplace" }];
+    }
     if (href.indexOf("buy.stripe.com") !== -1) {
       return ["checkout_click", { tier: clean((a.textContent || "").replace(/^\s*Buy\s*/i, "")).toLowerCase() || "unknown" }];
     }
