@@ -326,3 +326,7 @@ footer .wrap > span:first-child::before {
 .guide-list { list-style: none; padding: 0; }
 .guide-list li { margin: 0 0 22px; }
 .guide-list a { font-size: 18px; font-weight: 600; }
+
+/* Hosted (Marketplace) box under the downloadable tiers. */
+.crosslink.hosted { margin: 28px 0 8px; }
+.crosslink.hosted p a { white-space: nowrap; }
