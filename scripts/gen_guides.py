@@ -67,6 +67,16 @@ def page(title, desc, canonical, body):
 </html>
 '''
 
+MARKETPLACE_BADGE = (
+    '<p><a href="https://marketplace.microsoft.com/en-us/product/leecrowesoftwaresolutionsllc1790970685806.serverbridge-license-auditor?tab=Overview&amp;utm_source=server-bridge&amp;utm_campaign=mkt_badge" target="_blank" rel="noopener" data-cta="mkt_badge" data-cta-location="guide_cta" class="mkt-badge">'
+    '<img src="/assets/badges/available-on-microsoft-marketplace-black.svg" alt="Available on Microsoft Marketplace" '
+    'height="56" style="height:56px;width:auto;max-width:100%" /></a></p>')
+
+def add_badge(body):
+    """Put the badge straight after the paragraph with the guide's final License Auditor link."""
+    end = body.index("</p>", body.rindex("ct=laseo_")) + len("</p>")
+    return f"{body[:end]}\n{MARKETPLACE_BADGE}{body[end:]}"
+
 def main():
     OUT.mkdir(exist_ok=True)
     index = []
@@ -80,6 +90,7 @@ def main():
         md = re.sub(r"https://leecrowesoftware\.com/guides/([a-z0-9-]+)", r"/guides/\1.html", md)
         body = subprocess.run(["pandoc", "-f", "gfm", "-t", "html", "--wrap=preserve"],
                               input=md, capture_output=True, text=True, check=True).stdout
+        body = add_badge(body)
         canonical = f"{SITE}/guides/{slug}.html"
         (OUT / f"{slug}.html").write_text(page(meta["title"], meta["meta_description"], canonical, body))
         h1 = re.search(r"^# (.+)$", md, re.M).group(1)
@@ -91,7 +102,8 @@ def main():
       <p class="updated">Practical, read-only ways to find what you are paying for and not using.</p>
       <ul class="guide-list">
 {items}
-      </ul>'''
+      </ul>
+      {MARKETPLACE_BADGE}'''
     (OUT / "index.html").write_text(page("Microsoft 365 licence guides — ServerBridge",
         "Guides to finding unused Microsoft 365 licences, inactive users and the July 2026 price changes.",
         f"{SITE}/guides/", body))
