@@ -7,7 +7,8 @@
  *
  * Cookieless, in-memory only, no autocapture, no session replay, no person profiles. What is sent:
  *   $pageview         — with the full URL, so utm_* and ct= campaign codes survive
- *   checkout_click    — a Stripe checkout link was clicked, with the tier
+ *   checkout_click    — a Stripe or Marketplace checkout link was clicked, with the tier (and, on
+ *                       the Marketplace badge, cta and location)
  *   download_click    — a GitHub download or release link was clicked, with which product
  * Plus `is_bot` on everything, so crawlers can be filtered out.
  *
@@ -40,7 +41,13 @@
   function linkEvent(a) {
     var href = a.href || "";
     if (href.indexOf("marketplace.microsoft.com") !== -1) {
-      return ["checkout_click", { tier: "hosted-marketplace" }];
+      var props = { tier: "hosted-marketplace" };
+      // The Marketplace badge says which placement it is; the plain button does not.
+      if (a.getAttribute("data-cta")) {
+        props.cta = clean(a.getAttribute("data-cta"));
+        props.location = clean(a.getAttribute("data-cta-location"));
+      }
+      return ["checkout_click", props];
     }
     if (href.indexOf("buy.stripe.com") !== -1) {
       return ["checkout_click", { tier: clean((a.textContent || "").replace(/^\s*Buy\s*/i, "")).toLowerCase() || "unknown" }];
