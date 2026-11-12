@@ -66,3 +66,5 @@ section { padding: 36px 0; }
 
 footer { border-top: 1px solid var(--border); padding: 28px 0; color: var(--muted); font-size: 14px; margin-top: 20px; }
 footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; justify-content: space-between; }
+.product img.logo { background: none; object-fit: cover; }
+.product p.note { font-size: 14px; margin-top: -8px; }
