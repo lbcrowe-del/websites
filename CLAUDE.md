@@ -9,7 +9,7 @@ desktop app (which lives in the separate `lbcrowe-del/ServerBridge` repo, on-dis
 ## Layout
 - `server-bridge/` — the `server-bridge.com` site (HTML/CSS) **plus**:
   - `api/` — the licensing **Azure Functions** app (isolated worker, **.NET 10**).
-  - `api-tests/` — xUnit integration tests for the API (run against Azurite; `Category=Integration`).
+  - `api-tests/` — xUnit tests for the API: Azurite-backed `Category=Integration` plus emulator-free `Category=Unit`.
   - `legal-source/ServerBridge-EULA.md` — synced copy of the EULA source of truth (real source is
     in the ServerBridge repo), used to generate `eula.html`.
   - `eula.html` / `privacy.html` / `terms.html` / `refund.html` / `buy.html` / `download.html`.
@@ -36,7 +36,9 @@ desktop app (which lives in the separate `lbcrowe-del/ServerBridge` repo, on-dis
   **`https://serverbridge-licensing.azurewebsites.net/api/`** (legacy, still load-bearing for
   shipped desktop clients — do **not** delete it). Functions: `LicenseActivate`,
   `LicenseStatus`, `MigrationComplete`, `StripeWebhook`, `StripeIssueLicense`,
-  `LicenseAnonymisation` (timer, 03:20 UTC daily).
+  `LicenseAnonymisation` (timer, 03:20 UTC daily), and `Contact` (added 2026-11-12, deployed only
+  to `serverbridge-licensing-fc`, so it is reachable at `api.server-bridge.com` but not on the
+  original app's `azurewebsites.net` host; see "Contact form" below).
 - **Custom domain `api.server-bridge.com` (added 2026-09-11).** Cloudflare-proxied (orange cloud)
   CNAME → `serverbridge-licensing.azurewebsites.net`, plus an `asuid.api` TXT record holding the
   subscription's `customDomainVerificationId`. Azure holds a hostname binding with **no
@@ -69,6 +71,32 @@ desktop app (which lives in the separate `lbcrowe-del/ServerBridge` repo, on-dis
 - **App installers are NOT in this repo's domain** — `download.html` fetches releases from the
   public `lbcrowe-del/ServerBridge-releases` repo (the app source repo is private). See the
   ServerBridge desktop repo's CLAUDE.md for the release-publishing topology.
+
+
+## Contact form (leecrowesoftware.com → `POST /api/contact`)
+
+The leecrowesoftware.com form (`leecrowesoftware/js/contact.js`) posts to
+**`https://api.server-bridge.com/api/contact`** (`Functions/ContactFunction.cs`), because the Free
+SWA refuses POSTs. The function emails `hello@leecrowesoftware.com` through Brevo
+(`Services/BrevoContactMailer.cs`, same `BREVO_API_KEY`) with the visitor as reply-to, and adds
+them to **no** Brevo list. The privacy page (`leecrowesoftware/privacy.html#contact-form`) promises
+exactly that, so keep the two in step.
+
+- **CORS is answered in code** for `https://leecrowesoftware.com` and `https://www.leecrowesoftware.com`;
+  any other `Origin` gets 403. The Function App's **platform CORS list must stay empty**: if origins
+  are added there, the platform takes over and the code's headers are ignored. A new site that needs
+  the form means editing `AllowedOrigins` in `ContactFunction`.
+- **Two response modes.** A caller sending `Accept: application/json` gets `{ ok, error }` (200 /
+  400 / 429 / 502). A plain no-JavaScript form post gets a 303 back to
+  `https://leecrowesoftware.com/?sent=1|0#contact`. Both use form-encoded bodies, so no preflight.
+- **Spam handling** (`Services/ContactRequestHandler.cs`): honeypot field `website` and submissions
+  sent under 3 s after page load are discarded but reported as success, so bots learn nothing.
+  Senders are limited to 5 messages/hour, keyed on a SHA-256 of the IP, **held in memory only**:
+  never log or store the IP, since the privacy page says it isn't kept.
+- **Tests:** `ContactRequestHandlerTests` (`Category=Unit`, no emulator needed).
+- **⚠️ A local `func start` sends real email.** `local.settings.json` holds the live Brevo key, and
+  `BREVO_API_KEY="" func start` does not override it. To test locally without sending, blank the key
+  in `local.settings.json` itself, or only exercise requests that fail validation.
 
 
 ## Licence-data retention (the nightly anonymisation job)
@@ -148,7 +176,7 @@ scripts/preflight.sh --smoke         # also smoke-test the live Function App (ne
 # Manual equivalents:
 dotnet build server-bridge/api/ServerBridge.LicensingApi.csproj -c Release
 azurite --silent --location /tmp/azurite &   # Table emulator on :10002
-dotnet test server-bridge/api-tests/ServerBridge.LicensingApi.Tests.csproj --filter "Category=Integration"
+dotnet test server-bridge/api-tests/ServerBridge.LicensingApi.Tests.csproj --filter "Category=Integration|Category=Unit"
 # local Functions host: create server-bridge/api/local.settings.json with
 #   AzureWebJobsStorage / LICENSE_TABLE_CONNECTION = "UseDevelopmentStorage=true"
 ```
