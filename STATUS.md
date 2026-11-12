@@ -3,7 +3,46 @@
 > Living state doc. **Read first each session; update at the end of any session that changes
 > something here, then commit.** Architecture that's stable belongs in `CLAUDE.md`, not here.
 
-_Last updated: 2026-07-04 (one correction 2026-09-17)_
+_Last updated: 2026-11-12_
+
+## leecrowesoftware.com redesign + contact form (shipped 2026-11-12, PR #46)
+- **Repo moved** to `~/Projects/websites` (was `~/Documents/ServerBridge/websites`).
+- **Site repositioned** away from "practical software for IT professionals" to software of any
+  kind plus services. Sections: hero → *Things I've built* (ServerBridge, License Auditor, Halera,
+  "Your idea here") → *Work with me* (custom software & apps; automated business setup = domain,
+  website, email on your domain, forms; automation & consulting) → three-step "how it works" →
+  About → contact form. `og-image.png` tagline updated to match. The page deliberately makes **no
+  reply-time promise and no ownership/contract terms**; add those only as a business decision.
+- **Contact form → `POST https://api.server-bridge.com/api/contact`** (`ContactFunction`, on
+  `serverbridge-licensing-fc` only). The Free SWA can't take POSTs, hence the API. It emails
+  `hello@leecrowesoftware.com` through Brevo (same `BREVO_API_KEY`), visitor as reply-to, added to
+  **no** Brevo list. CORS is answered in code for `leecrowesoftware.com` + `www.`; other origins
+  get 403. The app's platform CORS list is empty and must stay empty, or the platform overrides the
+  code. Works without JS too: a plain form post gets a 303 back to `/?sent=1|0#contact`.
+- **Spam handling:** honeypot field `website`, submissions under 3 s after page load are discarded,
+  5 messages/hour per sender. The per-sender count is keyed on a SHA-256 of the IP and held in
+  memory only (resets when the host recycles). Logic lives in `Services/ContactRequestHandler.cs`.
+- **Privacy page** (`leecrowesoftware/privacy.html#contact-form`) now discloses the form data, that
+  Brevo (France) delivers it, and the in-memory IP count.
+- **Tests:** 17 `Category=Unit` tests (`ContactRequestHandlerTests`). `preflight.sh` and
+  `test-licensing-api.yml` now filter `Category=Integration|Category=Unit`. Preflight: 34 passed.
+- **Verified live after deploy:** CORS preflight 204, invalid email → 400 with message, foreign
+  origin → 403, live page serves the new copy, `license/status` unaffected. A real send through
+  Brevo was proven once from a local host (it reached `hello@`); **not yet sent from the live form**.
+
+### Gotchas learned today
+- **A local `func start` sends real email.** `local.settings.json` holds the live Brevo key, and
+  `BREVO_API_KEY="" func start` does **not** override it. To test locally without sending, blank the
+  key in `local.settings.json` itself, or only exercise paths that fail validation.
+- **SWA preview environments fill up.** Free SKU allows 3 staging environments per app; when full,
+  the PR's "Build and Deploy Job" fails with "maximum number of staging environments" (not a code
+  failure). PRs #39–#42 had left 6 behind; deleted with
+  `az staticwebapp environment delete -n <app> -g websites_rg --environment-name <PR#> --yes`.
+  PR #46's own previews were removed automatically on merge, so the close job does work; why the
+  older ones lingered is unknown. Check with `az staticwebapp environment list` if it recurs.
+- **"Allow auto-merge" is now on** for the repo, but `main` has no required checks, so GitHub
+  refuses auto-merge while checks are pending ("unstable status"). Merge by hand once green, or add
+  required checks to branch protection.
 
 ## Current state
 - 🚀 **ServerBridge v1.0.1 shipped (2026-07-04).** `download.html` now fetches releases from the
@@ -66,6 +105,8 @@ legacy comp/refunded rows become eligible around **mid-January 2027**, not 120 d
 actually deactivated.
 
 ## Open items / decisions
+- ⏳ **Send one real message from the live leecrowesoftware.com form** and confirm it reaches
+  `hello@` (only a local-host send has been proven so far).
 - ⏰ **DMARC follow-up — revisit on/after ~2026-07-25** (≥3 weeks of `p=none` report data).
   `leecrowesoftware.com` DMARC is currently `p=none` (monitoring). Before tightening: (1) confirm
   DKIM is enabled and passing, (2) review the `rua` aggregate reports sent to
