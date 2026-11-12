@@ -143,8 +143,9 @@
         </div>
         <div class="feature">
           <div class="ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
-          <h3>Cross-check real sign-in activity</h3>
-          <p>Match each licensed user against their last sign-in to find dormant and disabled seats.</p>
+          <h3>Cross-check real activity</h3>
+          <p>Match each licensed user against their last activity — sign-ins with Entra ID P1,
+            Microsoft 365 usage reports without it — to find dormant and disabled seats.</p>
         </div>
         <div class="feature">
           <div class="ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
@@ -358,12 +359,13 @@
         <details>
           <summary>Will it find a shared mailbox nobody uses?</summary>
           <p>Sometimes — and it tells you when it can't. Mailbox types come from Microsoft's usage
-            report, which only lists mailboxes that have had activity, so a shared mailbox sitting
-            completely untouched doesn't appear in it at all. Its type is reported as
-            <em>unknown</em> rather than guessed. The free PowerShell module can read types straight
-            from Exchange Online instead, which sees every mailbox whether it's been used or not —
-            that's <code>Invoke-OffboardingCheck -UseExchangeOnline</code>, and it needs a second
-            sign-in. The same option is planned for the Auditor.</p>
+            report, which can take a long time to list a mailbox nobody has used: in our own
+            testing one was still missing after a week and only appeared at around eighteen days
+            old. Until it appears, its type is reported as <em>unknown</em> rather than guessed.
+            The free PowerShell module can read types straight from Exchange Online instead, which
+            sees every mailbox whether it's been used or not — that's
+            <code>Invoke-OffboardingCheck -UseExchangeOnline</code>, and it needs a second
+            sign-in.</p>
         </details>
         <details>
           <summary>What if it doesn't find enough to justify the price?</summary>
