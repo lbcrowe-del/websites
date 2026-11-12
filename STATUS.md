@@ -28,7 +28,8 @@ _Last updated: 2026-11-12_
   `test-licensing-api.yml` now filter `Category=Integration|Category=Unit`. Preflight: 34 passed.
 - **Verified live after deploy:** CORS preflight 204, invalid email → 400 with message, foreign
   origin → 403, live page serves the new copy, `license/status` unaffected. A real send through
-  Brevo was proven once from a local host (it reached `hello@`); **not yet sent from the live form**.
+  Brevo was proven from a local host, then **confirmed end-to-end from the live form 2026-11-12** (a
+  test message sent on leecrowesoftware.com reached `hello@`).
 
 ### Gotchas learned today
 - **A local `func start` sends real email.** `local.settings.json` holds the live Brevo key, and
@@ -105,8 +106,6 @@ legacy comp/refunded rows become eligible around **mid-January 2027**, not 120 d
 actually deactivated.
 
 ## Open items / decisions
-- ⏳ **Send one real message from the live leecrowesoftware.com form** and confirm it reaches
-  `hello@` (only a local-host send has been proven so far).
 - ⏰ **DMARC follow-up — revisit on/after ~2026-07-25** (≥3 weeks of `p=none` report data).
   `leecrowesoftware.com` DMARC is currently `p=none` (monitoring). Before tightening: (1) confirm
   DKIM is enabled and passing, (2) review the `rua` aggregate reports sent to
