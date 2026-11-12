@@ -42,7 +42,7 @@ cleanup() { if $STARTED_AZURITE && [ -n "$AZ_PID" ]; then kill "$AZ_PID" 2>/dev/
 trap cleanup EXIT
 
 echo "==> integration tests (Azurite-backed)"
-dotnet test "$TESTS" --filter "Category=Integration"
+dotnet test "$TESTS" --filter "Category=Integration|Category=Unit"
 
 if $RUN_SMOKE; then
   echo "==> prod smoke test (live Function App)"

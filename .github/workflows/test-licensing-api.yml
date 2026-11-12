@@ -42,4 +42,4 @@ jobs:
           done
 
       - name: Integration tests
-        run: dotnet test server-bridge/api-tests/ServerBridge.LicensingApi.Tests.csproj --filter "Category=Integration" --verbosity normal
+        run: dotnet test server-bridge/api-tests/ServerBridge.LicensingApi.Tests.csproj --filter "Category=Integration|Category=Unit" --verbosity normal
