@@ -1,5 +1,5 @@
 #!/bin/bash
-cd "$HOME/Documents/ServerBridge/websites" || exit 1
+cd "$HOME/Projects/websites" || exit 1
 echo "Current status:"
 git status
 echo ""
