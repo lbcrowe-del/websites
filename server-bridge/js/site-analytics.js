@@ -10,6 +10,9 @@
  *   checkout_click    — a Stripe or Marketplace checkout link was clicked, with the tier (and, on
  *                       the Marketplace badge, cta and location)
  *   download_click    — a GitHub download or release link was clicked, with which product
+ *   scan_copy_click   — the free scan's Install-Module "Copy" button was clicked, with the page and
+ *                       which button (data-cta-location: hero, closing, ...). It's a <button>, not a
+ *                       link, so the link tracking below never saw it, and it is the free-scan start.
  * Plus `is_bot` on everything, so crawlers can be filtered out.
  *
  * The project token is a placeholder here and is filled in at deploy time by the Static Web Apps
@@ -87,6 +90,19 @@
     document.addEventListener(
       "click",
       function (e) {
+        var btn = e.target && e.target.closest ? e.target.closest(".copy-btn[data-copy]") : null;
+        if (btn && (btn.getAttribute("data-copy") || "").indexOf("ServerBridge.LicenseScan") !== -1) {
+          try {
+            window.posthog.capture(
+              "scan_copy_click",
+              { page: location.pathname, location: clean(btn.getAttribute("data-cta-location")) || "unknown" },
+              { send_instantly: true, transport: "sendBeacon" }
+            );
+          } catch (err) {
+            /* never block the copy */
+          }
+          return;
+        }
         var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
         var ev = a && linkEvent(a);
         if (!ev) return;
