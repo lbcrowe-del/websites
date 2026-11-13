@@ -98,14 +98,14 @@ def main():
         print("wrote", slug)
     items = "\n".join(
         f'      <li><a href="/guides/{s}.html">{html.escape(h)}</a><br />{html.escape(d)}</li>' for s, h, d in index)
-    body = f'''      <h1>Microsoft 365 licence guides</h1>
+    body = f'''      <h1>Microsoft 365 license guides</h1>
       <p class="updated">Practical, read-only ways to find what you are paying for and not using.</p>
       <ul class="guide-list">
 {items}
       </ul>
       {MARKETPLACE_BADGE}'''
-    (OUT / "index.html").write_text(page("Microsoft 365 licence guides — ServerBridge",
-        "Guides to finding unused Microsoft 365 licences, inactive users and the July 2026 price changes.",
+    (OUT / "index.html").write_text(page("Microsoft 365 license guides — ServerBridge",
+        "Guides to finding unused Microsoft 365 licenses, inactive users and the July 2026 price changes.",
         f"{SITE}/guides/", body))
     print("wrote index")
 

@@ -333,3 +333,10 @@ footer .wrap > span:first-child::before {
 /* Hosted (Marketplace) box under the downloadable tiers. */
 .crosslink.hosted { margin: 28px 0 8px; }
 .crosslink.hosted p a { white-space: nowrap; }
+
+/* "Wrong product?" note on the ServerBridge Pro buy and download pages (websites#51): people
+   looking for the License Auditor were landing on the $99 migration checkout. */
+.product-note { max-width: 480px; margin: 0 auto 18px; padding: 12px 16px; border-radius: 10px;
+  background: var(--accent-soft); border: 1px solid var(--border); color: var(--muted); font-size: 14px; }
+.product-note a { font-weight: 600; }
+.hero .product-note { max-width: none; margin: 0 0 18px; }
