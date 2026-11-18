@@ -148,6 +148,32 @@ section { padding: 40px 0; }
 footer { border-top: 1px solid var(--border); padding: 28px 0; color: var(--muted); font-size: 14px; margin-top: 30px; }
 footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; justify-content: space-between; }
 
+/* Product pages */
+.steps-4 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.price-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 26px; max-width: 760px;
+}
+.price-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.price-table th, .price-table td { padding: 12px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+.price-table th { text-align: left; font-weight: 500; color: var(--muted); padding-right: 16px; }
+.price-table td { text-align: right; font-weight: 700; white-space: nowrap; }
+.price-table .opt { color: var(--muted); font-weight: 400; }
+.price-example { margin: 18px 0 10px; color: var(--muted); font-size: 15px; }
+.price-example strong { color: var(--text); }
+.fine { color: var(--muted); font-size: 13px; }
+.faq details {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px 18px; margin: 0 0 10px; max-width: 760px;
+}
+.faq summary { cursor: pointer; font-weight: 600; }
+.faq details p { color: var(--muted); margin: 10px 0 0; font-size: 15px; }
+.faq .legal { margin-top: 20px; max-width: 760px; }
+.closing { text-align: center; padding: 48px 24px; }
+.closing h2 { font-size: clamp(26px, 4vw, 34px); letter-spacing: -0.02em; margin: 0 0 18px; }
+.closing .cta-row { justify-content: center; }
+.products .product.idea:last-child:nth-child(odd) { grid-column: 1 / -1; }
+
 @media (max-width: 760px) { .products { grid-template-columns: 1fr; } }
 
 @media (max-width: 640px) {
