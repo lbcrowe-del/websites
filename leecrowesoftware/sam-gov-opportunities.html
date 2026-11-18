@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SAM.gov Opportunities Finder — daily federal contract alerts | Lee Crowe Software</title>
+  <meta name="description" content="Get new SAM.gov contract opportunities for your NAICS codes by email, Slack or Google Sheets every morning. Official SAM.gov API with your own free key, optional USAspending award history, pay per result." />
+  <link rel="canonical" href="https://leecrowesoftware.com/sam-gov-opportunities.html" />
+  <meta property="og:title" content="SAM.gov Opportunities Finder" />
+  <meta property="og:description" content="New federal contract opportunities for your NAICS codes, delivered every morning. Official SAM.gov API, optional award history, no subscription." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://leecrowesoftware.com/sam-gov-opportunities.html" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <meta property="og:image" content="https://leecrowesoftware.com/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="wrap topbar">
+    <a class="brand" href="/"><img class="crow" src="/brand/lcs-crow-on-dark-tight.svg" width="36" height="36" alt="" /> Lee Crowe Software</a>
+    <nav>
+      <a class="hide-sm" href="#how">How it works</a>
+      <a class="hide-sm" href="#pricing">Pricing</a>
+      <a class="hide-sm" href="#faq">FAQ</a>
+      <a class="btn btn-sm" href="https://apify.com/leecrowesoftware/sam-gov-opportunities">Try it on Apify</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="wrap hero">
+      <p class="eyebrow">SAM.gov Opportunities Finder</p>
+      <h1>New federal contracts,<br /> in your inbox every morning.</h1>
+      <p class="lede">Pick your NAICS codes, set-asides and agencies once. Each morning you get only
+        the SAM.gov opportunities that are new or changed since the last run, by email, in Slack or
+        in a Google Sheet, with a public link to every notice. Add past award history from
+        USAspending.gov to see who wins this kind of work.</p>
+      <div class="cta-row">
+        <a class="btn" href="https://apify.com/leecrowesoftware/sam-gov-opportunities">Try it on Apify</a>
+        <a class="btn btn-ghost" href="#how">See how it works</a>
+      </div>
+      <ul class="platforms" aria-label="Key facts">
+        <li>Official SAM.gov API</li><li>Your own free key</li><li>No subscription</li><li>Pay per result</li>
+      </ul>
+    </section>
+
+    <section id="features" class="wrap">
+      <div class="section-head">
+        <h2>What you get</h2>
+        <p>A clean list of opportunities you can act on, without logging in to SAM.gov every day.</p>
+      </div>
+      <div class="services">
+        <article class="service">
+          <h3>Search the way you bid</h3>
+          <p>Filter by NAICS, PSC, set-aside, notice type, agency, place of performance, keywords
+            and dates. Several values run as one search, merged and deduplicated.</p>
+          <ul>
+            <li>Small business, 8(a), HUBZone, SDVOSB, WOSB set-asides</li>
+            <li>Solicitations, sources sought, presolicitations, awards</li>
+            <li>Response deadlines and points of contact</li>
+          </ul>
+        </article>
+
+        <article class="service">
+          <h3>Only what's new</h3>
+          <p>Turn on monitoring and each run returns just the notices that are new or changed
+            since the last one, with a note of what changed, such as a moved deadline.</p>
+          <ul>
+            <li>Unchanged notices are skipped and not charged</li>
+            <li>A missed day is picked up on the next run</li>
+            <li>One monitor per search</li>
+          </ul>
+        </article>
+
+        <article class="service">
+          <h3>Who wins this work</h3>
+          <p>Optionally attach past contract awards from USAspending.gov to each notice, matched on
+            the buying agency, the NAICS code or the named awardee.</p>
+          <ul>
+            <li>Recent awards with recipients and amounts</li>
+            <li>Award counts and totals over 1 to 5 years</li>
+            <li>Links to each award on USAspending.gov</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="how" class="wrap">
+      <div class="section-head">
+        <h2>How it works</h2>
+        <p>About ten minutes of setup, once. It runs on Apify, so there's nothing to install.</p>
+      </div>
+      <ol class="steps steps-4" aria-label="Setup steps">
+        <li><strong>Get a free SAM.gov key.</strong> Sign in to SAM.gov and request a Public API Key
+          under Account Details. It's stored as a secret and never appears in your results.</li>
+        <li><strong>Set up your search.</strong> Open the finder on Apify, enter your NAICS codes and
+          other filters, turn on "Only new or changed notices", and save it as a task.</li>
+        <li><strong>Schedule it.</strong> Add an Apify schedule, for example 7:00 every weekday.</li>
+        <li><strong>Choose where it goes.</strong> Connect Gmail, Slack or Google Sheets, and the
+          new notices arrive there after each run.</li>
+      </ol>
+    </section>
+
+    <section id="delivery" class="wrap">
+      <div class="section-head">
+        <h2>Delivered where you work</h2>
+        <p>Step-by-step instructions for each are in the
+          <a href="https://apify.com/leecrowesoftware/sam-gov-opportunities">finder's documentation on Apify</a>.</p>
+      </div>
+      <div class="products">
+        <article class="product">
+          <div class="row">
+            <span class="logo" aria-hidden="true">@</span>
+            <div><h3>Email</h3><span class="kind">Gmail integration</span></div>
+          </div>
+          <p>Results emailed after each run, with the list attached. Good for a one-person shop
+            that reads email first thing.</p>
+        </article>
+        <article class="product">
+          <div class="row">
+            <span class="logo" style="background:linear-gradient(135deg,#a855f7,#ec4899)" aria-hidden="true">#</span>
+            <div><h3>Slack</h3><span class="kind">Slack integration</span></div>
+          </div>
+          <p>A message in your BD channel with the day's summary, such as "12 new, 2 changed",
+            and a link to the full results.</p>
+        </article>
+        <article class="product">
+          <div class="row">
+            <span class="logo" style="background:linear-gradient(135deg,#10b981,#22d3ee)" aria-hidden="true">▦</span>
+            <div><h3>Google Sheets</h3><span class="kind">With Zapier, Make or n8n</span></div>
+          </div>
+          <p>One row per notice: title, agency, deadline, set-aside and link. A shared pipeline your
+            team can sort, assign and comment on.</p>
+        </article>
+        <article class="product">
+          <div class="row">
+            <span class="logo" style="background:linear-gradient(135deg,#f59e0b,#ef4444)" aria-hidden="true">{ }</span>
+            <div><h3>Your own systems</h3><span class="kind">API, CSV, Excel, JSON</span></div>
+          </div>
+          <p>Download any run as CSV, Excel or JSON, or pull results into your CRM through the
+            Apify API.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="pricing" class="wrap">
+      <div class="section-head">
+        <h2>Pricing</h2>
+        <p>Pay only for what each run delivers. No subscription, nothing to cancel.</p>
+      </div>
+      <div class="price-card">
+        <table class="price-table">
+          <tbody>
+            <tr><th scope="row">Each run</th><td>$0.01</td></tr>
+            <tr><th scope="row">Each opportunity in the results</th><td>$0.003 <span class="opt">($3 per 1,000)</span></td></tr>
+            <tr><th scope="row">Award history, when at least one past award is found</th><td>$0.005</td></tr>
+          </tbody>
+        </table>
+        <p class="price-example"><strong>Example:</strong> a weekday monitor that finds 20 new
+          notices a day costs $0.01 + 20 × $0.003 = <strong>$0.07 a day</strong>, about $1.50 a month.
+          A day with nothing new costs $0.01.</p>
+        <p class="fine">Not charged: duplicates, unchanged notices, lookups that find no awards,
+          and failed lookups. You can set a maximum cost per run, and the finder stops before going
+          over it.</p>
+      </div>
+    </section>
+
+    <section id="faq" class="wrap faq">
+      <div class="section-head"><h2>Questions</h2></div>
+      <details>
+        <summary>Why do I need my own SAM.gov key?</summary>
+        <p>SAM.gov's terms don't allow sharing a personal API key, so each user brings their own. The
+          key is free. Your key's daily request limit applies, and the finder stops cleanly at that
+          limit and keeps everything it already collected.</p>
+      </details>
+      <details>
+        <summary>Does it scrape SAM.gov?</summary>
+        <p>No. It uses the official SAM.gov Get Opportunities Public API and the public
+          USAspending.gov API. It doesn't log in anywhere for you.</p>
+      </details>
+      <details>
+        <summary>Do the links need a SAM.gov login?</summary>
+        <p>No. Every notice has a public sam.gov link that opens in any browser.</p>
+      </details>
+      <details>
+        <summary>Are attachments downloaded?</summary>
+        <p>No. You get the links SAM.gov publishes for each notice's attachments.</p>
+      </details>
+      <details>
+        <summary>Do I need an Apify account?</summary>
+        <p>Yes. The finder runs on Apify, and charges appear on your Apify bill. Signing up is free.</p>
+      </details>
+      <details>
+        <summary>Can you set it up for me?</summary>
+        <p>Yes. If you'd rather have the searches, schedule and delivery set up for your team, or
+          need it connected to your own systems, <a href="/#contact">get in touch</a>.</p>
+      </details>
+      <p class="fine legal">Not affiliated with or endorsed by GSA, SAM.gov or USAspending.gov.
+        Data comes from their public APIs. Published by Lee Crowe Software Solutions LLC.</p>
+    </section>
+
+    <section class="wrap closing">
+      <h2>Stop checking SAM.gov by hand.</h2>
+      <div class="cta-row">
+        <a class="btn" href="https://apify.com/leecrowesoftware/sam-gov-opportunities">Try it on Apify</a>
+        <a class="btn btn-ghost" href="/#contact">Ask a question</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© <span id="yr"></span> Lee Crowe Software Solutions LLC</span>
+      <span><a href="/">Home</a> · <a href="https://server-bridge.com">ServerBridge</a> · <a href="https://gethalera.com">Halera</a> · <a href="/privacy.html">Privacy</a> · <a href="mailto:hello@leecrowesoftware.com">hello@leecrowesoftware.com</a></span>
+    </div>
+  </footer>
+
+  <script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+  <!-- PostHog website analytics (cookieless) — see /js/site-analytics.js -->
+  <script src="/assets/posthog.js" defer></script>
+  <script src="/js/site-analytics.js" data-site="leecrowesoftware" defer></script>
+</body>
+</html>
